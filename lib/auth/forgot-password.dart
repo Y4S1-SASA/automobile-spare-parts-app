@@ -6,10 +6,14 @@ import 'login.dart';
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 <<<<<<< HEAD
+<<<<<<< HEAD
   // forget pw state
 =======
 
 >>>>>>> Auth screens initial view done
+=======
+  // forget pw state
+>>>>>>> Store user details in db func and added some comments
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
@@ -195,9 +199,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   // request password reset email
 =======
 >>>>>>> Auth screens initial view done
+=======
+  // request password reset email
+>>>>>>> Store user details in db func and added some comments
   void ReqForgotPassword(String email) async {
     if (_formkey.currentState!.validate()) {
       await _auth
