@@ -6,6 +6,7 @@ import '../market-items/home.dart';
 import 'register.dart';
 
 class LoginScreen extends StatefulWidget {
+  // login state
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -232,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               visible = true;
                             });
-                            signIn(
+                            logIn(
                                 emailController.text, passwordController.text);
                           },
                           child: Text(
@@ -269,7 +270,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signIn(String email, String password) async {
+  // request log in using email and password
+  void logIn(String email, String password) async {
     if (_formkey.currentState!.validate()) {
       try {
         UserCredential userCredential =
