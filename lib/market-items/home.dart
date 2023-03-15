@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+=======
+>>>>>>> Auth screens initial view done
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -7,6 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+<<<<<<< HEAD
   int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
@@ -15,6 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+=======
+>>>>>>> Auth screens initial view done
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 40,
             ),
+<<<<<<< HEAD
           ],
         ),
       ),
@@ -78,9 +85,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.asset('assets/appbar/profile.png'),
               onPressed: () => _appBarIconTap(3),
             ),
+=======
+
+>>>>>>> Auth screens initial view done
           ],
         ),
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Auth screens initial view done

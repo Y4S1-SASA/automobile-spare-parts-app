@@ -3,9 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
+=======
+>>>>>>> Auth screens initial view done
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -377,7 +380,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               setState(() {
                                 showProgress = true;
                               });
+<<<<<<< HEAD
                               register(
+=======
+                              signUp(
+>>>>>>> Auth screens initial view done
                                 firstNameController.text,
                                 lastNameController.text,
                                 emailController.text,
@@ -419,6 +426,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+<<<<<<< HEAD
   // register req
   register(
       String firstName, String lastName, String email, String password) async {
@@ -487,4 +495,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
 //     }
 //   }
 // }
+=======
+  signUp(
+      String firstName, String lastName, String email, String password) async {
+    if (_formkey.currentState!.validate()) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            )
+            .whenComplete(() => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginScreen(),
+                    ),
+                  )
+                });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    CircularProgressIndicator();
+  }
+>>>>>>> Auth screens initial view done
 }
