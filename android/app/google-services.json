@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "529396403522",
+    "project_id": "automobile-spare-parts-app",
+    "storage_bucket": "automobile-spare-parts-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529396403522:android:bba738071107c4a416ccdb",
+        "android_client_info": {
+          "package_name": "com.example.automobile_spare_parts_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529396403522-5ggrsnkkbp0siteek4krekjkr07q5e0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrmLSLWldSnoqLTdaMjKq-X0DC-WNw4HQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529396403522-5ggrsnkkbp0siteek4krekjkr07q5e0h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
