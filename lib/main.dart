@@ -1,3 +1,5 @@
+import 'package:automobile_spare_parts_app/view/screens/auth/login.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/register.dart';
 import 'package:automobile_spare_parts_app/utils.dart';
 import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
           toolbarHeight: 10,
         ),
         body: SingleChildScrollView(
-          child: Scene(),
+          child: LoginScreen(),
         ),
       ),
     );

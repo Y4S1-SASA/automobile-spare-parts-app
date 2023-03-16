@@ -1,8 +1,8 @@
+import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'forgot-password.dart';
-import '../market-items/home.dart';
 import 'register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,8 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return Container(
+      //body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
@@ -266,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
-      ),
+      //),
     );
   }
 
