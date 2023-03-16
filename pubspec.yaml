@@ -181,6 +181,15 @@ flutter:
     - assets/page-1/images/icon-edit-2-jfn.png
     - assets/page-1/images/icon-user-g5E.png
     - assets/page-1/images/icon-shop-SkQ.png
+    - assets/appbar/article_filled.png
+    - assets/appbar/article.png
+    - assets/appbar/market_filled.png
+    - assets/appbar/market.png
+    - assets/appbar/reservation_filled.png
+    - assets/appbar/reservation.png
+    - assets/appbar/profile_filled.png
+    - assets/appbar/profile_filled.png
+    - assets/appbar/profile_filled.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
