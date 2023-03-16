@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-=======
->>>>>>> Auth screens initial view done
-=======
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
->>>>>>> fix: resolved
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,10 +9,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fix: resolved
   int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
@@ -25,12 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedAppBarIconIndex = index;
     });
   }
-
-<<<<<<< HEAD
-=======
->>>>>>> Auth screens initial view done
-=======
->>>>>>> fix: resolved
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,10 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 40,
             ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fix: resolved
           ],
         ),
       ),
@@ -98,23 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.asset('assets/appbar/profile.png'),
               onPressed: () => _appBarIconTap(3),
             ),
-<<<<<<< HEAD
-=======
-
->>>>>>> Auth screens initial view done
-=======
->>>>>>> fix: resolved
           ],
         ),
       ),
     );
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Auth screens initial view done
-=======
-}
->>>>>>> fix: resolved

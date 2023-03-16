@@ -3,18 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
-=======
->>>>>>> Auth screens initial view done
-=======
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
->>>>>>> Store user details in db func and added some comments
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -386,15 +377,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               setState(() {
                                 showProgress = true;
                               });
-<<<<<<< HEAD
-<<<<<<< HEAD
                               register(
-=======
-                              signUp(
->>>>>>> Auth screens initial view done
-=======
-                              register(
->>>>>>> Store user details in db func and added some comments
                                 firstNameController.text,
                                 lastNameController.text,
                                 emailController.text,
@@ -436,8 +419,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   // register req
   register(
       String firstName, String lastName, String email, String password) async {
@@ -506,80 +487,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
 //     }
 //   }
 // }
-=======
-  signUp(
-=======
-  // register req
-  register(
->>>>>>> Store user details in db func and added some comments
-      String firstName, String lastName, String email, String password) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      String userId = userCredential.user!.uid;
-      DatabaseReference usersRef =
-          FirebaseDatabase.instance.reference().child('users');
-      Map<String, dynamic> newUser = {
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-      };
-      usersRef.child(userId).set(newUser);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-    CircularProgressIndicator();
-  }
-<<<<<<< HEAD
->>>>>>> Auth screens initial view done
-=======
-
-  // firestore code
-//   register(String firstName, String lastName, String email, String password) async {
-//   if (_formkey.currentState!.validate()) {
-//     try {
-//       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-//         email: email,
-//         password: password,
-//       );
-//       // Add first name and last name to user profile
-//       await userCredential.user?.updateProfile(displayName: '$firstName $lastName');
-//       await userCredential.user?.reload();
-//       // Save additional user data to Firestore or Realtime Database
-//       await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-//         'firstName': firstName,
-//         'lastName': lastName,
-//         'email': email,
-//       });
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (_) => LoginScreen(),
-//         ),
-//       );
-//     } on FirebaseAuthException catch (e) {
-//       if (e.code == 'weak-password') {
-//         print('The password provided is too weak.');
-//       } else if (e.code == 'email-already-in-use') {
-//         print('The account already exists for that email.');
-//       }
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-// }
->>>>>>> Store user details in db func and added some comments
 }
