@@ -1,4 +1,5 @@
 import 'package:automobile_spare_parts_app/auth/register.dart';
+import 'package:automobile_spare_parts_app/market-items/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.blue[900],
       ),
-      home: RegisterScreen(),
+      home: HomeScreen(),
     );
   }
 }

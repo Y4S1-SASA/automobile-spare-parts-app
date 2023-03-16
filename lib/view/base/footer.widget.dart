@@ -27,18 +27,18 @@ class Footer extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-              // iconmessagetextWCY (10:790)
-              margin:
-                  EdgeInsets.fromLTRB(0 * fem, 0 * fem, 72 * fem, 0.11 * fem),
-              width: 45 * fem,
-              height: 45 * fem,
-              child: Image.asset(
-                'assets/page-1/images/icon-message-text-cun.png',
-                width: 45 * fem,
-                height: 45 * fem,
-              ),
-            ),
+            // Container(
+            //   // iconmessagetextWCY (10:790)
+            //   margin:
+            //       EdgeInsets.fromLTRB(0 * fem, 0 * fem, 72 * fem, 0.11 * fem),
+            //   width: 45 * fem,
+            //   height: 45 * fem,
+            //   child: Image.asset(
+            //     'assets/page-1/images/icon-message-text-cun.png',
+            //     width: 45 * fem,
+            //     height: 45 * fem,
+            //   ),
+            // ),
             Container(
               // iconshopoxL (10:773)
               margin:
