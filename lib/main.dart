@@ -5,7 +5,7 @@ import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'view/screens/reservations/place-order.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,15 +28,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SASA',
       home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Color(0xff5db075),
-          toolbarHeight: 10,
-        ),
-        body: SingleChildScrollView(
-          child: LoginScreen(),
-        ),
-      ),
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Color(0xff5db075),
+            toolbarHeight: 10,
+          ),
+          body: LoginScreen()),
     );
   }
 }
