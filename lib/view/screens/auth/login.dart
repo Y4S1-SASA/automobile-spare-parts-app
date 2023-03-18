@@ -21,8 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //body: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
@@ -180,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 text: 'Register',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 58, 140, 54),
+                                  color: Color(0xff5db075),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Forgot Password",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 58, 140, 54),
+                                color: Color(0xff5db075),
                                 fontSize: 13,
                                 fontFamily: "Inter",
                               ),
@@ -244,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontFamily: 'Inter',
                             ),
                           ),
-                          color: Color.fromARGB(255, 58, 140, 54),
+                          color: Color(0xff5db075),
                         ),
                         SizedBox(
                           height: 10,
@@ -256,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color.fromARGB(255, 58, 140, 54),
+                              color: Color(0xff5db075),
                             ))),
                       ],
                     ),
@@ -266,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
-      //),
+      ),
     );
   }
 

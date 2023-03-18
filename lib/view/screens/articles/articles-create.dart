@@ -21,8 +21,8 @@ class _SceneState extends State<Scene> {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return Container(
-      width: double.infinity,
+    return Scaffold(
+      body: SingleChildScrollView(
       child: Container(
         // articlescreatebq2 (10:678)
         width: double.infinity,
@@ -297,6 +297,7 @@ class _SceneState extends State<Scene> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
