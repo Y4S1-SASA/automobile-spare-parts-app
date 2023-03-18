@@ -1,5 +1,6 @@
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? Image.asset('assets/appbar/reservation_filled.png')
                   : Image.asset('assets/appbar/reservation.png'),
               onPressed: () {
-                _appBarIconTap(0);
+                _appBarIconTap(2);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const PlaceOrder()),
@@ -84,7 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: _selectedAppBarIconIndex == 3
                   ? Image.asset('assets/appbar/profile_filled.png')
                   : Image.asset('assets/appbar/profile.png'),
-              onPressed: () => _appBarIconTap(3),
+              onPressed: () {
+                _appBarIconTap(3);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                );
+              },
             ),
           ],
         ),

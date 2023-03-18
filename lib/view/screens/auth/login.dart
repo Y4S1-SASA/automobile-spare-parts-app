@@ -1,9 +1,12 @@
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
 import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'forgot-password.dart';
 import 'register.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   // login state
@@ -279,6 +282,13 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
         );
+        AuthUser user = AuthUser(
+        firstName: userCredential.user!.displayName ?? '',
+        email: userCredential.user!.email ?? '',
+        lastName: userCredential.user!.displayName ?? '',
+      );
+
+      Provider.of<AuthProvider>(context, listen: false).setUser(user);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
