@@ -234,7 +234,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        color: const Color.fromARGB(255, 58, 140, 54),
+        color: const Color(0xff5db075),
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        color: Color.fromARGB(255, 58, 140, 54),
+        color: Color(0xff5db075),
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
