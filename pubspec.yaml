@@ -2,7 +2,7 @@ name: automobile_spare_parts_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.2 <3.0.0'
+  sdk: ">=2.19.2 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,10 +31,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  image_picker: ^0.8.7
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:
@@ -46,13 +47,20 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  firebase_core: ^2.7.0
+  firebase_app_check: ^0.1.1+12
+  firebase_auth: ^4.2.9
+  fluttertoast: ^8.2.1
+  firebase_database: ^10.0.14
+  flutter_spinkit: ^5.1.0
+  confirm_dialog: ^1.0.1
+  provider: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -62,6 +70,127 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/page-1/images/ellipse-71-bg.png
+    - assets/page-1/images/icon-trash.png
+    - assets/page-1/images/icon-shop.png
+    - assets/page-1/images/group-4.png
+    - assets/page-1/images/icon-trash-8Jk.png
+    - assets/page-1/images/icon-message-text.png
+    - assets/page-1/images/ellipse-71-bg-psi.png
+    - assets/page-1/images/icon-arrow-left-1.png
+    - assets/page-1/images/icon-trash-XRz.png
+    - assets/page-1/images/ellipse-71-bg-H1a.png
+    - assets/page-1/images/icon-user.png
+    - assets/page-1/images/icon-shop-J32.png
+    - assets/page-1/images/icon-shopping-cart.png
+    - assets/page-1/images/icon-message-text-Hwn.png
+    - assets/page-1/images/icon-shop-4KJ.png
+    - assets/page-1/images/group-4-r8g.png
+    - assets/page-1/images/icon-trash-LrU.png
+    - assets/page-1/images/polygon-1.png
+    - assets/page-1/images/ellipse-71-bg-1CU.png
+    - assets/page-1/images/icon-arrow-left-1-Lac.png
+    - assets/page-1/images/bg.png
+    - assets/page-1/images/group-30.png
+    - assets/page-1/images/group-4-Btc.png
+    - assets/page-1/images/bg-B9r.png
+    - assets/page-1/images/icon-shopping-cart-Zpc.png
+    - assets/page-1/images/camera-alt.png
+    - assets/page-1/images/icon-user-RdA.png
+    - assets/page-1/images/group-4-Uqe.png
+    - assets/page-1/images/group-47.png
+    - assets/page-1/images/bg-35z.png
+    - assets/page-1/images/group-4-WWc.png
+    - assets/page-1/images/icon-trash-xHN.png
+    - assets/page-1/images/group-4-Fwv.png
+    - assets/page-1/images/icon-user-tMv.png
+    - assets/page-1/images/icon-shopping-cart-7dz.png
+    - assets/page-1/images/icon-shop-vQ8.png
+    - assets/page-1/images/icon-trash-1t4.png
+    - assets/page-1/images/polygon-1-ibz.png
+    - assets/page-1/images/group-4-UqN.png
+    - assets/page-1/images/icon-shop-TVa.png
+    - assets/page-1/images/bg-PqJ.png
+    - assets/page-1/images/icon-shopping-cart-fH2.png
+    - assets/page-1/images/icon-user-QBJ.png
+    - assets/page-1/images/bg-xTi.png
+    - assets/page-1/images/icon-arrow-left-1-K3N.png
+    - assets/page-1/images/icon-user-XAg.png
+    - assets/page-1/images/ios-status-bar-black.png
+    - assets/page-1/images/icon-shop-Z6g.png
+    - assets/page-1/images/bg-hya.png
+    - assets/page-1/images/bg-6k8.png
+    - assets/page-1/images/icon-user-WmE.png
+    - assets/page-1/images/group-4-SMN.png
+    - assets/page-1/images/icon-shop-Gkx.png
+    - assets/page-1/images/icon-message-text-B7E.png
+    - assets/page-1/images/icon-arrow-left-1-fKn.png
+    - assets/page-1/images/icon-message-text-cun.png
+    - assets/page-1/images/group-4-m1z.png
+    - assets/page-1/images/icon-shopping-cart-QKr.png
+    - assets/page-1/images/icon-shop-LjJ.png
+    - assets/page-1/images/group-4-iLY.png
+    - assets/page-1/images/icon-shopping-cart-AyE.png
+    - assets/page-1/images/icon-arrow-left-1-Vhz.png
+    - assets/page-1/images/icon-shopping-cart-bY4.png
+    - assets/page-1/images/group-4-2jA.png
+    - assets/page-1/images/icon-shop-pvU.png
+    - assets/page-1/images/icon-user-AYQ.png
+    - assets/page-1/images/icon-user-yvQ.png
+    - assets/page-1/images/icon-user-dQc.png
+    - assets/page-1/images/group-4-A9e.png
+    - assets/page-1/images/icon-edit-2.png
+    - assets/page-1/images/icon-arrow-left-1-u2g.png
+    - assets/page-1/images/icon-house.png
+    - assets/page-1/images/group-4-8FS.png
+    - assets/page-1/images/icon-arrow-left-1-3tC.png
+    - assets/page-1/images/icon-message-text-FV2.png
+    - assets/page-1/images/icon-user-hFn.png
+    - assets/page-1/images/group-4-eik.png
+    - assets/page-1/images/mask-group.png
+    - assets/page-1/images/icon-message-text-KXN.png
+    - assets/page-1/images/group-47-oPv.png
+    - assets/page-1/images/icon-message-text-Jyv.png
+    - assets/page-1/images/icon-shop-fKn.png
+    - assets/page-1/images/icon-message-text-UW4.png
+    - assets/page-1/images/icon-message-text-6Ka.png
+    - assets/page-1/images/icon-trash-pxp.png
+    - assets/page-1/images/icon-user-p8g.png
+    - assets/page-1/images/icon-arrow-left-1-eiL.png
+    - assets/page-1/images/icon-shop-Ld6.png
+    - assets/page-1/images/icon-message-text-4oz.png
+    - assets/page-1/images/icon-shopping-cart-H1A.png
+    - assets/page-1/images/icon-magic-star.png
+    - assets/page-1/images/icon-shopping-cart-QyN.png
+    - assets/page-1/images/group-47-GBz.png
+    - assets/page-1/images/icon-message-text-Grk.png
+    - assets/page-1/images/icon-message-text-a8g.png
+    - assets/page-1/images/icon-arrow-left-1-iek.png
+    - assets/page-1/images/icon-shopping-cart-kx8.png
+    - assets/page-1/images/icon-shopping-cart-Shn.png
+    - assets/page-1/images/icon-shop-Y1N.png
+    - assets/page-1/images/bg-by2.png
+    - assets/page-1/images/icon-shopping-cart-sRJ.png
+    - assets/page-1/images/group-4-ktG.png
+    - assets/page-1/images/icon-edit-2-BcC.png
+    - assets/page-1/images/icon-house-kZv.png
+    - assets/page-1/images/icon-user-8mN.png
+    - assets/page-1/images/icon-arrow-left-1-JGG.png
+    - assets/page-1/images/group-30-o9i.png
+    - assets/page-1/images/icon-shopping-cart-KrY.png
+    - assets/page-1/images/icon-edit-2-jfn.png
+    - assets/page-1/images/icon-user-g5E.png
+    - assets/page-1/images/icon-shop-SkQ.png
+    - assets/appbar/article_filled.png
+    - assets/appbar/article.png
+    - assets/appbar/market_filled.png
+    - assets/appbar/market.png
+    - assets/appbar/reservation_filled.png
+    - assets/appbar/reservation.png
+    - assets/appbar/profile_filled.png
+    - assets/appbar/profile_filled.png
+    - assets/appbar/profile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
