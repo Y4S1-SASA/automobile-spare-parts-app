@@ -1,26 +1,44 @@
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
-import 'package:flutter/gestures.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-field.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils.dart';
 import 'shared/label-name.dart';
 import 'shared/label-value.dart';
 
-class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key});
+class PaymentGateway extends StatefulWidget {
+  const PaymentGateway({super.key});
 
   @override
-  State<PlaceOrder> createState() => _PlaceOrderState();
+  State<PaymentGateway> createState() => _PaymentGatewayState();
 }
 
-class _PlaceOrderState extends State<PlaceOrder> {
+class _PaymentGatewayState extends State<PaymentGateway> {
   int _selectedAppBarIconIndex = 1;
+  final TextEditingController cardNoController = TextEditingController();
+  final TextEditingController nameOnCardController = TextEditingController();
+  final TextEditingController expDateController = TextEditingController();
+  final TextEditingController cvvController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   void _appBarIconTap(int index) {
     setState(() {
       _selectedAppBarIconIndex = index;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -56,101 +74,150 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   ),
                 ),
                 Text(
-                  'Place Order',
+                  'Payment',
                   style: SafeGoogleFont(
                     'Inter',
                     fontSize: 24 * ffem,
                     fontWeight: FontWeight.w500,
                     height: 1.2125 * ffem / fem,
-                    color: Color(0xff000000),
+                    color: const Color(0xff000000),
                   ),
                 ),
               ],
             ),
           ),
           Container(
-            // Image of the item
-            margin: EdgeInsets.fromLTRB(149 * fem, 0 * fem, 157 * fem, 0 * fem),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8 * fem),
-            ),
-            child: Center(
-              // contentblockdyA (1:79)
-              child: SizedBox(
-                width: double.infinity,
-                height: 139 * fem,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8 * fem),
-                    color: const Color.fromARGB(255, 187, 186, 186),
-                  ),
-                ),
+            margin: EdgeInsets.fromLTRB(0 * fem, 10 * fem, 21 * fem, 9 * fem),
+            child: Text(
+              'We Accept',
+              style: SafeGoogleFont(
+                'Inter',
+                fontSize: 20 * ffem,
+                fontWeight: FontWeight.w500,
+                height: 1.2125 * ffem / fem,
+                color: const Color(0xff5db075),
               ),
             ),
           ),
           Container(
-            // input fields
-            margin:
-                EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
+            // group65E6t (1:157)
+            margin: EdgeInsets.fromLTRB(83 * fem, 0 * fem, 83 * fem, 0 * fem),
             width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                LabelName(labelName: 'Order Number'),
-                LabelValue(
-                  labelValue: 'ORD-R1297NH-879DNb',
-                  disabled: true,
-                )
-              ],
-            ),
-          ),
-          Container(
-            // input fields
-            margin:
-                EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                LabelName(labelName: 'Item Name'),
-                LabelValue(
-                  labelValue: 'Item 1',
-                  disabled: true,
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32 * fem, 25 * fem),
-            width: double.infinity,
-            height: 79.36 * fem,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
+                  // icons8mastercard4801x2t (1:158)
                   margin:
-                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 17 * fem, 0 * fem),
-                  width: 140 * fem,
-                  height: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      LabelName(labelName: 'Quantity'),
-                      LabelValue(labelValue: '2', disabled: false)
-                    ],
+                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 1 * fem),
+                  width: 91 * fem,
+                  height: 91 * fem,
+                  child: Image.asset(
+                    'assets/page-1/images/icons8-mastercard-480-1-B1A.png',
+                    fit: BoxFit.cover,
                   ),
                 ),
+                SizedBox(
+                  width: 21 * fem,
+                ),
+                SizedBox(
+                  // icons8visa4801eAc (1:159)
+                  width: 92 * fem,
+                  height: 92 * fem,
+                  child: Image.asset(
+                    'assets/page-1/images/icons8-visa-480-1-ijS.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(
+                  width: 21 * fem,
+                ),
+                Container(
+                  // icons8paypal641APr (1:160)
+                  margin:
+                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 2 * fem),
+                  width: 54 * fem,
+                  height: 54 * fem,
+                  child: Image.asset(
+                    'assets/page-1/images/icons8-paypal-64-1-JoS.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0 * fem, 40 * fem, 240 * fem, 22 * fem),
+            child: Text(
+              'Enter Card Details',
+              style: SafeGoogleFont(
+                'Inter',
+                fontSize: 16 * ffem,
+                fontWeight: FontWeight.w500,
+                height: 1.2125 * ffem / fem,
+                color: const Color(0xff000000),
+              ),
+            ),
+          ),
+          InputField(
+              labelName: 'Card No',
+              enabled: true,
+              controller: cardNoController,
+              hint: 'Enter name on Card'),
+          InputField(
+              labelName: 'Name on Card',
+              enabled: true,
+              controller: nameOnCardController,
+              hint: 'Enter name on Card'),
+          SizedBox(
+            height: 105 * fem,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                      0 * fem, 0.36 * fem, 0 * fem, 0 * fem),
-                  width: 224 * fem,
+                      0 * fem, 0.36 * fem, 75 * fem, 0 * fem),
+                  width: 200 * fem,
                   height: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      LabelName(labelName: 'Unit Price(LKR)'),
-                      LabelValue(labelValue: '48500.00', disabled: false)
+                    children: [
+                      InputField(
+                          enabled: true,
+                          controller: cvvController,
+                          hint: 'CVV',
+                          labelName: 'CVV')
+                    ],
+                  ),
+                ),
+                Container(
+                  margin:
+                      EdgeInsets.fromLTRB(15 * fem, 5 * fem, 0 * fem, 0 * fem),
+                  width: 120 * fem,
+                  height: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        children: [
+                          const LabelName(labelName: 'Exp. Date'),
+                          Text(
+                            "${"${selectedDate.toLocal()}".split('')[5]}${"${selectedDate.toLocal()}".split('')[6]}/${"${selectedDate.toLocal()}".split('')[2]}${"${selectedDate.toLocal()}".split('')[3]}",
+                            style: SafeGoogleFont(
+                              'Inter',
+                              fontSize: 18 * ffem,
+                              fontWeight: FontWeight.w500,
+                              height: 2.5 * ffem / fem,
+                              color: const Color(0xff000000),
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: Image.asset(
+                            'assets/page-1/images/icons8-calendar-48.png'),
+                        onPressed: () => _selectDate(context),
+                      ),
                     ],
                   ),
                 ),
@@ -158,49 +225,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
             ),
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32 * fem, 30 * fem),
-            width: double.infinity,
-            height: 79.36 * fem,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin:
-                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 17 * fem, 0 * fem),
-                  width: 300 * fem,
-                  height: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      LabelName(labelName: 'Delivery Address'),
-                      LabelValue(
-                          labelValue: '110/2B, Kaduwela Road, Kaduwela',
-                          disabled: false)
-                    ],
-                  ),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.fromLTRB(0 * fem, 17 * fem, 0 * fem, 0 * fem),
-                  width: 50 * fem,
-                  height: 50 * fem,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xff5db075),
-                      borderRadius: BorderRadius.circular(8 * fem),
-                    ),
-                    child: IconButton(
-                      icon:
-                          Image.asset('assets/page-1/images/icon-location.png'),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(88 * fem, 0 * fem, 87 * fem, 58 * fem),
+            margin: EdgeInsets.fromLTRB(88 * fem, 0 * fem, 87 * fem, 60 * fem),
             width: double.infinity,
             height: 45 * fem,
             decoration: BoxDecoration(
@@ -210,7 +235,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0xff5db075),
+                color: const Color(0xff5db075),
                 borderRadius: BorderRadius.circular(30 * fem),
               ),
               child: MaterialButton(
@@ -222,13 +247,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const PaymentGateway()),
+                    MaterialPageRoute(builder: (context) => const PlaceOrder()),
                   );
                 },
                 color: const Color(0xff5db075),
                 child: const Text(
-                  "Confirm Order",
+                  "Pay Now",
                   style: TextStyle(
                     fontSize: 18,
                     color: Color.fromARGB(255, 255, 255, 255),
