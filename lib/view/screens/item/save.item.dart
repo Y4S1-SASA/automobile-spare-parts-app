@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SaveItem extends StatefulWidget {
   const SaveItem({super.key});
@@ -12,6 +15,16 @@ class SaveItem extends StatefulWidget {
 }
 
 class _SaveItemState extends State<SaveItem> {
+  late File? image;
+
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      image = File(pickedImage!.path);
+    });
+  }
+
   String selectedCategory = 'Item 1';
   final List<String> ctegories = [
     'Item 1',
@@ -46,14 +59,33 @@ class _SaveItemState extends State<SaveItem> {
                 width: 130,
                 height: 130,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 4, color: Colors.white),
-                  boxShadow: [
-                    BoxShadow(
-                        spreadRadius: 2,
-                        blurRadius: 10,
-                        color: Colors.black.withOpacity(0.1),
-                        offset: const Offset(0, 10))
-                  ],
+                    border: Border.all(width: 4, color: Colors.white),
+                    boxShadow: [
+                      BoxShadow(
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(0, 10))
+                    ],
+                    image: DecorationImage(image: FileImage(image!))),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.green,
+                  ),
+                  child: GestureDetector(
+                      onTap: () {
+                        pickImage();
+                      },
+                      child: const Icon(Icons.camera_alt_outlined,
+                          color: Colors.black)),
                 ),
               )
             ]),
