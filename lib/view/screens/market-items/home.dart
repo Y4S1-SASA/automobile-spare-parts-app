@@ -1,6 +1,7 @@
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Scene()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _appBarIconTap(2);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _appBarIconTap(3);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
