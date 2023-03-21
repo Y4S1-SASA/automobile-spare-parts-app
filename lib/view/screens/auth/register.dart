@@ -345,7 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               TextSpan(
                                 text: 'Login',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 58, 140, 54),
+                                  color: Color(0xff5db075),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -392,7 +392,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontFamily: 'Inter',
                               ),
                             ),
-                            color: Color.fromARGB(255, 58, 140, 54),
+                            color: Color(0xff5db075),
                           ),
                         ),
                         SizedBox(
@@ -405,7 +405,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color.fromARGB(255, 58, 140, 54),
+                              color: Color(0xff5db075),
                             ))),
                       ],
                     ),

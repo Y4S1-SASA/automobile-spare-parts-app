@@ -54,6 +54,7 @@ dev_dependencies:
   firebase_database: ^10.0.14
   flutter_spinkit: ^5.1.0
   confirm_dialog: ^1.0.1
+  provider: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -134,7 +135,6 @@ flutter:
     - assets/page-1/images/icon-arrow-left-1-Vhz.png
     - assets/page-1/images/icon-shopping-cart-bY4.png
     - assets/page-1/images/group-4-2jA.png
-    - assets/page-1/images/icon-location.png
     - assets/page-1/images/icon-shop-pvU.png
     - assets/page-1/images/icon-user-AYQ.png
     - assets/page-1/images/icon-user-yvQ.png

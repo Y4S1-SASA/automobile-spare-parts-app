@@ -128,7 +128,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   fontFamily: 'Inter',
                                 ),
                               ),
-                              color: Color.fromARGB(255, 58, 140, 54),
+                              color: Color(0xff5db075),
                             ),
                           ),
                           SizedBox(
@@ -141,7 +141,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(30.0)),
                                 side: BorderSide(
-                                  color: Color.fromARGB(255, 58, 140, 54),
+                                  color: Color(0xff5db075),
                                 ),
                               ),
                               elevation: 2.0,
@@ -158,7 +158,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 "Login",
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Color.fromARGB(255, 58, 140, 54),
+                                  color: Color(0xff5db075),
                                   fontFamily: 'Inter',
                                 ),
                               ),
@@ -175,7 +175,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               visible: visible,
                               child: Container(
                                   child: CircularProgressIndicator(
-                                color: Color.fromARGB(255, 58, 140, 54),
+                                color: Color(0xff5db075),
                               ))),
                         ],
                       ),

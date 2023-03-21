@@ -1,15 +1,9 @@
 import 'package:automobile_spare_parts_app/view/screens/auth/login.dart';
-import 'package:automobile_spare_parts_app/view/screens/auth/register.dart';
-import 'package:automobile_spare_parts_app/utils.dart';
-import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
+import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'view/screens/reservations/place-order.dart';
-import 'package:flutter/gestures.dart';
-import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
-import 'view/screens/articles/articles-create.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,18 +16,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SASA',
-      home: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Color(0xff5db075),
-            toolbarHeight: 10,
-          ),
-          body: LoginScreen()),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SASA',
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            if (authProvider.isLoggedIn) {
+              return HomeScreen();
+            } else {
+              return Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  backgroundColor: Color(0xff5db075),
+                  toolbarHeight: 10,
+                ),
+                body: LoginScreen(),
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }
