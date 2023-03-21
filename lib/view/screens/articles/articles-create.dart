@@ -125,6 +125,7 @@ class _SceneState extends State<Scene> {
         'description': article.description,
         'tags': article.tags,
         'imageUrl': article.imageUrl,
+        'ownerEmail': article.ownerEmail
       });
       // Hide progress dialog
       Navigator.of(context).pop();
