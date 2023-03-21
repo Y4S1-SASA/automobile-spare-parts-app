@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -425,7 +427,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SaveItem()),
+                  MaterialPageRoute(builder: (context) => Scene()),
                 );
               },
             ),
@@ -443,7 +445,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(2);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SaveItem()),
+                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
                 );
               },
             ),

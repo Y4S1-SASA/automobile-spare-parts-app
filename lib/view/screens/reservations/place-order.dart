@@ -1,8 +1,12 @@
+import 'package:automobile_spare_parts_app/data/models/order.model.dart';
+import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../utils.dart';
 import 'shared/label-name.dart';
@@ -17,9 +21,20 @@ class PlaceOrder extends StatefulWidget {
 
 class _PlaceOrderState extends State<PlaceOrder> {
   int _selectedAppBarIconIndex = 1;
+  final OrderService _orderService = OrderService();
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final orderNumber = 'ORD-001';
+  final imgUrl =
+      'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
+  final itemId = 'I001';
+  final itemName = 'Spark Plug';
+  final itemPrice = '300';
+  var quantity = '';
+  var totalPrice = '';
+  var deliveryAddress = '';
 
   void _appBarIconTap(int index) {
     setState(() {
@@ -55,10 +70,18 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
                     width: 11.65 * fem,
                     height: 66 * fem,
-                    child: Image.asset(
-                      'assets/page-1/images/icon-arrow-left-1-3tC.png',
-                      width: 11.65 * fem,
-                      height: 26 * fem,
+                    child: IconButton(
+                      icon: Image.asset(
+                        'assets/page-1/images/icon-arrow-left-1-3tC.png',
+                        width: 11.65 * fem,
+                        height: 26 * fem,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
                     ),
                   ),
                   Text(
@@ -68,7 +91,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       fontSize: 24 * ffem,
                       fontWeight: FontWeight.w500,
                       height: 1.2125 * ffem / fem,
-                      color: Color(0xff000000),
+                      color: const Color(0xff000000),
                     ),
                   ),
                 ],
@@ -129,34 +152,107 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ),
             ),
             Container(
+              margin:
+                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
+              width: double.infinity,
               height: 105 * fem,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  Container(
                     width: 140 * fem,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputField(
-                            enabled: true,
-                            controller: quantityController,
-                            hint: '2',
-                            labelName: 'Quantity'),
+                        const LabelName(labelName: 'Quantity'),
+                        Container(
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: const Color(0xffe7e7e7)),
+                              color: const Color(0xfff6f6f6),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextFormField(
+                              controller: quantityController,
+                              onChanged: (value) {
+                                setState(() => {quantity = value});
+                                var totPrice =
+                                    int.parse(itemPrice) * int.parse(quantity);
+                                totalPrice = totPrice.toString();
+                                setState(() {
+                                  totalPrice = totalPrice;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 14.0),
+                                hintText: '0',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16 * ffem,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.2125 * ffem / fem,
+                                  color: const Color(0xffbdbdbd),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16 * ffem,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2125 * ffem / fem,
+                                color: const Color(0xff666666),
+                              ),
+                              enabled: true,
+                            ))
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 300 * fem,
+                  Container(
+                    margin: EdgeInsets.fromLTRB(
+                        32 * fem, 0 * fem, 0 * fem, 22 * fem),
+                    width: 205 * fem,
                     // height: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputField(
-                            enabled: true,
-                            controller: priceController,
-                            hint: 'Total',
-                            labelName: 'Total Price')
+                        const LabelName(labelName: 'TotalPrice'),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xffe7e7e7)),
+                            color: const Color(0xfff6f6f6),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: LabelValue(
+                              labelValue: totalPrice, disabled: false),
+                          // TextFormField(
+                          //   initialValue: totalPrice,
+                          //   onChanged: (totalPrice) {
+                          //     setState(() => {totalPrice = value});
+                          //   },
+                          //   decoration: InputDecoration(
+                          //     contentPadding: const EdgeInsets.symmetric(
+                          //         vertical: 10.0, horizontal: 14.0),
+                          //     hintText: '0',
+                          //     hintStyle: TextStyle(
+                          //       fontFamily: 'Inter',
+                          //       fontSize: 16 * ffem,
+                          //       fontWeight: FontWeight.w500,
+                          //       height: 1.2125 * ffem / fem,
+                          //       color: const Color(0xffbdbdbd),
+                          //     ),
+                          //     border: InputBorder.none,
+                          //   ),
+                          //   style: TextStyle(
+                          //     fontFamily: 'Inter',
+                          //     fontSize: 16 * ffem,
+                          //     fontWeight: FontWeight.w500,
+                          //     height: 1.2125 * ffem / fem,
+                          //     color: const Color(0xff666666),
+                          //   ),
+                          //   enabled: true,
+                          // )
+                        )
                       ],
                     ),
                   ),
@@ -164,6 +260,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ),
             ),
             Container(
+              margin:
+                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
+              width: double.infinity,
               height: 105 * fem,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,22 +270,52 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   Container(
                     margin: EdgeInsets.fromLTRB(
                         0 * fem, 0 * fem, 10 * fem, 0 * fem),
-                    width: 350 * fem,
+                    width: 310 * fem,
                     height: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputField(
-                            enabled: true,
-                            controller: addressController,
-                            hint: 'Enter Delivery Address',
-                            labelName: 'Delivery Address')
+                        const LabelName(labelName: 'Delivery Address'),
+                        Container(
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: const Color(0xffe7e7e7)),
+                              color: const Color(0xfff6f6f6),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextFormField(
+                              controller: addressController,
+                              onChanged: (value) {
+                                setState(() => {deliveryAddress = value});
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 14.0),
+                                hintText: '0',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 16 * ffem,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.2125 * ffem / fem,
+                                  color: const Color(0xffbdbdbd),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16 * ffem,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2125 * ffem / fem,
+                                color: const Color(0xff666666),
+                              ),
+                              enabled: true,
+                            ))
                       ],
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 0 * fem, 10 * fem),
+                        10 * fem, 0 * fem, 0 * fem, 10 * fem),
                     width: 50 * fem,
                     height: 50 * fem,
                     child: Container(
@@ -216,7 +345,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0xff5db075),
+                  color: const Color(0xff5db075),
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: MaterialButton(
@@ -226,6 +355,32 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
+                    var totPrice = int.parse(itemPrice) * int.parse(quantity);
+                    totalPrice = totPrice.toString();
+                    var orderObj = OrderModel(
+                        userId,
+                        orderNumber,
+                        imgUrl,
+                        itemId,
+                        itemName,
+                        quantity,
+                        totalPrice,
+                        deliveryAddress);
+                    var result = _orderService.createOrder(orderObj);
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('ERROR!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Article created successfully!')),
+                      );
+                      quantityController.clear();
+                      priceController.clear();
+                      addressController.clear();
+                    }
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

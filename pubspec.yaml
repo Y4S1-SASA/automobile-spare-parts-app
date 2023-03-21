@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^4.0.3
   firebase_storage: ^11.0.16
   syncfusion_flutter_datepicker: ^20.4.54
+  cloud_firestore: ^4.4.5
 
 dev_dependencies:
   flutter_test:
