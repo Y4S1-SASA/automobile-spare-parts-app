@@ -1,9 +1,12 @@
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
+import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'forgot-password.dart';
-import '../market-items/home.dart';
 import 'register.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   // login state
@@ -180,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 text: 'Register',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 58, 140, 54),
+                                  color: Color(0xff5db075),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -212,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Forgot Password",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 58, 140, 54),
+                                color: Color(0xff5db075),
                                 fontSize: 13,
                                 fontFamily: "Inter",
                               ),
@@ -244,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontFamily: 'Inter',
                             ),
                           ),
-                          color: Color.fromARGB(255, 58, 140, 54),
+                          color: Color(0xff5db075),
                         ),
                         SizedBox(
                           height: 10,
@@ -256,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color.fromARGB(255, 58, 140, 54),
+                              color: Color(0xff5db075),
                             ))),
                       ],
                     ),
@@ -279,6 +282,13 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
         );
+        AuthUser user = AuthUser(
+        firstName: userCredential.user!.displayName ?? '',
+        email: userCredential.user!.email ?? '',
+        lastName: userCredential.user!.displayName ?? '',
+      );
+
+      Provider.of<AuthProvider>(context, listen: false).setUser(user);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

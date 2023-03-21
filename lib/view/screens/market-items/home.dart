@@ -1,6 +1,7 @@
-
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedAppBarIconIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        color: Color.fromARGB(255, 58, 140, 54),
+        color: Color(0xff5db075),
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,13 +73,25 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: _selectedAppBarIconIndex == 2
                   ? Image.asset('assets/appbar/reservation_filled.png')
                   : Image.asset('assets/appbar/reservation.png'),
-              onPressed: () => _appBarIconTap(2),
+              onPressed: () {
+                _appBarIconTap(2);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
+                );
+              },
             ),
             IconButton(
               icon: _selectedAppBarIconIndex == 3
                   ? Image.asset('assets/appbar/profile_filled.png')
                   : Image.asset('assets/appbar/profile.png'),
-              onPressed: () => _appBarIconTap(3),
+              onPressed: () {
+                _appBarIconTap(3);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                );
+              },
             ),
           ],
         ),
