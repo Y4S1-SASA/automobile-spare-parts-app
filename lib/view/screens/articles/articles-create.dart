@@ -1,6 +1,7 @@
 import 'package:automobile_spare_parts_app/data/models/article.modal.dart';
 import 'package:automobile_spare_parts_app/view/base/footer.widget.dart';
 import 'package:automobile_spare_parts_app/view/base/heading.widget.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
@@ -458,7 +459,7 @@ class _SceneState extends State<Scene> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Scene()),
+                  MaterialPageRoute(builder: (context) => ListArticles()),
                 );
               },
             ),
