@@ -3,7 +3,8 @@ import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-field.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/incrementor.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,17 +22,19 @@ class PlaceOrder extends StatefulWidget {
 
 class _PlaceOrderState extends State<PlaceOrder> {
   int _selectedAppBarIconIndex = 1;
-  final OrderService _orderService = OrderService();
   final String userId = FirebaseAuth.instance.currentUser!.uid;
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final orderNumber = 'ORD-001';
-  final imgUrl =
+  final TextEditingController itemNameController = TextEditingController();
+  final TextEditingController orderNumberController = TextEditingController();
+
+  String orderNumber = 'ORD-001';
+  String imgUrl =
       'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
-  final itemId = 'I001';
-  final itemName = 'Spark Plug';
-  final itemPrice = '300';
+  String itemId = 'I001';
+  String itemName = 'Spark Plug';
+  String itemPrice = '300';
   var quantity = '';
   var totalPrice = '';
   var deliveryAddress = '';
@@ -119,99 +122,62 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 ),
               ),
             ),
-            Container(
-              // input fields
-              margin:
-                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  LabelName(labelName: 'Order Number'),
-                  LabelValue(
-                    labelValue: 'ORD-R1297NH-879DNb',
-                    disabled: true,
-                  )
-                ],
-              ),
-            ),
-            Container(
-              // input fields
-              margin:
-                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  LabelName(labelName: 'Item Name'),
-                  LabelValue(
-                    labelValue: 'Item 1',
-                    disabled: true,
-                  )
-                ],
-              ),
-            ),
+            InputText(
+                onChanged: (value) {
+                  orderNumber = orderNumber;
+                },
+                labelName: 'Order Number',
+                hint: orderNumber,
+                enabled: false,
+                controller: orderNumberController),
+            InputText(
+                onChanged: (value) {
+                  itemName = itemName;
+                },
+                labelName: 'Item Name',
+                hint: itemName,
+                enabled: false,
+                controller: itemNameController),
             Container(
               margin:
-                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
+                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 0 * fem),
               width: double.infinity,
               height: 105 * fem,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 140 * fem,
+                  SizedBox(
+                    width: 150 * fem,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const LabelName(labelName: 'Quantity'),
                         Container(
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: const Color(0xffe7e7e7)),
-                              color: const Color(0xfff6f6f6),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: TextFormField(
-                              controller: quantityController,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xffe7e7e7)),
+                            color: const Color(0xfff6f6f6),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Incrementor(
+                              minValue: 0,
+                              maxValue: 10,
                               onChanged: (value) {
-                                setState(() => {quantity = value});
+                                quantity = value.toString();
                                 var totPrice =
                                     int.parse(itemPrice) * int.parse(quantity);
                                 totalPrice = totPrice.toString();
                                 setState(() {
                                   totalPrice = totalPrice;
                                 });
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 14.0),
-                                hintText: '0',
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 16 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.2125 * ffem / fem,
-                                  color: const Color(0xffbdbdbd),
-                                ),
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.2125 * ffem / fem,
-                                color: const Color(0xff666666),
-                              ),
-                              enabled: true,
-                            ))
+                              }),
+                        )
                       ],
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(
                         32 * fem, 0 * fem, 0 * fem, 22 * fem),
-                    width: 205 * fem,
+                    width: 190 * fem,
                     // height: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,33 +191,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           ),
                           child: LabelValue(
                               labelValue: totalPrice, disabled: false),
-                          // TextFormField(
-                          //   initialValue: totalPrice,
-                          //   onChanged: (totalPrice) {
-                          //     setState(() => {totalPrice = value});
-                          //   },
-                          //   decoration: InputDecoration(
-                          //     contentPadding: const EdgeInsets.symmetric(
-                          //         vertical: 10.0, horizontal: 14.0),
-                          //     hintText: '0',
-                          //     hintStyle: TextStyle(
-                          //       fontFamily: 'Inter',
-                          //       fontSize: 16 * ffem,
-                          //       fontWeight: FontWeight.w500,
-                          //       height: 1.2125 * ffem / fem,
-                          //       color: const Color(0xffbdbdbd),
-                          //     ),
-                          //     border: InputBorder.none,
-                          //   ),
-                          //   style: TextStyle(
-                          //     fontFamily: 'Inter',
-                          //     fontSize: 16 * ffem,
-                          //     fontWeight: FontWeight.w500,
-                          //     height: 1.2125 * ffem / fem,
-                          //     color: const Color(0xff666666),
-                          //   ),
-                          //   enabled: true,
-                          // )
                         )
                       ],
                     ),
@@ -259,59 +198,22 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 ],
               ),
             ),
-            Container(
-              margin:
-                  EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
-              width: double.infinity,
+            SizedBox(
               height: 105 * fem,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 10 * fem, 0 * fem),
-                    width: 310 * fem,
+                  SizedBox(
+                    width: 340 * fem,
                     height: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const LabelName(labelName: 'Delivery Address'),
-                        Container(
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: const Color(0xffe7e7e7)),
-                              color: const Color(0xfff6f6f6),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: TextFormField(
-                              controller: addressController,
-                              onChanged: (value) {
-                                setState(() => {deliveryAddress = value});
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 14.0),
-                                hintText: '0',
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 16 * ffem,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.2125 * ffem / fem,
-                                  color: const Color(0xffbdbdbd),
-                                ),
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.2125 * ffem / fem,
-                                color: const Color(0xff666666),
-                              ),
-                              enabled: true,
-                            ))
-                      ],
-                    ),
+                    child: InputText(
+                        onChanged: (value) {
+                          deliveryAddress = value;
+                        },
+                        labelName: 'Delivery Address',
+                        hint: 'Delivery Address',
+                        enabled: true,
+                        controller: addressController),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(
@@ -357,7 +259,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   onPressed: () {
                     var totPrice = int.parse(itemPrice) * int.parse(quantity);
                     totalPrice = totPrice.toString();
-                    var orderObj = OrderModel(
+                    final orderObj = OrderModel(
                         userId,
                         orderNumber,
                         imgUrl,
@@ -366,25 +268,26 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         quantity,
                         totalPrice,
                         deliveryAddress);
-                    var result = _orderService.createOrder(orderObj);
-                    if (result == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('ERROR!')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Article created successfully!')),
-                      );
-                      quantityController.clear();
-                      priceController.clear();
-                      addressController.clear();
-                    }
+                    // var result = _orderService.createOrder(orderObj);
+                    // if (result == null) {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     const SnackBar(content: Text('ERROR!')),
+                    //   );
+                    // } else {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     const SnackBar(
+                    //         content: Text('Order Placed successfully!')),
+                    //   );
+                    //   quantityController.clear();
+                    //   priceController.clear();
+                    //   addressController.clear();
+                    // }
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const PaymentGateway()),
+                          builder: (context) =>
+                              PaymentGateway(orderModel: orderObj)),
                     );
                   },
                   color: const Color(0xff5db075),

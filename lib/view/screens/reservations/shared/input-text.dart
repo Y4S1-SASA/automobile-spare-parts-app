@@ -1,40 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../../../utils.dart';
 
-class InputFields extends StatefulWidget {
-  InputFields(
+class InputText extends StatefulWidget {
+  final String labelName;
+  final String hint;
+  final bool enabled;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+
+  const InputText(
       {super.key,
+      required this.onChanged,
       required this.labelName,
       required this.hint,
       required this.enabled,
-      required this.value,
       required this.controller});
-  // final String InputField;
-  String labelName;
-  String hint;
-  bool enabled;
-  String value;
-  final TextEditingController controller;
 
   @override
-  State<InputFields> createState() => _InputFieldsState();
+  State<InputText> createState() {
+    return _InputTextState();
+  }
 }
 
-class _InputFieldsState extends State<InputFields> {
-  late final String labelName;
-  late final String hint;
-  late final bool enabled;
-  late final String value;
-  late final TextEditingController controller;
+class _InputTextState extends State<InputText> {
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-
     return Container(
       // input fields
       margin: EdgeInsets.fromLTRB(32 * fem, 0 * fem, 32.41 * fem, 22 * fem),
@@ -45,7 +41,7 @@ class _InputFieldsState extends State<InputFields> {
           Container(
             margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8.52 * fem),
             child: Text(
-              labelName,
+              widget.labelName,
               style: SafeGoogleFont(
                 'Inter',
                 fontSize: 12 * ffem,
@@ -62,14 +58,16 @@ class _InputFieldsState extends State<InputFields> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextFormField(
-                controller: controller,
-                onChanged: (val) {
-                  setState(() => value = val);
+                controller: widget.controller,
+                onChanged: (value) {
+                  setState(() {
+                    widget.onChanged(value);
+                  });
                 },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 14.0),
-                  hintText: hint,
+                  hintText: widget.hint,
                   hintStyle: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 16 * ffem,
@@ -86,31 +84,59 @@ class _InputFieldsState extends State<InputFields> {
                   height: 1.2125 * ffem / fem,
                   color: const Color(0xff666666),
                 ),
-                enabled: enabled,
+                enabled: widget.enabled,
               ))
         ],
       ),
     );
-    // Container(
-    //   padding: EdgeInsets.fromLTRB(16 * fem, 19 * fem, 16 * fem, 16.48 * fem),
-    //   width: double.infinity,
-    //   decoration: BoxDecoration(
-    //     border: Border.all(color: Color(0xffe7e7e7)),
-    //     color: Color(0xfff6f6f6),
-    //     borderRadius: BorderRadius.circular(8),
-    //   ),
-    //   child: Text(
-    //     InputField,
-    //     style: SafeGoogleFont(
-    //       'Inter',
-    //       fontSize: 16 * ffem,
-    //       fontWeight: FontWeight.w500,
-    //       height: 1.2125 * ffem / fem,
-    //       color: disabled == true
-    //           ? const Color(0xffbdbdbd)
-    //           : const Color(0xff000000),
+
+    // Row(
+    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //   children: [
+    //     IconButton(
+    //       icon: Icon(
+    //         Icons.remove,
+    //         color: Theme.of(context).colorScheme.secondary,
+    //       ),
+    //       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
+    //       iconSize: 20.0,
+    //       color: Theme.of(context).primaryColor,
+    //       onPressed: () {
+    //         setState(() {
+    //           if (counter > widget.minValue) {
+    //             counter--;
+    //           }
+    //           widget.onChanged(counter);
+    //         });
+    //       },
     //     ),
-    //   ),
+    //     Text(
+    //       '$counter',
+    //       textAlign: TextAlign.center,
+    //       style: const TextStyle(
+    //         color: Colors.black87,
+    //         fontSize: 15.0,
+    //         fontWeight: FontWeight.w500,
+    //       ),
+    //     ),
+    //     IconButton(
+    //       icon: Icon(
+    //         Icons.add,
+    //         color: Theme.of(context).colorScheme.secondary,
+    //       ),
+    //       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
+    //       iconSize: 20.0,
+    //       color: Theme.of(context).primaryColor,
+    //       onPressed: () {
+    //         setState(() {
+    //           if (counter < widget.maxValue) {
+    //             counter++;
+    //           }
+    //           widget.onChanged(counter);
+    //         });
+    //       },
+    //     ),
+    //   ],
     // );
   }
 }
