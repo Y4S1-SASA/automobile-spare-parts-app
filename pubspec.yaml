@@ -199,6 +199,7 @@ flutter:
     - assets/appbar/profile_filled.png
     - assets/appbar/profile_filled.png
     - assets/appbar/profile.png
+    - assets/users/profile-icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

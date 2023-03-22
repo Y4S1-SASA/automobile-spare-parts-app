@@ -282,13 +282,10 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
         );
-        AuthUser user = AuthUser(
-        firstName: userCredential.user!.displayName ?? '',
-        email: userCredential.user!.email ?? '',
-        lastName: userCredential.user!.displayName ?? '',
-      );
-
-      Provider.of<AuthProvider>(context, listen: false).setUser(user);
+        // init user id
+        String userId = userCredential.user!.uid;
+        // provider to get auth user data
+        Provider.of<AuthProvider>(context, listen: false).getAuthUserData(userId);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -304,4 +301,5 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
+
 }
