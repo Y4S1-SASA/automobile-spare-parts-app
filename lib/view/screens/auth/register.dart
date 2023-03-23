@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -28,6 +29,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController mobile = new TextEditingController();
   bool _isObscure = true;
   bool _isObscure2 = true;
+  File? _imageFile;
+  final picker = ImagePicker();
+
+// Loads image image from source
+  Future<void> _getImageFromSource(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
+    });
+    Navigator.of(context).pop();
+  }
+
+  // Image selecting dialog
+  Future<void> _showImagePicker() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text('Gallery'),
+                  onTap: () {
+                    _getImageFromSource(ImageSource.gallery);
+                  },
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  child: const Text('Camera'),
+                  onTap: () {
+                    _getImageFromSource(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // uploads image to firebase storage
+  Future<String> _uploadImageToFirebase(BuildContext context) async {
+    if (_imageFile == null) return "null";
+
+    // Create a unique filename for the image
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Upload the image to Firebase Storage
+    final storageRef = FirebaseStorage.instance.ref().child('images/$fileName');
+    final uploadTask = storageRef.putFile(_imageFile!);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final imageUrl = await snapshot.ref.getDownloadURL();
+
+    return imageUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +124,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         SizedBox(
                           height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await _showImagePicker();
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(300),
+                            child: Container(
+                              width: 120,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Color(0xff5db075),
+                                  width: 1,
+                                ),
+                              ),
+                              child: _imageFile == null
+                                  ? Image.asset(
+                                      'assets/users/profile-icon.png',
+                                      width: 120,
+                                      height: 120,
+                                    )
+                                  : Image.file(
+                                      _imageFile!,
+                                      height: 120,
+                                    ),
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 30,
@@ -429,12 +519,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: password,
       );
       String userId = userCredential.user!.uid;
+      String imageUrl = await _uploadImageToFirebase(context);
       DatabaseReference usersRef =
           FirebaseDatabase.instance.reference().child('users');
       Map<String, dynamic> newUser = {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
+        'imageUrl': imageUrl,
       };
       usersRef.child(userId).set(newUser);
       Navigator.pushReplacement(

@@ -17,11 +17,11 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // CircleAvatar(
-            //   radius: 50,
-            //   backgroundImage: NetworkImage(user!.profilePictureUrl),
-            // ),
-            // SizedBox(height: 20),
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(user!.imageUrl),
+            ),
+            SizedBox(height: 20),
             Text(
               user?.firstName ?? '',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
