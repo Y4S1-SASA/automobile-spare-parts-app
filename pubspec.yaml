@@ -39,6 +39,7 @@ dependencies:
   firebase_storage: ^11.0.16
   syncfusion_flutter_datepicker: ^20.4.54
   cloud_firestore: ^4.4.5
+  accordion: ^2.5.1
 
 dev_dependencies:
   flutter_test:
@@ -190,6 +191,7 @@ flutter:
     - assets/page-1/images/icons8-visa-480-1-ijS.png
     - assets/page-1/images/icons8-paypal-64-1-JoS.png
     - assets/page-1/images/icons8-mastercard-480-1-B1A.png
+    - assets/page-1/images/icon-edit-2 copy.png
     - assets/appbar/article_filled.png
     - assets/appbar/article.png
     - assets/appbar/market_filled.png

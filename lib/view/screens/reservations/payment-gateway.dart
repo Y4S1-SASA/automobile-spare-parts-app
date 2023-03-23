@@ -1,15 +1,19 @@
+import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-field.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../service/order.service.dart';
 import '../../../utils.dart';
 import 'shared/label-name.dart';
 import 'shared/label-value.dart';
 
 class PaymentGateway extends StatefulWidget {
-  const PaymentGateway({super.key});
-
+  const PaymentGateway({super.key, required this.orderModel});
+  final OrderModel orderModel;
   @override
   State<PaymentGateway> createState() => _PaymentGatewayState();
 }
@@ -20,7 +24,12 @@ class _PaymentGatewayState extends State<PaymentGateway> {
   final TextEditingController nameOnCardController = TextEditingController();
   final TextEditingController expDateController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
+  final OrderService _orderService = OrderService();
   DateTime selectedDate = DateTime.now();
+  String cardNo = '';
+  String nameOnCard = '';
+  String expDate = '';
+  String cvv = '';
 
   void _appBarIconTap(int index) {
     setState(() {
@@ -162,16 +171,24 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                 ),
               ),
             ),
-            InputField(
-                labelName: 'Card No',
-                enabled: true,
-                controller: cardNoController,
-                hint: 'Enter name on Card'),
-            InputField(
-                labelName: 'Name on Card',
-                enabled: true,
-                controller: nameOnCardController,
-                hint: 'Enter name on Card'),
+            InputText(
+              labelName: 'Card No',
+              enabled: true,
+              controller: cardNoController,
+              hint: 'Enter name on Card',
+              onChanged: (value) {
+                cardNo = value;
+              },
+            ),
+            InputText(
+              labelName: 'Name on Card',
+              enabled: true,
+              controller: nameOnCardController,
+              hint: 'Enter name on Card',
+              onChanged: (value) {
+                nameOnCard = value;
+              },
+            ),
             SizedBox(
               height: 105 * fem,
               child: Row(
@@ -185,11 +202,15 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputField(
-                            enabled: true,
-                            controller: cvvController,
-                            hint: 'CVV',
-                            labelName: 'CVV')
+                        InputText(
+                          enabled: true,
+                          controller: cvvController,
+                          hint: 'CVV',
+                          labelName: 'CVV',
+                          onChanged: (value) {
+                            cvv = value;
+                          },
+                        )
                       ],
                     ),
                   ),
@@ -249,10 +270,24 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
+                    var result = _orderService.createOrder(widget.orderModel);
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('ERROR!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Order Placed successfully!')),
+                      );
+                      cardNoController.clear();
+                      nameOnCardController.clear();
+                      cvvController.clear();
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const PlaceOrder()),
+                          builder: (context) => const OrderList()),
                     );
                   },
                   color: const Color(0xff5db075),

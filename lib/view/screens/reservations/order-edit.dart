@@ -2,6 +2,7 @@ import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/incrementor.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
@@ -13,23 +14,51 @@ import '../../../utils.dart';
 import 'shared/label-name.dart';
 import 'shared/label-value.dart';
 
-class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key});
+class EditOrder extends StatefulWidget {
+  const EditOrder({
+    super.key,
+    required this.orderModel,
+  });
+  final OrderModel orderModel;
 
   @override
-  State<PlaceOrder> createState() => _PlaceOrderState();
+  State<EditOrder> createState() => _EditOrderState();
 }
 
-class _PlaceOrderState extends State<PlaceOrder> {
+class _EditOrderState extends State<EditOrder> {
   int _selectedAppBarIconIndex = 1;
+  late OrderModel currentOrder;
   final String userId = FirebaseAuth.instance.currentUser!.uid;
-  final TextEditingController quantityController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController itemNameController = TextEditingController();
-  final TextEditingController orderNumberController = TextEditingController();
+  late TextEditingController quantityController;
+  late TextEditingController priceController;
+  late TextEditingController addressController;
+  late TextEditingController itemNameController;
+  late TextEditingController orderNumberController;
 
-  String orderNumber = 'ORD-001';
+  @override
+  void initState() {
+    super.initState();
+    currentOrder = OrderModel(
+        orderId: widget.orderModel.orderId,
+        userId: widget.orderModel.userId,
+        orderNumber: widget.orderModel.orderNumber,
+        imgUrl: widget.orderModel.imgUrl,
+        itemId: widget.orderModel.itemId,
+        itemName: widget.orderModel.itemName,
+        quantity: widget.orderModel.quantity,
+        totalPrice: widget.orderModel.totalPrice,
+        deliveryAddress: widget.orderModel.deliveryAddress);
+    // quantityController =
+    //     TextEditingController(text: widget.orderModel.quantity);
+    // priceController = TextEditingController(text: widget.orderModel.totalPrice);
+    addressController =
+        TextEditingController(text: widget.orderModel.deliveryAddress);
+    itemNameController = TextEditingController(text: currentOrder.itemName);
+    orderNumberController =
+        TextEditingController(text: currentOrder.orderNumber);
+  }
+
+  String orderNumber = '';
   String imgUrl =
       'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
   String itemId = 'I001';
@@ -50,6 +79,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+    final OrderService _orderService = OrderService();
     return Scaffold(
       // appBar: AppBar(backgroundColor: Colors.green, title: Text('')), // App Bar
       body: SingleChildScrollView(
@@ -162,12 +192,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               minValue: 0,
                               maxValue: 10,
                               onChanged: (value) {
-                                quantity = value.toString();
-                                var totPrice =
-                                    int.parse(itemPrice) * int.parse(quantity);
+                                currentOrder.quantity = value.toString();
+                                var totPrice = int.parse(itemPrice) *
+                                    int.parse(currentOrder.quantity);
                                 totalPrice = totPrice.toString();
                                 setState(() {
-                                  totalPrice = totalPrice;
+                                  currentOrder.totalPrice = totalPrice;
                                 });
                               }),
                         )
@@ -190,7 +220,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: LabelValue(
-                              labelValue: totalPrice, disabled: false),
+                              labelValue: currentOrder.totalPrice,
+                              disabled: false),
                         )
                       ],
                     ),
@@ -208,7 +239,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     height: double.infinity,
                     child: InputText(
                         onChanged: (value) {
-                          deliveryAddress = value;
+                          currentOrder.deliveryAddress = value;
                         },
                         labelName: 'Delivery Address',
                         hint: 'Delivery Address',
@@ -257,42 +288,53 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
-                    var totPrice = int.parse(itemPrice) * int.parse(quantity);
-                    totalPrice = totPrice.toString();
-                    final orderObj = OrderModel(
-                        userId: userId,
-                        orderNumber: orderNumber,
-                        imgUrl: imgUrl,
-                        itemId: itemId,
-                        itemName: itemName,
-                        quantity: quantity,
-                        totalPrice: totalPrice,
-                        deliveryAddress: deliveryAddress);
-                    // var result = _orderService.createOrder(orderObj);
-                    // if (result == null) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(content: Text('ERROR!')),
-                    //   );
-                    // } else {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(
-                    //         content: Text('Order Placed successfully!')),
-                    //   );
+                    var orderObj = OrderModel(
+                        userId: currentOrder.userId,
+                        orderNumber: currentOrder.orderNumber,
+                        imgUrl: currentOrder.imgUrl,
+                        itemId: currentOrder.itemId,
+                        itemName: currentOrder.itemName,
+                        quantity: currentOrder.quantity,
+                        totalPrice: currentOrder.totalPrice,
+                        deliveryAddress: currentOrder.deliveryAddress);
+                    // var result = _orderService.updateOrder(orderObj, currentOrder.orderId)
+
+                    // var totPrice = int.parse(itemPrice) * int.parse(quantity);
+                    // totalPrice = totPrice.toString();
+                    // final orderObj = OrderModel(
+                    //     userId: userId,
+                    //     orderNumber: orderNumber,
+                    //     imgUrl: imgUrl,
+                    //     itemId: itemId,
+                    //     itemName: itemName,
+                    //     quantity: quantity,
+                    //     totalPrice: totalPrice,
+                    //     deliveryAddress: deliveryAddress);
+                    var result = _orderService.updateOrder(
+                        orderObj, currentOrder.orderId);
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('ERROR!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Order updated successfully!')),
+                      );
+                    }
                     //   quantityController.clear();
                     //   priceController.clear();
                     //   addressController.clear();
                     // }
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentGateway(orderModel: orderObj)),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => OrderList()),
+                    // );
                   },
                   color: const Color(0xff5db075),
                   child: const Text(
-                    "Confirm Order",
+                    "Save Edited Order",
                     style: TextStyle(
                       fontSize: 18,
                       color: Color.fromARGB(255, 255, 255, 255),
@@ -342,7 +384,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
+                  MaterialPageRoute(builder: (context) => const OrderList()),
                 );
               },
             ),
