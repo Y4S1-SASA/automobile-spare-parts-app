@@ -203,6 +203,16 @@ flutter:
     - assets/appbar/profile_filled.png
     - assets/appbar/profile.png
     - assets/users/profile-icon.png
+    - assets/orders/icon-arrow-left.png
+    - assets/orders/icon-edit.png
+    - assets/orders/icon-location.png
+    - assets/orders/icon-trash.png
+    - assets/orders/icon-mastercard.png
+    - assets/orders/icon-paypal.png
+    - assets/orders/icon-calendar.png
+    - assets/orders/icons-visa.png
+    - assets/orders/icon-close-circle.png
+    - assets/orders/package.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

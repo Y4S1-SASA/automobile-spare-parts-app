@@ -1,57 +1,87 @@
+// ignore: depend_on_referenced_packages
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/screens/order-list.dart';
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/service/order.service.dart';
-import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/incrementor.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
-import 'package:flutter/gestures.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../utils.dart';
-import 'shared/label-name.dart';
-import 'shared/label-value.dart';
+import '../../../../utils.dart';
+import '../shared/components/incrementor.dart';
+import '../shared/components/input-text.dart';
+import '../shared/components/label-name.dart';
+import '../shared/components/label-value.dart';
 
-class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key});
+class EditOrder extends StatefulWidget {
+  const EditOrder({
+    super.key,
+    required this.orderModel,
+  });
+  final OrderModel orderModel;
 
   @override
-  State<PlaceOrder> createState() => _PlaceOrderState();
+  State<EditOrder> createState() => _EditOrderState();
 }
 
-class _PlaceOrderState extends State<PlaceOrder> {
-  int _selectedAppBarIconIndex = 1;
+class _EditOrderState extends State<EditOrder> {
+  late OrderModel currentOrder;
+  final OrderService _orderService = OrderService();
   final String userId = FirebaseAuth.instance.currentUser!.uid;
-  final TextEditingController quantityController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController itemNameController = TextEditingController();
-  final TextEditingController orderNumberController = TextEditingController();
 
-  String orderNumber = 'ORD-001';
+  late TextEditingController quantityController;
+  late TextEditingController priceController;
+  late TextEditingController addressController;
+  late TextEditingController itemNameController;
+  late TextEditingController orderNumberController;
+
+  @override
+  void initState() {
+    super.initState();
+    currentOrder = OrderModel(
+        orderId: widget.orderModel.orderId,
+        userId: widget.orderModel.userId,
+        orderNumber: widget.orderModel.orderNumber,
+        imgUrl: widget.orderModel.imgUrl,
+        itemId: widget.orderModel.itemId,
+        itemPrice: widget.orderModel.itemPrice,
+        itemName: widget.orderModel.itemName,
+        quantity: widget.orderModel.quantity,
+        totalPrice: widget.orderModel.totalPrice,
+        deliveryAddress: widget.orderModel.deliveryAddress);
+    // quantityController =
+    //     TextEditingController(text: widget.orderModel.quantity);
+    // priceController = TextEditingController(text: widget.orderModel.totalPrice);
+    addressController =
+        TextEditingController(text: widget.orderModel.deliveryAddress);
+    itemNameController = TextEditingController(text: currentOrder.itemName);
+    orderNumberController =
+        TextEditingController(text: currentOrder.orderNumber);
+  }
+
+  String orderNumber = '';
   String imgUrl =
       'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
   String itemId = 'I001';
   String itemName = 'Spark Plug';
-  String itemPrice = '300';
+  String itemPrice = '';
   var quantity = '';
   var totalPrice = '';
   var deliveryAddress = '';
 
-  void _appBarIconTap(int index) {
-    setState(() {
-      _selectedAppBarIconIndex = index;
-    });
-  }
+  // void _appBarIconTap(int index) {
+  //   setState(() {
+  //     _selectedAppBarIconIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+
     return Scaffold(
-      // appBar: AppBar(backgroundColor: Colors.green, title: Text('')), // App Bar
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -61,7 +91,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
               color: Colors.green,
             ),
             Container(
-              // Heading place order and back arrow
               margin:
                   EdgeInsets.fromLTRB(33 * fem, 0 * fem, 155 * fem, 0 * fem),
               width: double.infinity,
@@ -75,7 +104,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     height: 66 * fem,
                     child: IconButton(
                       icon: Image.asset(
-                        'assets/page-1/images/icon-arrow-left-1-3tC.png',
+                        Constants.LEFT_ARROW_ICON,
                         width: 11.65 * fem,
                         height: 26 * fem,
                       ),
@@ -88,7 +117,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     ),
                   ),
                   Text(
-                    'Place Order',
+                    Constants.EDIT_ORDERS_TITLE,
                     style: SafeGoogleFont(
                       'Inter',
                       fontSize: 24 * ffem,
@@ -114,11 +143,23 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   width: double.infinity,
                   height: 139 * fem,
                   child: Container(
+                    child: Image.network(currentOrder.imgUrl),
+                    // contentblockQ9E (I9:522;150:1080)
+                    margin:
+                        EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem),
+                    width: double.infinity,
+                    height: 240 * fem,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8 * fem),
-                      color: const Color.fromARGB(255, 187, 186, 186),
+                      color: Color(0xfff6f6f6),
                     ),
                   ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(8 * fem),
+                  //     color: const Color.fromARGB(255, 187, 186, 186),
+                  //   ),
+                  // ),
                 ),
               ),
             ),
@@ -162,12 +203,13 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               minValue: 0,
                               maxValue: 10,
                               onChanged: (value) {
-                                quantity = value.toString();
+                                currentOrder.quantity = value.toString();
                                 var totPrice =
-                                    int.parse(itemPrice) * int.parse(quantity);
+                                    int.parse(currentOrder.itemPrice) *
+                                        int.parse(currentOrder.quantity);
                                 totalPrice = totPrice.toString();
                                 setState(() {
-                                  totalPrice = totalPrice;
+                                  currentOrder.totalPrice = totalPrice;
                                 });
                               }),
                         )
@@ -190,7 +232,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: LabelValue(
-                              labelValue: totalPrice, disabled: false),
+                              labelValue: currentOrder.totalPrice,
+                              disabled: false),
                         )
                       ],
                     ),
@@ -208,7 +251,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     height: double.infinity,
                     child: InputText(
                         onChanged: (value) {
-                          deliveryAddress = value;
+                          currentOrder.deliveryAddress = value;
                         },
                         labelName: 'Delivery Address',
                         hint: 'Delivery Address',
@@ -226,8 +269,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         borderRadius: BorderRadius.circular(8 * fem),
                       ),
                       child: IconButton(
-                        icon: Image.asset(
-                            'assets/page-1/images/icon-location.png'),
+                        icon: Image.asset(Constants.LOCATION_ICON),
                         onPressed: () {},
                       ),
                     ),
@@ -257,42 +299,36 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
-                    var totPrice = int.parse(itemPrice) * int.parse(quantity);
-                    totalPrice = totPrice.toString();
-                    final orderObj = OrderModel(
-                        userId: userId,
-                        orderNumber: orderNumber,
-                        imgUrl: imgUrl,
-                        itemId: itemId,
-                        itemName: itemName,
-                        quantity: quantity,
-                        totalPrice: totalPrice,
-                        deliveryAddress: deliveryAddress);
-                    // var result = _orderService.createOrder(orderObj);
-                    // if (result == null) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(content: Text('ERROR!')),
-                    //   );
-                    // } else {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(
-                    //         content: Text('Order Placed successfully!')),
-                    //   );
-                    //   quantityController.clear();
-                    //   priceController.clear();
-                    //   addressController.clear();
-                    // }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentGateway(orderModel: orderObj)),
-                    );
+                    var orderObj = OrderModel(
+                        userId: currentOrder.userId,
+                        orderNumber: currentOrder.orderNumber,
+                        imgUrl: currentOrder.imgUrl,
+                        itemId: currentOrder.itemId,
+                        itemPrice: currentOrder.itemPrice,
+                        itemName: currentOrder.itemName,
+                        quantity: currentOrder.quantity,
+                        totalPrice: currentOrder.totalPrice,
+                        deliveryAddress: currentOrder.deliveryAddress);
+                    var result = _orderService.updateOrder(
+                        orderObj, currentOrder.orderId);
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(Constants.UPDATE_ERROR)),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(Constants.UPDATE_SUCCESS)),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const OrderList()),
+                      );
+                    }
                   },
                   color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(
-                    "Confirm Order",
+                    "Save Edited Order",
                     style: TextStyle(
                       fontSize: 18,
                       color: Color.fromARGB(255, 255, 255, 255),
@@ -308,55 +344,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
           ],
         ),
       ),
-
-      // Don't write bottom app bar here. - SHEHAN
-
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: const CircularNotchedRectangle(),
-      //   color: const Color.fromARGB(255, 6, 84, 79),
-      //   height: 60,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     children: [
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 0
-      //             ? Image.asset('assets/appbar/article_filled.png')
-      //             : Image.asset('assets/appbar/article.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Scene()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 1
-      //             ? Image.asset('assets/appbar/market_filled.png')
-      //             : Image.asset('assets/appbar/market.png'),
-      //         onPressed: () => _appBarIconTap(1),
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 2
-      //             ? Image.asset('assets/appbar/reservation_filled.png')
-      //             : Image.asset('assets/appbar/reservation.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => const PlaceOrder()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 3
-      //             ? Image.asset('assets/appbar/profile_filled.png')
-      //             : Image.asset('assets/appbar/profile.png'),
-      //         onPressed: () => _appBarIconTap(3),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

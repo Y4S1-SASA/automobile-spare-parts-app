@@ -1,15 +1,12 @@
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
-import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../../service/order.service.dart';
-import '../../../utils.dart';
-import 'shared/label-name.dart';
-import 'shared/label-value.dart';
+import '../../../../service/order.service.dart';
+import '../../../../utils.dart';
+import '../shared/components/input-text.dart';
+import '../shared/components/label-name.dart';
+import 'order-list.dart';
 
 class PaymentGateway extends StatefulWidget {
   const PaymentGateway({super.key, required this.orderModel});
@@ -19,7 +16,6 @@ class PaymentGateway extends StatefulWidget {
 }
 
 class _PaymentGatewayState extends State<PaymentGateway> {
-  int _selectedAppBarIconIndex = 1;
   final TextEditingController cardNoController = TextEditingController();
   final TextEditingController nameOnCardController = TextEditingController();
   final TextEditingController expDateController = TextEditingController();
@@ -30,12 +26,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
   String nameOnCard = '';
   String expDate = '';
   String cvv = '';
-
-  void _appBarIconTap(int index) {
-    setState(() {
-      _selectedAppBarIconIndex = index;
-    });
-  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -79,7 +69,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 11.65 * fem,
                     height: 66 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icon-arrow-left-1-3tC.png',
+                      Constants.LEFT_ARROW_ICON,
                       width: 11.65 * fem,
                       height: 26 * fem,
                     ),
@@ -124,7 +114,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 91 * fem,
                     height: 91 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-mastercard-480-1-B1A.png',
+                      Constants.MASTERCARD_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -136,7 +126,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 92 * fem,
                     height: 92 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-visa-480-1-ijS.png',
+                      Constants.VISA_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -150,7 +140,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 54 * fem,
                     height: 54 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-paypal-64-1-JoS.png',
+                      Constants.PAYPAL_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -238,8 +228,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                           ],
                         ),
                         IconButton(
-                          icon: Image.asset(
-                              'assets/page-1/images/icons8-calendar-48.png'),
+                          icon: Image.asset(Constants.CALENDAR_ICON),
                           onPressed: () => _selectDate(context),
                         ),
                       ],
@@ -308,55 +297,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
           ],
         ),
       ),
-      
-      // Don't write bottom app bar here. - SHEHAN
-
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: const CircularNotchedRectangle(),
-      //   color: const Color.fromARGB(255, 6, 84, 79),
-      //   height: 60,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     children: [
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 0
-      //             ? Image.asset('assets/appbar/article_filled.png')
-      //             : Image.asset('assets/appbar/article.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Scene()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 1
-      //             ? Image.asset('assets/appbar/market_filled.png')
-      //             : Image.asset('assets/appbar/market.png'),
-      //         onPressed: () => _appBarIconTap(1),
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 2
-      //             ? Image.asset('assets/appbar/reservation_filled.png')
-      //             : Image.asset('assets/appbar/reservation.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => const PlaceOrder()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 3
-      //             ? Image.asset('assets/appbar/profile_filled.png')
-      //             : Image.asset('assets/appbar/profile.png'),
-      //         onPressed: () => _appBarIconTap(3),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

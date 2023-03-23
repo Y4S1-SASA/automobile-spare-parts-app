@@ -4,9 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 
 class OrderService {
   final orderCollection = FirebaseDatabase.instance.ref().child('orders');
+  final itemCollection = FirebaseDatabase.instance.ref().child('items');
 
   Future<void> createOrder(OrderModel orderModel) async {
-    final json = orderModel.toJson();
     await orderCollection
         .push()
         .set({
@@ -14,32 +14,14 @@ class OrderService {
           'orderNumber': orderModel.orderNumber,
           'imgUrl': orderModel.imgUrl,
           'itemId': orderModel.itemId,
+          'itemPrice': orderModel.itemPrice,
           'itemName': orderModel.itemName,
           'quantity': orderModel.quantity,
           'totalPrice': orderModel.totalPrice,
           'deliveryAddress': orderModel.deliveryAddress,
         })
         .then((value) => print("Order Placed Successfully"))
-        .catchError((error) => print("Failed"));
-  }
-
-  Future<List<OrderModel>> fetchOrderList() async {
-    final snapshot = await FirebaseDatabase.instance.ref('orders').get();
-    final map = snapshot.value as Map<dynamic, dynamic>;
-    List<OrderModel> ordersList = [];
-    map.forEach((key, value) {
-      OrderModel order = OrderModel(
-          userId: value["userId"],
-          orderNumber: value["orderNumber"],
-          imgUrl: value["imgUrl"],
-          itemId: value["itemId"],
-          itemName: value["itemName"],
-          quantity: value["quantity"],
-          totalPrice: value["totalPrice"],
-          deliveryAddress: value["deliveryAddress"]);
-      ordersList.add(order);
-    });
-    return ordersList;
+        .catchError((error) => print("Order Failed"));
   }
 
   Future<void> updateOrder(OrderModel order, String? orderId) async {
