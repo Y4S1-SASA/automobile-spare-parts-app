@@ -454,7 +454,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(Color(0xff5db075)),
+                                MaterialStateProperty.all(Color.fromARGB(255, 6, 84, 79)),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -518,7 +518,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
-            backgroundColor: const Color(0xff5db075),
+            backgroundColor: const Color.fromARGB(255, 6, 84, 79),
             textColor: Colors.white,
             fontSize: 16.0);
         Navigator.push(

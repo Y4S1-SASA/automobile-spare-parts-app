@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return ProfileScreen();
         break;
       default:
-        return ListArticles();
+        return ItemMarketList();
     }
   }
 

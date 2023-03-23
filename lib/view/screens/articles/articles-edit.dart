@@ -517,7 +517,7 @@ class _EditArticleState extends State<EditArticle> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   borderRadius: BorderRadius.circular(30 * fem),
                                 ),
                                 child: Center(
