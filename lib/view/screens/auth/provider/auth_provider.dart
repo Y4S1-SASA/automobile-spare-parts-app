@@ -46,11 +46,15 @@ class AuthProvider with ChangeNotifier {
     print('User data: $user');
   }
 
-  void logout() {
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
     _user = null;
-    _isLoggedIn = false;
-    _prefs.setString('user', json.encode(_user!.toJson()));
+    // _prefs.setString('user', json.encode(_user!.toJson()));
     notifyListeners();
+    // Redirect to login screen after logout
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
   }
 
   //get user data
