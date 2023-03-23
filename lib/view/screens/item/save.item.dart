@@ -9,20 +9,20 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SaveItem extends StatefulWidget {
-  SaveItem({super.key});
-  final nameController = TextEditingController();
-  final categoryController = TextEditingController();
-  final quantityController = TextEditingController();
-  final unitPriceController = TextEditingController();
-  final descriptionController = TextEditingController();
-
   @override
   State<SaveItem> createState() => _SaveItemState();
 }
 
 class _SaveItemState extends State<SaveItem> {
+  final nameController = TextEditingController();
+  final categoryController = TextEditingController();
+  final quantityController = TextEditingController();
+  final unitPriceController = TextEditingController();
+  final descriptionController = TextEditingController();
   int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
@@ -31,14 +31,114 @@ class _SaveItemState extends State<SaveItem> {
     });
   }
 
-  late File? image;
+  File? _imageFile;
+  final picker = ImagePicker();
 
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+  // Loads image image from source
+  Future<void> getImageFromSource(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
     setState(() {
-      image = File(pickedImage!.path);
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
     });
+    Navigator.of(context).pop();
+  }
+
+  Future<void> showImageSourceSelectionDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text('Gallery'),
+                  onTap: () {
+                    getImageFromSource(ImageSource.gallery);
+                  },
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  child: const Text('Camera'),
+                  onTap: () {
+                    getImageFromSource(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // uploads image to firebase storage
+  Future<String> seedItemImageAsync(BuildContext context) async {
+    if (_imageFile == null) return "null";
+
+    // Create a unique filename for the image
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Upload the image to Firebase Storage
+    final storageRef =
+        FirebaseStorage.instance.ref().child('item_images/$fileName');
+    final uploadTask = storageRef.putFile(_imageFile!);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final imageUrl = await snapshot.ref.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  Future<void> saveItem(ItemModel item) async {
+    try {
+      String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
+
+      if (currentUserEmail != null) {
+        final dbContextReference =
+            FirebaseDatabase.instance.ref().child('items');
+        String imageUrl = await seedItemImageAsync(context);
+        dbContextReference.child(item.id).set(({
+              'id': item.id,
+              'name': item.name,
+              'category': item.category,
+              'quantity': item.quantity,
+              'price': item.price,
+              'desctiption': item.description,
+              'imageUrl': imageUrl,
+              "createdBy": currentUserEmail,
+            }));
+
+        Fluttertoast.showToast(
+            msg: "Item Saved Successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: const Color(0xff5db075),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Authentication Error",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 192, 25, 25),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (exception) {
+      Fluttertoast.showToast(
+          msg: "Error has been occured pleas try again",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   String selectedCategory = 'Item 1';
@@ -52,6 +152,9 @@ class _SaveItemState extends State<SaveItem> {
 
   @override
   Widget build(BuildContext context) {
+    double baseWidth = 445;
+    double fem = MediaQuery.of(context).size.width / baseWidth;
+    double ffem = fem * 0.97;
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,24 +176,29 @@ class _SaveItemState extends State<SaveItem> {
             ),
             Center(
               child: Stack(children: [
-                Container(
-                  width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 4, color: Colors.white),
-                    boxShadow: [
-                      BoxShadow(
-                          spreadRadius: 2,
-                          blurRadius: 10,
-                          color: Colors.black.withOpacity(0.1),
-                          offset: const Offset(0, 10))
-                    ],
+                GestureDetector(
+                  onTap: () async {
+                    await showImageSourceSelectionDialog();
+                  },
+                  child: Container(
+                    // group47wA8 (10:1628)
+                    margin: EdgeInsets.fromLTRB(
+                        9 * fem, 0 * fem, 0 * fem, 47.64 * fem),
+                    width: 242 * fem,
+                    height: 120 * fem,
+                    child: _imageFile == null
+                        ? Image.asset(
+                            'assets/page-1/images/group-47.png',
+                            width: 242 * fem,
+                            height: 149 * fem,
+                          )
+                        : Image.file(
+                            _imageFile!,
+                            height: 200,
+                          ),
                   ),
-                )
+                ),
               ]),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -115,7 +223,7 @@ class _SaveItemState extends State<SaveItem> {
                       height: 2,
                     ),
                     TextFormField(
-                      controller: widget.nameController,
+                      controller: nameController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color.fromARGB(255, 235, 235, 235),
@@ -220,7 +328,7 @@ class _SaveItemState extends State<SaveItem> {
                                   height: 2,
                                 ),
                                 TextFormField(
-                                  controller: widget.quantityController,
+                                  controller: quantityController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -279,7 +387,7 @@ class _SaveItemState extends State<SaveItem> {
                                   height: 2,
                                 ),
                                 TextFormField(
-                                  controller: widget.unitPriceController,
+                                  controller: unitPriceController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -336,7 +444,7 @@ class _SaveItemState extends State<SaveItem> {
                       height: 2,
                     ),
                     TextFormField(
-                      controller: widget.descriptionController,
+                      controller: descriptionController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color.fromARGB(255, 235, 235, 235),
@@ -384,16 +492,17 @@ class _SaveItemState extends State<SaveItem> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             ItemModel itemModel = ItemModel(
-                                id: DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
-                                name: widget.nameController.text,
-                                category: selectedCategory,
-                                quantity:
-                                    int.parse(widget.quantityController.text),
-                                price: double.parse(
-                                    widget.unitPriceController.text),
-                                description: widget.descriptionController.text);
+                              id: DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString(),
+                              name: nameController.text,
+                              category: selectedCategory,
+                              quantity: int.parse(quantityController.text),
+                              price: double.parse(unitPriceController.text),
+                              description: descriptionController.text,
+                              imageUrl: "",
+                              createdBy: "",
+                            );
 
                             saveItem(itemModel);
                           }
@@ -465,38 +574,5 @@ class _SaveItemState extends State<SaveItem> {
         ),
       ),
     );
-  }
-
-  Future<void> saveItem(ItemModel item) async {
-    try {
-      final dbContextReference = FirebaseDatabase.instance.ref().child('items');
-
-      dbContextReference.child(item.id).set(({
-            'id': item.id,
-            'name': item.name,
-            'category': item.category,
-            'quantity': item.quantity,
-            'price': item.price,
-            'desctiption': item.description,
-          }));
-
-      Fluttertoast.showToast(
-          msg: "Item Saved Successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 4,
-          backgroundColor: const Color(0xff5db075),
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } catch (exception) {
-      Fluttertoast.showToast(
-          msg: "Error has been occured pleas try again",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 4,
-          backgroundColor: const Color.fromARGB(255, 233, 23, 23),
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
   }
 }
