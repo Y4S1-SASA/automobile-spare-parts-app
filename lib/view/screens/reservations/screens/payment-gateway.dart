@@ -46,14 +46,14 @@ class _PaymentGatewayState extends State<PaymentGateway> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      // appBar: AppBar(backgroundColor: Colors.green, title: Text('')), // App Bar
+      // appBar: AppBar(backgroundColor: Color.fromARGB(255, 6, 84, 79), title: Text('')), // App Bar
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Colors.green,
+              color: Color.fromARGB(255, 6, 84, 79),
             ),
             Container(
               // Heading place order and back arrow

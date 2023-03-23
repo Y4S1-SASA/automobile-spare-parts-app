@@ -147,7 +147,7 @@ class _SaveItemState extends State<SaveItem> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(width: 4, color: Colors.white),
-                      color: Colors.green,
+                      color: Color.fromARGB(255, 6, 84, 79),
                     ),
                     child: GestureDetector(
                         onTap: () async {

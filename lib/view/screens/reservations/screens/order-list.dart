@@ -68,7 +68,7 @@ class _OrderListState extends State<OrderList> {
                   Container(
                     height: 70 * fem,
                     width: double.infinity,
-                    color: Colors.green,
+                    color: Color.fromARGB(255, 6, 84, 79),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(
@@ -128,7 +128,7 @@ class _OrderListState extends State<OrderList> {
                               leftIcon: const Icon(Icons.insights_rounded,
                                   color: Colors.white),
                               headerBackgroundColor: Colors.black,
-                              headerBackgroundColorOpened: Colors.green,
+                              headerBackgroundColorOpened: Color.fromARGB(255, 6, 84, 79),
                               header:
                                   Text(order.orderNumber, style: headerStyle),
                               content: Column(
@@ -298,7 +298,7 @@ class _OrderListState extends State<OrderList> {
                 Container(
                   height: 70 * fem,
                   width: double.infinity,
-                  color: Colors.green,
+                  color: Color.fromARGB(255, 6, 84, 79),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(

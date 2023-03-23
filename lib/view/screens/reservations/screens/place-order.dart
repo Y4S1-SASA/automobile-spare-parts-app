@@ -51,7 +51,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Colors.green,
+              color: Color.fromARGB(255, 6, 84, 79),
             ),
             Container(
               // Heading place order and back arrow

@@ -240,7 +240,7 @@ class _ListArticlesState extends State<ListArticles> {
                                                                 vertical: 3),
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: Colors.green,
+                                                          color: Color.fromARGB(255, 6, 84, 79),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(16),
