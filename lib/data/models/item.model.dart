@@ -5,6 +5,8 @@ class ItemModel {
   int quantity;
   double price;
   String description;
+  String imageUrl;
+  String createdBy;
 
   ItemModel({
     required this.id,
@@ -13,6 +15,8 @@ class ItemModel {
     required this.quantity,
     required this.price,
     required this.description,
+    required this.imageUrl,
+    required this.createdBy,
   });
 
   factory ItemModel.fromMap(Map<String, dynamic> map) {
@@ -23,6 +27,8 @@ class ItemModel {
       quantity: map['quantity'] ?? 0,
       price: map['price'] ?? 0,
       description: map['description'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+      createdBy: map['createdBy'] ?? '',
     );
   }
 }

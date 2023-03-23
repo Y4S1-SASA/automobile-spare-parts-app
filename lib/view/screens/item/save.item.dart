@@ -1,14 +1,13 @@
 import 'dart:io';
-
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
-import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SaveItem extends StatefulWidget {
   SaveItem({super.key});
@@ -31,14 +30,65 @@ class _SaveItemState extends State<SaveItem> {
     });
   }
 
-  late File? image;
+  File? _imageFile;
+  final picker = ImagePicker();
 
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+  // Loads image image from source
+  Future<void> getImageFromSource(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source);
     setState(() {
-      image = File(pickedImage!.path);
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
     });
+    Navigator.of(context).pop();
+  }
+
+  Future<void> showImageSourceSelectionDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text('Gallery'),
+                  onTap: () {
+                    getImageFromSource(ImageSource.gallery);
+                  },
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  child: const Text('Camera'),
+                  onTap: () {
+                    getImageFromSource(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // uploads image to firebase storage
+  Future<String> seedItemImageAsync(BuildContext context) async {
+    if (_imageFile == null) return "null";
+
+    // Create a unique filename for the image
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Upload the image to Firebase Storage
+    final storageRef =
+        FirebaseStorage.instance.ref().child('item_images/$fileName');
+    final uploadTask = storageRef.putFile(_imageFile!);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final imageUrl = await snapshot.ref.getDownloadURL();
+
+    return imageUrl;
   }
 
   String selectedCategory = 'Item 1';
@@ -76,15 +126,34 @@ class _SaveItemState extends State<SaveItem> {
                 Container(
                   width: 130,
                   height: 130,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 4, color: Colors.white),
-                    boxShadow: [
-                      BoxShadow(
-                          spreadRadius: 2,
-                          blurRadius: 10,
-                          color: Colors.black.withOpacity(0.1),
-                          offset: const Offset(0, 10))
-                    ],
+                  child: _imageFile == null
+                      ? Image.asset(
+                          'assets/page-1/images/group-47.png',
+                          width: 242,
+                          height: 149,
+                        )
+                      : Image.file(
+                          _imageFile!,
+                          height: 200,
+                        ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 4, color: Colors.white),
+                      color: Colors.green,
+                    ),
+                    child: GestureDetector(
+                        onTap: () async {
+                          await showImageSourceSelectionDialog();
+                        },
+                        child: const Icon(Icons.camera_alt_outlined,
+                            color: Colors.black)),
                   ),
                 )
               ]),
@@ -393,7 +462,9 @@ class _SaveItemState extends State<SaveItem> {
                                     int.parse(widget.quantityController.text),
                                 price: double.parse(
                                     widget.unitPriceController.text),
-                                description: widget.descriptionController.text);
+                                description: widget.descriptionController.text,
+                                imageUrl: "",
+                                createdBy: "");
 
                             saveItem(itemModel);
                           }
@@ -427,7 +498,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Scene()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -445,7 +516,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(2);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -469,25 +540,42 @@ class _SaveItemState extends State<SaveItem> {
 
   Future<void> saveItem(ItemModel item) async {
     try {
-      final dbContextReference = FirebaseDatabase.instance.ref().child('items');
+      String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
+      print(currentUserEmail.toString());
+      if (currentUserEmail != null) {
+        final dbContextReference =
+            FirebaseDatabase.instance.ref().child('items');
+        String imageUrl = await seedItemImageAsync(context);
+        print(imageUrl);
+        await dbContextReference.child(item.id).set(({
+              'id': item.id,
+              'name': item.name,
+              'category': item.category,
+              'quantity': item.quantity,
+              'price': item.price,
+              'desctiption': item.description,
+              'imageUrl': imageUrl,
+              "createdBy": currentUserEmail,
+            }));
 
-      dbContextReference.child(item.id).set(({
-            'id': item.id,
-            'name': item.name,
-            'category': item.category,
-            'quantity': item.quantity,
-            'price': item.price,
-            'desctiption': item.description,
-          }));
-
-      Fluttertoast.showToast(
-          msg: "Item Saved Successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 4,
-          backgroundColor: const Color(0xff5db075),
-          textColor: Colors.white,
-          fontSize: 16.0);
+        Fluttertoast.showToast(
+            msg: "Item Saved Successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: const Color(0xff5db075),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Authentication Error",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 192, 25, 25),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     } catch (exception) {
       Fluttertoast.showToast(
           msg: "Error has been occured pleas try again",
