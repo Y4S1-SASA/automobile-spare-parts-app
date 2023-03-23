@@ -1,9 +1,13 @@
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 import 'package:automobile_spare_parts_app/utils.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/item.edit.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/item.market.list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import '/utils.dart';
+import 'package:confirm_dialog/confirm_dialog.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class ItemView extends StatefulWidget {
   ItemView({Key? key, required this.itemModel}) : super(key: key);
@@ -15,6 +19,7 @@ class ItemView extends StatefulWidget {
 }
 
 class _ItemViewState extends State<ItemView> {
+  DatabaseReference dbContext = FirebaseDatabase.instance.ref().child('items');
   @override
   Widget build(BuildContext context) {
     double baseWidth = 445;
@@ -209,7 +214,7 @@ class _ItemViewState extends State<ItemView> {
                                       maxWidth: 395 * fem,
                                     ),
                                     child: Text(
-                                      widget.itemModel.description,
+                                      widget.itemModel.description.toString(),
                                       style: SafeGoogleFont(
                                         'Inter',
                                         fontSize: 16 * ffem,
@@ -223,41 +228,72 @@ class _ItemViewState extends State<ItemView> {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 16),
                             Container(
-                              margin: EdgeInsets.fromLTRB(
-                                  81 * fem, 0 * fem, 67 * fem, 188 * fem),
-                              width: double.infinity,
-                              height: 45 * fem,
+                              height: 50,
+                              width: 250,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30 * fem),
-                              ),
-                              child: Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30 * fem),
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Color(0xff5db075)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0)))),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditItemScreen(
+                                              itemModel: widget.itemModel)));
+                                },
+                                child: const Text(
+                                  'Update Item',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 25),
                                 ),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff5db075),
-                                    borderRadius:
-                                        BorderRadius.circular(30 * fem),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Update',
-                                      style: SafeGoogleFont(
-                                        'Inter',
-                                        fontSize: 18 * ffem,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.3333333333 * ffem / fem,
-                                        letterSpacing: 0.150000006 * fem,
-                                        color: Color(0xffffffff),
-                                      ),
-                                    ),
-                                  ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              height: 50,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Color.fromARGB(255, 216, 57, 57)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0)))),
+                                onPressed: () async {
+                                  if (await confirm(context,
+                                      title: const Text("Confirm"),
+                                      content: const Text(
+                                          "Are you sure you want to delete this item?"),
+                                      textOK: const Text("Yes"),
+                                      textCancel: const Text("No"))) {
+                                    dbContext
+                                        .child(widget.itemModel.id)
+                                        .remove();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => ItemMarketList()));
+                                  }
+                                },
+                                child: const Text(
+                                  'Delete Item',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 25),
                                 ),
                               ),
                             ),

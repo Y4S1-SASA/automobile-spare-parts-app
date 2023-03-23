@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/item.market.list.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -553,7 +554,7 @@ class _SaveItemState extends State<SaveItem> {
               'category': item.category,
               'quantity': item.quantity,
               'price': item.price,
-              'desctiption': item.description,
+              'description': item.description,
               'imageUrl': imageUrl,
               "createdBy": currentUserEmail,
             }));
@@ -566,6 +567,9 @@ class _SaveItemState extends State<SaveItem> {
             backgroundColor: const Color(0xff5db075),
             textColor: Colors.white,
             fontSize: 16.0);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ItemMarketList()));
       } else {
         Fluttertoast.showToast(
             msg: "Authentication Error",

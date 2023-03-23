@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/item/item.view.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
@@ -59,18 +60,25 @@ class _ItemMarketListState extends State<ItemMarketList> {
             SizedBox(
               height: 12 * fem,
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
-              width: double.infinity,
-              child: Text(
-                'Add',
-                textAlign: TextAlign.center,
-                style: SafeGoogleFont(
-                  'Inter',
-                  fontSize: 16 * ffem,
-                  fontWeight: FontWeight.w600,
-                  height: 1.2125 * ffem / fem,
-                  color: Color(0xff5db075),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SaveItem()));
+              },
+              child: Container(
+                margin:
+                    EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
+                width: double.infinity,
+                child: Text(
+                  'Add',
+                  textAlign: TextAlign.center,
+                  style: SafeGoogleFont(
+                    'Inter',
+                    fontSize: 16 * ffem,
+                    fontWeight: FontWeight.w600,
+                    height: 1.2125 * ffem / fem,
+                    color: Color(0xff5db075),
+                  ),
                 ),
               ),
             ),
