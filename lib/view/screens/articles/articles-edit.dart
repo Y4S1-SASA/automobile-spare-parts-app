@@ -185,7 +185,7 @@ class _EditArticleState extends State<EditArticle> {
     double ffem = fem * 0.97;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Create Article'),
+          title: Text('Update Article'),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -522,57 +522,6 @@ class _EditArticleState extends State<EditArticle> {
             ),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          color: Color(0xff5db075),
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                icon: _selectedAppBarIconIndex == 0
-                    ? Image.asset('assets/appbar/article_filled.png')
-                    : Image.asset('assets/appbar/article.png'),
-                onPressed: () {
-                  _appBarIconTap(0);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => EditArticle(articleId: "2",)),
-                  // );
-                },
-              ),
-              IconButton(
-                icon: _selectedAppBarIconIndex == 1
-                    ? Image.asset('assets/appbar/market_filled.png')
-                    : Image.asset('assets/appbar/market.png'),
-                onPressed: () => _appBarIconTap(1),
-              ),
-              IconButton(
-                icon: _selectedAppBarIconIndex == 2
-                    ? Image.asset('assets/appbar/reservation_filled.png')
-                    : Image.asset('assets/appbar/reservation.png'),
-                onPressed: () {
-                  _appBarIconTap(2);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const PlaceOrder()),
-                  );
-                },
-              ),
-              IconButton(
-                icon: _selectedAppBarIconIndex == 3
-                    ? Image.asset('assets/appbar/profile_filled.png')
-                    : Image.asset('assets/appbar/profile.png'),
-                onPressed: () {
-                  _appBarIconTap(3);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileScreen()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ));
+        );
   }
 }

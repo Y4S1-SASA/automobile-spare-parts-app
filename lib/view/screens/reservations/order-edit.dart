@@ -1,7 +1,7 @@
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
+import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/payment-gateway.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/incrementor.dart';
@@ -350,53 +350,53 @@ class _EditOrderState extends State<EditOrder> {
           ],
         ),
       ),
-
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        color: const Color(0xff5db075),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: _selectedAppBarIconIndex == 0
-                  ? Image.asset('assets/appbar/article_filled.png')
-                  : Image.asset('assets/appbar/article.png'),
-              onPressed: () {
-                _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Scene()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 1
-                  ? Image.asset('assets/appbar/market_filled.png')
-                  : Image.asset('assets/appbar/market.png'),
-              onPressed: () => _appBarIconTap(1),
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 2
-                  ? Image.asset('assets/appbar/reservation_filled.png')
-                  : Image.asset('assets/appbar/reservation.png'),
-              onPressed: () {
-                _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const OrderList()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 3
-                  ? Image.asset('assets/appbar/profile_filled.png')
-                  : Image.asset('assets/appbar/profile.png'),
-              onPressed: () => _appBarIconTap(3),
-            ),
-          ],
-        ),
-      ),
+      // Don't write bottom app bar here. - SHEHAN
+      // bottomNavigationBar: BottomAppBar(
+      //   shape: const CircularNotchedRectangle(),
+      //   color: const Color(0xff5db075),
+      //   height: 60,
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //     children: [
+      //       IconButton(
+      //         icon: _selectedAppBarIconIndex == 0
+      //             ? Image.asset('assets/appbar/article_filled.png')
+      //             : Image.asset('assets/appbar/article.png'),
+      //         onPressed: () {
+      //           _appBarIconTap(0);
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => Scene()),
+      //           );
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: _selectedAppBarIconIndex == 1
+      //             ? Image.asset('assets/appbar/market_filled.png')
+      //             : Image.asset('assets/appbar/market.png'),
+      //         onPressed: () => _appBarIconTap(1),
+      //       ),
+      //       IconButton(
+      //         icon: _selectedAppBarIconIndex == 2
+      //             ? Image.asset('assets/appbar/reservation_filled.png')
+      //             : Image.asset('assets/appbar/reservation.png'),
+      //         onPressed: () {
+      //           _appBarIconTap(0);
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => const OrderList()),
+      //           );
+      //         },
+      //       ),
+      //       IconButton(
+      //         icon: _selectedAppBarIconIndex == 3
+      //             ? Image.asset('assets/appbar/profile_filled.png')
+      //             : Image.asset('assets/appbar/profile.png'),
+      //         onPressed: () => _appBarIconTap(3),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
