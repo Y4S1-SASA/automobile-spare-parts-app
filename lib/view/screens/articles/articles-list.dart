@@ -1,4 +1,5 @@
 import 'package:automobile_spare_parts_app/data/models/article.modal.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-edit.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
@@ -34,13 +35,14 @@ class _ListArticlesState extends State<ListArticles> {
       });
 
       ArticleModal article = ArticleModal(
+          key: key,
           title: value["title"],
           description: value["description"],
           tags: tagsList,
           imageUrl: value["imageUrl"],
           ownerEmail: value["ownerEmail"]);
-
-      articlesList.add(article);
+setState(() { articlesList.add(article);  });
+      
     });
   }
 
@@ -84,7 +86,16 @@ class _ListArticlesState extends State<ListArticles> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: articlesList
-                                  .map((article) => Container(
+                                  .map((article) => GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditArticle(
+                                                        article: article)));
+                                      },
+                                      child: Container(
                                         margin: EdgeInsets.fromLTRB(0 * fem,
                                             25 * fem, 0 * fem, 0 * fem),
                                         // contentcontentblocklargeHaQ (9:522)
@@ -199,7 +210,7 @@ class _ListArticlesState extends State<ListArticles> {
                                             ),
                                           ],
                                         ),
-                                      ))
+                                      )))
                                   .toList(),
                             ),
                           ),

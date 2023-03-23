@@ -1,4 +1,5 @@
 class ArticleModal {
+  String? key;
   final String title;
   final String description;
   final List<String> tags;
@@ -6,6 +7,7 @@ class ArticleModal {
   final String ownerEmail;
 
   ArticleModal({
+    this.key,
     required this.title,
     required this.description,
     required this.tags,

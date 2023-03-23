@@ -1,7 +1,9 @@
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 
@@ -19,32 +21,28 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Widget _getBody(index) {
+    switch (index) {
+  case 0:
+    return ListArticles();
+    break;
+  case 1:
+    return SaveItem();
+    break;
+  case 2:
+    return OrderList();
+    break;
+  case 3:
+    return ProfileScreen();
+    break;
+  default:
+    return ListArticles();
+  }}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Market",
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Market View Display here - ASHEN HADAPANG",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-              ),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-          ],
-        ),
-      ),
+      body: _getBody(_selectedAppBarIconIndex),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         color: Color(0xff5db075),
@@ -58,10 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.asset('assets/appbar/article.png'),
               onPressed: () {
                 _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SaveItem()),
-                );
               },
             ),
             IconButton(
@@ -76,10 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.asset('assets/appbar/reservation.png'),
               onPressed: () {
                 _appBarIconTap(2);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SaveItem()),
-                );
               },
             ),
             IconButton(
@@ -88,10 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.asset('assets/appbar/profile.png'),
               onPressed: () {
                 _appBarIconTap(3);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
               },
             ),
           ],

@@ -1,7 +1,7 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:automobile_spare_parts_app/service/order.service.dart';
-import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
+import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/order-edit.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/label-name.dart';
 import 'package:flutter/material.dart';
