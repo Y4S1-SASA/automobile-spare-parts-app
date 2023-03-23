@@ -286,6 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String userId = userCredential.user!.uid;
         // provider to get auth user data
         Provider.of<AuthProvider>(context, listen: false).getAuthUserData(userId);
+        
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
