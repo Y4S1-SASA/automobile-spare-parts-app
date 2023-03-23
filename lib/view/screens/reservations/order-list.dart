@@ -2,6 +2,7 @@ import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/market-items/home.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/order-edit.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/label-name.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -38,6 +39,7 @@ class _OrderListState extends State<OrderList> {
       if (value["userId"] == userId) {
         // print(value);
         OrderModel order = OrderModel(
+            orderId: key,
             userId: value["userId"],
             orderNumber: value["orderNumber"],
             imgUrl: value["imgUrl"],
@@ -240,7 +242,15 @@ class _OrderListState extends State<OrderList> {
                                   IconButton(
                                     icon: Image.asset(
                                         'assets/page-1/images/icon-edit-2 copy.png'),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EditOrder(
+                                                  orderModel: e,
+                                                )),
+                                      );
+                                    },
                                   ),
                                   IconButton(
                                     icon: Image.asset(

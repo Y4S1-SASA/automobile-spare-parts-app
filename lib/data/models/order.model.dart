@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderModel {
+  String? orderId;
   final String userId;
   String orderNumber;
   String imgUrl;
@@ -11,7 +12,8 @@ class OrderModel {
   String deliveryAddress;
 
   OrderModel(
-      {required this.userId,
+      {this.orderId,
+      required this.userId,
       required this.orderNumber,
       required this.imgUrl,
       required this.itemId,

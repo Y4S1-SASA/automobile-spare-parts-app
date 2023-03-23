@@ -41,4 +41,23 @@ class OrderService {
     });
     return ordersList;
   }
+
+  Future<void> updateOrder(OrderModel order, String? orderId) async {
+    final Map<String, dynamic> updateData = {
+      'userId': order.userId,
+      'orderNumber': order.orderNumber,
+      'imgUrl': order.imgUrl,
+      'itemId': order.itemId,
+      'itemName': order.itemName,
+      'quantity': order.quantity,
+      'totalPrice': order.totalPrice,
+      'deliveryAddress': order.deliveryAddress,
+    };
+
+    await orderCollection
+        .child(orderId ?? "")
+        .update(updateData)
+        .then((value) => print("Order Updated Successfully"))
+        .catchError((error) => print("Failed"));
+  }
 }
