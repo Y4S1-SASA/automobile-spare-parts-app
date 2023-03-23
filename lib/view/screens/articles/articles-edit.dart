@@ -4,7 +4,6 @@ import 'package:automobile_spare_parts_app/view/base/heading.widget.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
@@ -18,7 +17,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
 import 'package:provider/provider.dart';
-
 
 class EditArticle extends StatefulWidget {
   final ArticleModal article;
@@ -34,7 +32,6 @@ class _EditArticleState extends State<EditArticle> {
   late TextEditingController _descriptionController;
   late TextEditingController _tagsController;
   int _selectedAppBarIconIndex = 1;
-  
 
   final databaseRef = FirebaseDatabase.instance.reference();
 
@@ -266,10 +263,9 @@ class _EditArticleState extends State<EditArticle> {
                   children: [
                     // Heading(),
                     GestureDetector(
-                      
                       onTap: () async {
-                        if (ownedByLoggedInUser) 
-                        await _showImageSourceSelectionDialog();
+                        if (ownedByLoggedInUser)
+                          await _showImageSourceSelectionDialog();
                       },
                       child: Container(
                         // group47wA8 (10:1628)
@@ -498,83 +494,85 @@ class _EditArticleState extends State<EditArticle> {
                               ],
                             ),
                           ),
-                          if (ownedByLoggedInUser) 
-                          Container(
-                            // group6fJQ (10:1168)
-                            margin: EdgeInsets.fromLTRB(
-                                55 * fem, 0 * fem, 56 * fem, 0 * fem),
-                            width: double.infinity,
-                            height: 45 * fem,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30 * fem),
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                await _saveArticle(context);
-                              },
-                              child: Container(
-                                // group5CJL (10:1169)
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff5db075),
-                                  borderRadius: BorderRadius.circular(30 * fem),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Update',
-                                    style: SafeGoogleFont(
-                                      'Inter',
-                                      fontSize: 18 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.3333333333 * ffem / fem,
-                                      letterSpacing: 0.150000006 * fem,
-                                      color: Color(0xffffffff),
+                          if (ownedByLoggedInUser)
+                            Container(
+                              // group6fJQ (10:1168)
+                              margin: EdgeInsets.fromLTRB(
+                                  55 * fem, 0 * fem, 56 * fem, 0 * fem),
+                              width: double.infinity,
+                              height: 45 * fem,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30 * fem),
+                              ),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await _saveArticle(context);
+                                },
+                                child: Container(
+                                  // group5CJL (10:1169)
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff5db075),
+                                    borderRadius:
+                                        BorderRadius.circular(30 * fem),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Update',
+                                      style: SafeGoogleFont(
+                                        'Inter',
+                                        fontSize: 18 * ffem,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.3333333333 * ffem / fem,
+                                        letterSpacing: 0.150000006 * fem,
+                                        color: Color(0xffffffff),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          if (ownedByLoggedInUser) 
-                          Container(
-                            // group6fJQ (10:1168)
-                            margin: EdgeInsets.fromLTRB(
-                                55 * fem, 8 * fem, 56 * fem, 0 * fem),
-                            width: double.infinity,
-                            height: 45 * fem,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30 * fem),
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                //await deleteArticle(context);
-                                _showDeleteConfirmationDialog(context);
-                              },
-                              child: Container(
-                                // group5CJL (10:1169)
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 214, 120, 13),
-                                  borderRadius: BorderRadius.circular(30 * fem),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Delete',
-                                    style: SafeGoogleFont(
-                                      'Inter',
-                                      fontSize: 18 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.3333333333 * ffem / fem,
-                                      letterSpacing: 0.150000006 * fem,
-                                      color: Color(0xffffffff),
+                          if (ownedByLoggedInUser)
+                            Container(
+                              // group6fJQ (10:1168)
+                              margin: EdgeInsets.fromLTRB(
+                                  55 * fem, 8 * fem, 56 * fem, 0 * fem),
+                              width: double.infinity,
+                              height: 45 * fem,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30 * fem),
+                              ),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  //await deleteArticle(context);
+                                  _showDeleteConfirmationDialog(context);
+                                },
+                                child: Container(
+                                  // group5CJL (10:1169)
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 214, 120, 13),
+                                    borderRadius:
+                                        BorderRadius.circular(30 * fem),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Delete',
+                                      style: SafeGoogleFont(
+                                        'Inter',
+                                        fontSize: 18 * ffem,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.3333333333 * ffem / fem,
+                                        letterSpacing: 0.150000006 * fem,
+                                        color: Color(0xffffffff),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),

@@ -3,7 +3,6 @@ import 'package:automobile_spare_parts_app/view/base/footer.widget.dart';
 import 'package:automobile_spare_parts_app/view/base/heading.widget.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
