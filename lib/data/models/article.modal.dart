@@ -4,7 +4,7 @@ class ArticleModal {
   final String description;
   final List<String> tags;
   final String imageUrl;
-  final String ownerEmail;
+  final String ownerUid;
 
   ArticleModal({
     this.key,
@@ -12,6 +12,6 @@ class ArticleModal {
     required this.description,
     required this.tags,
     required this.imageUrl,
-    required this.ownerEmail
+    required this.ownerUid
   });
 }

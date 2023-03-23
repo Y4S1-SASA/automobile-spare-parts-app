@@ -1,4 +1,5 @@
 import 'package:automobile_spare_parts_app/data/models/article.modal.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-edit.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -40,9 +41,10 @@ class _ListArticlesState extends State<ListArticles> {
           description: value["description"],
           tags: tagsList,
           imageUrl: value["imageUrl"],
-          ownerEmail: value["ownerEmail"]);
-setState(() { articlesList.add(article);  });
-      
+          ownerUid: value["ownerUid"]);
+      setState(() {
+        articlesList.add(article);
+      });
     });
   }
 
@@ -68,6 +70,53 @@ setState(() { articlesList.add(article);  });
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Container(
+                    // addZeG (10:579)
+                    margin: EdgeInsets.fromLTRB(
+                        1 * fem, 20 * fem, 0 * fem, 34 * fem),
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Scene()));
+                        },
+                        child: Container( child: Text(
+                          'Add',
+                          textAlign: TextAlign.center,
+                          style: SafeGoogleFont(
+                            'Inter',
+                            fontSize: 16 * ffem,
+                            fontWeight: FontWeight.w600,
+                            height: 1.2125 * ffem / fem,
+                            color: Color(0xff5db075),
+                          ),
+                        )),
+                  ),),
+                  Container(
+                    // inputsearchGYg (10:636)
+                    margin: EdgeInsets.fromLTRB(
+                        25 * fem, 0 * fem, 24 * fem, 33 * fem),
+                    padding: EdgeInsets.fromLTRB(
+                        16 * fem, 20 * fem, 16 * fem, 18 * fem),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          'assets/page-1/images/bg-hya.png',
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Search',
+                      style: SafeGoogleFont(
+                        'Inter',
+                        fontSize: 16 * ffem,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2125 * ffem / fem,
+                        color: Color(0xffbdbdbd),
+                      ),
+                    ),
+                  ),
                   Container(
                     // autogroup1krs4Sk (2G1LrfqWb4Yvf5s1h81krs)
                     margin:

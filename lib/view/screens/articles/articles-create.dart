@@ -21,14 +21,14 @@ class Scene extends StatefulWidget {
 }
 
 class _SceneState extends State<Scene> {
-
-    int _selectedAppBarIconIndex = 1;
+  int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
     setState(() {
       _selectedAppBarIconIndex = index;
     });
   }
+
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _tagsController = TextEditingController();
@@ -96,9 +96,9 @@ class _SceneState extends State<Scene> {
 
   // saves article in firebase realitime database
   Future<void> _saveArticle(BuildContext context) async {
-    String? loggedInUserEmail = FirebaseAuth.instance.currentUser?.email;
+    String? loggedInUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-    if (loggedInUserEmail != null) {
+    if (loggedInUserUid != null) {
       // Show progress dialog
       showDialog(
         context: context,
@@ -114,7 +114,7 @@ class _SceneState extends State<Scene> {
           description: _descriptionController.text,
           tags: tagsList,
           imageUrl: imageUrl,
-          ownerEmail: loggedInUserEmail);
+          ownerUid: loggedInUserUid);
 
       // Generate a new push key for the article
       final articleRef =
@@ -126,7 +126,7 @@ class _SceneState extends State<Scene> {
         'description': article.description,
         'tags': article.tags,
         'imageUrl': article.imageUrl,
-        'ownerEmail': article.ownerEmail
+        'ownerUid': article.ownerUid
       });
       // Hide progress dialog
       Navigator.of(context).pop();
@@ -135,6 +135,7 @@ class _SceneState extends State<Scene> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Article created successfully!')),
       );
+      Navigator.pop(context);
     } else {
       print("not logged in");
     }
@@ -420,7 +421,7 @@ class _SceneState extends State<Scene> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Create Article',
+                                    'Create',
                                     style: SafeGoogleFont(
                                       'Inter',
                                       fontSize: 18 * ffem,
