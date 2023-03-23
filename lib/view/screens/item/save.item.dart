@@ -1,28 +1,27 @@
 import 'dart:io';
-
 import 'package:automobile_spare_parts_app/data/models/item.model.dart';
-import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SaveItem extends StatefulWidget {
-  @override
-  State<SaveItem> createState() => _SaveItemState();
-}
-
-class _SaveItemState extends State<SaveItem> {
+  SaveItem({super.key});
   final nameController = TextEditingController();
   final categoryController = TextEditingController();
   final quantityController = TextEditingController();
   final unitPriceController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  @override
+  State<SaveItem> createState() => _SaveItemState();
+}
+
+class _SaveItemState extends State<SaveItem> {
   int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
@@ -92,55 +91,6 @@ class _SaveItemState extends State<SaveItem> {
     return imageUrl;
   }
 
-  Future<void> saveItem(ItemModel item) async {
-    try {
-      String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
-
-      if (currentUserEmail != null) {
-        final dbContextReference =
-            FirebaseDatabase.instance.ref().child('items');
-        String imageUrl = await seedItemImageAsync(context);
-        dbContextReference.child(item.id).set(({
-              'id': item.id,
-              'name': item.name,
-              'category': item.category,
-              'quantity': item.quantity,
-              'price': item.price,
-              'desctiption': item.description,
-              'imageUrl': imageUrl,
-              "createdBy": currentUserEmail,
-            }));
-
-        Fluttertoast.showToast(
-            msg: "Item Saved Successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 4,
-            backgroundColor: const Color(0xff5db075),
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else {
-        Fluttertoast.showToast(
-            msg: "Authentication Error",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 4,
-            backgroundColor: Color.fromARGB(255, 192, 25, 25),
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } catch (exception) {
-      Fluttertoast.showToast(
-          msg: "Error has been occured pleas try again",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 4,
-          backgroundColor: const Color.fromARGB(255, 233, 23, 23),
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
-  }
-
   String selectedCategory = 'Item 1';
   final List<String> ctegories = [
     'Item 1',
@@ -152,9 +102,6 @@ class _SaveItemState extends State<SaveItem> {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 445;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -176,29 +123,43 @@ class _SaveItemState extends State<SaveItem> {
             ),
             Center(
               child: Stack(children: [
-                GestureDetector(
-                  onTap: () async {
-                    await showImageSourceSelectionDialog();
-                  },
-                  child: Container(
-                    // group47wA8 (10:1628)
-                    margin: EdgeInsets.fromLTRB(
-                        9 * fem, 0 * fem, 0 * fem, 47.64 * fem),
-                    width: 242 * fem,
-                    height: 120 * fem,
-                    child: _imageFile == null
-                        ? Image.asset(
-                            'assets/page-1/images/group-47.png',
-                            width: 242 * fem,
-                            height: 149 * fem,
-                          )
-                        : Image.file(
-                            _imageFile!,
-                            height: 200,
-                          ),
-                  ),
+                Container(
+                  width: 130,
+                  height: 130,
+                  child: _imageFile == null
+                      ? Image.asset(
+                          'assets/page-1/images/group-47.png',
+                          width: 242,
+                          height: 149,
+                        )
+                      : Image.file(
+                          _imageFile!,
+                          height: 200,
+                        ),
                 ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 4, color: Colors.white),
+                      color: Colors.green,
+                    ),
+                    child: GestureDetector(
+                        onTap: () async {
+                          await showImageSourceSelectionDialog();
+                        },
+                        child: const Icon(Icons.camera_alt_outlined,
+                            color: Colors.black)),
+                  ),
+                )
               ]),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0),
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -223,7 +184,7 @@ class _SaveItemState extends State<SaveItem> {
                       height: 2,
                     ),
                     TextFormField(
-                      controller: nameController,
+                      controller: widget.nameController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color.fromARGB(255, 235, 235, 235),
@@ -328,7 +289,7 @@ class _SaveItemState extends State<SaveItem> {
                                   height: 2,
                                 ),
                                 TextFormField(
-                                  controller: quantityController,
+                                  controller: widget.quantityController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -387,7 +348,7 @@ class _SaveItemState extends State<SaveItem> {
                                   height: 2,
                                 ),
                                 TextFormField(
-                                  controller: unitPriceController,
+                                  controller: widget.unitPriceController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: const Color.fromARGB(
@@ -444,7 +405,7 @@ class _SaveItemState extends State<SaveItem> {
                       height: 2,
                     ),
                     TextFormField(
-                      controller: descriptionController,
+                      controller: widget.descriptionController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color.fromARGB(255, 235, 235, 235),
@@ -492,17 +453,18 @@ class _SaveItemState extends State<SaveItem> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             ItemModel itemModel = ItemModel(
-                              id: DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString(),
-                              name: nameController.text,
-                              category: selectedCategory,
-                              quantity: int.parse(quantityController.text),
-                              price: double.parse(unitPriceController.text),
-                              description: descriptionController.text,
-                              imageUrl: "",
-                              createdBy: "",
-                            );
+                                id: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                                name: widget.nameController.text,
+                                category: selectedCategory,
+                                quantity:
+                                    int.parse(widget.quantityController.text),
+                                price: double.parse(
+                                    widget.unitPriceController.text),
+                                description: widget.descriptionController.text,
+                                imageUrl: "",
+                                createdBy: "");
 
                             saveItem(itemModel);
                           }
@@ -536,7 +498,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(0);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Scene()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -554,7 +516,7 @@ class _SaveItemState extends State<SaveItem> {
                 _appBarIconTap(2);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
+                  MaterialPageRoute(builder: (context) => SaveItem()),
                 );
               },
             ),
@@ -574,5 +536,55 @@ class _SaveItemState extends State<SaveItem> {
         ),
       ),
     );
+  }
+
+  Future<void> saveItem(ItemModel item) async {
+    try {
+      String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
+      print(currentUserEmail.toString());
+      if (currentUserEmail != null) {
+        final dbContextReference =
+            FirebaseDatabase.instance.ref().child('items');
+        String imageUrl = await seedItemImageAsync(context);
+        print(imageUrl);
+        await dbContextReference.child(item.id).set(({
+              'id': item.id,
+              'name': item.name,
+              'category': item.category,
+              'quantity': item.quantity,
+              'price': item.price,
+              'desctiption': item.description,
+              'imageUrl': imageUrl,
+              "createdBy": currentUserEmail,
+            }));
+
+        Fluttertoast.showToast(
+            msg: "Item Saved Successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: const Color(0xff5db075),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Authentication Error",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 192, 25, 25),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (exception) {
+      Fluttertoast.showToast(
+          msg: "Error has been occured pleas try again",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }
