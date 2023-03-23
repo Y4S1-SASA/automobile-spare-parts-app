@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Text(
                           "Register Now",
                           style: TextStyle(
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 24,
                             fontFamily: "Inter",

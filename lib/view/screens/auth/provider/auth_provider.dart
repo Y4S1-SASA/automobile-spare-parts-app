@@ -91,9 +91,9 @@ class AuthProvider with ChangeNotifier {
     final confirmDelete = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete User Data?'),
+        title: Text('Delete Account Permanently'),
         content: Text(
-            'Are you sure you want to delete your data? This action cannot be undone.'),
+            'Are you sure you want to delete your account permanently? This action cannot be undo.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -105,7 +105,7 @@ class AuthProvider with ChangeNotifier {
               await _firebaseAuth.currentUser!.delete();
               Navigator.of(context).pop(true);
             },
-            child: Text('Delete'),
+            child: Text('Confirm'),
           ),
         ],
       ),

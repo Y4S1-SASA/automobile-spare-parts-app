@@ -1,5 +1,7 @@
+import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/edit-user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
+import 'package:automobile_spare_parts_app/view/screens/item/item.view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
@@ -60,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<AuthProvider>(context);
     final user = userProvider.user;
+    final List<ItemModel> listOfItems = [];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -164,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 "My Items",
                 style: TextStyle(
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 6, 84, 79),
                   fontSize: 24,
                   fontFamily: "Inter",
@@ -187,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   focusedBorder: OutlineInputBorder(
                     borderSide: new BorderSide(
                         color: Color.fromARGB(255, 217, 217, 217)),
-                    borderRadius: new BorderRadius.circular(100),
+                    borderRadius: new BorderRadius.circular(150),
                   ),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: new BorderSide(
@@ -237,7 +240,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       onPressed: () {
-                        // navigate to item detail page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ItemView(
+                              itemModel: ItemModel(
+                                id: item["id"],
+                                name: item["name"],
+                                category: item["category"],
+                                quantity: item["quantity"],
+                                price: 3,
+                                description: item["description"] ?? "",
+                                imageUrl: item["imageUrl"] ?? "",
+                                createdBy: item["createdBy"] ?? "",
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),

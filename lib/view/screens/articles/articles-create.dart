@@ -147,9 +147,6 @@ class _SceneState extends State<Scene> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Article'),
-      ),
       body: SingleChildScrollView(
         child: Container(
           // articlescreatebq2 (10:678)
@@ -161,6 +158,33 @@ class _SceneState extends State<Scene> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 70,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                    Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Create Article",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 24,
+                        fontFamily: "Inter",
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                      width: 48), // Add some spacing to the right of the text
+                ],
+              ),
               Container(
                 // autogroupyq5usGk (2G1d1Cw1Lk4a1AbVs8yQ5u)
                 padding:
