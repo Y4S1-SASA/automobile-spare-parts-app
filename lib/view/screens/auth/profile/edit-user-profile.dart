@@ -152,43 +152,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 },
               ),
               SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Last Name",
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 63, 63, 63),
-                              fontSize: 10,
-                              fontFamily: "Inter",
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
+                height: 20,
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Last Name",
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Color.fromARGB(255, 63, 63, 63),
+                    fontSize: 10,
+                    fontFamily: "Inter",
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 2,
+              ),
               TextFormField(
                 initialValue: user?.lastName ?? '',
                 decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 235, 235, 235),
-                            hintText: 'Enter your last name',
-                            enabled: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 14.0),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Color.fromARGB(255, 217, 217, 217)),
-                              borderRadius: new BorderRadius.circular(8),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Color.fromARGB(255, 217, 217, 217)),
-                              borderRadius: new BorderRadius.circular(8),
-                            ),
-                          ),
+                  filled: true,
+                  fillColor: Color.fromARGB(255, 235, 235, 235),
+                  hintText: 'Enter your last name',
+                  enabled: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 14.0),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(
+                        color: Color.fromARGB(255, 217, 217, 217)),
+                    borderRadius: new BorderRadius.circular(8),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: new BorderSide(
+                        color: Color.fromARGB(255, 217, 217, 217)),
+                    borderRadius: new BorderRadius.circular(8),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your last name';
@@ -206,12 +206,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     _formKey.currentState!.save();
 
                     final updatedUser = AuthUser(
-                      userId: user!.userId,
-                      email: user.email,
-                      firstName: _firstName!,
-                      lastName: _lastName!,
-                      imageUrl: _imageUrl!,
-                    );
+  userId: user?.userId ?? '',
+  email: user?.email ?? '',
+  firstName: _firstName ?? user?.firstName ?? '',
+  lastName: _lastName ?? user?.lastName ?? '',
+  imageUrl: _imageUrl ?? user?.imageUrl ?? '',
+);
+
 
                     userProvider.updateUser(updatedUser);
 
