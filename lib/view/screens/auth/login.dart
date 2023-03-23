@@ -192,7 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => RegisterScreen()),
+                                          builder: (context) =>
+                                              RegisterScreen()),
                                     );
                                   },
                               ),
@@ -207,7 +208,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ForgotPasswordScreen()));
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -285,8 +287,9 @@ class _LoginScreenState extends State<LoginScreen> {
         // init user id
         String userId = userCredential.user!.uid;
         // provider to get auth user data
-        Provider.of<AuthProvider>(context, listen: false).getAuthUserData(userId);
-        
+        Provider.of<AuthProvider>(context, listen: false)
+            .getAuthUserData(userId);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -302,5 +305,4 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
 }

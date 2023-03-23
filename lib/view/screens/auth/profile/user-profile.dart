@@ -69,13 +69,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // profile section
             Container(
               color: Color.fromARGB(255, 6, 84, 79),
-              padding: const EdgeInsets.all(
-                  8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   SizedBox(
-              height: 70,
-            ),
+                    height: 70,
+                  ),
                   CircleAvatar(
                     radius: 50,
                     backgroundImage: user?.imageUrl == null
@@ -88,7 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 20),
                   Text(
                     (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -107,16 +109,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: IconButton(
                           onPressed: () {
                             Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => EditProfileScreen()),
-                          );
+                              MaterialPageRoute(
+                                  builder: (_) => EditProfileScreen()),
+                            );
                           },
                           icon: Icon(Icons.edit),
                           color: Color.fromARGB(255, 6, 84, 79),
                         ),
                       ),
                       SizedBox(width: 30),
-
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
@@ -131,7 +132,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(width: 30),
-                      
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
@@ -149,8 +149,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   SizedBox(
-              height: 20,
-            ),
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -165,8 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 "My Items",
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  color: Color.fromARGB(255, 63, 63, 63),
-                  fontSize: 30,
+                  color: Color.fromARGB(255, 6, 84, 79),
+                  fontSize: 24,
                   fontFamily: "Inter",
                 ),
               ),
@@ -230,7 +230,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(color: Colors.black),
                     ),
                     trailing: MaterialButton(
-                      child: Text('View'),
+                      child: Text(
+                        'View',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 6, 84, 79),
+                        ),
+                      ),
                       onPressed: () {
                         // navigate to item detail page
                       },

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:flutter/material.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         context: context,
         barrierDismissible: false,
         builder: (_) => AlertDialog(
-          title: Text('Uploading Image'),
+          title: Text('Uploading...'),
           content: StreamBuilder<TaskSnapshot>(
             stream: task.snapshotEvents,
             builder: (_, snapshot) {
@@ -69,27 +70,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final user = userProvider.user;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Profile'),
-      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "Update",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 24,
-                  fontFamily: "Inter",
-                ),
+              SizedBox(
+                height: 50,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                    Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Update Profile",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 24,
+                        fontFamily: "Inter",
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                      width: 48), // Add some spacing to the right of the text
+                ],
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               CircleAvatar(
                 radius: 50,
@@ -143,7 +159,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
+                    return 'First Name is required!';
                   }
                   return null;
                 },
@@ -174,7 +190,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 235, 235, 235),
-                  hintText: 'Enter your last name',
+                  hintText: 'Last Name is required!',
                   enabled: true,
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 20.0, horizontal: 14.0),
@@ -200,26 +216,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                elevation: 2.0,
+                height: 45,
+                minWidth: 270,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
 
                     final updatedUser = AuthUser(
-  userId: user?.userId ?? '',
-  email: user?.email ?? '',
-  firstName: _firstName ?? user?.firstName ?? '',
-  lastName: _lastName ?? user?.lastName ?? '',
-  imageUrl: _imageUrl ?? user?.imageUrl ?? '',
-);
-
+                      userId: user?.userId ?? '',
+                      email: user?.email ?? '',
+                      firstName: _firstName ?? user?.firstName ?? '',
+                      lastName: _lastName ?? user?.lastName ?? '',
+                      imageUrl: _imageUrl ?? user?.imageUrl ?? '',
+                    );
 
                     userProvider.updateUser(updatedUser);
 
                     Navigator.of(context).pop();
                   }
                 },
-                child: Text('Save'),
+                child: Text(
+                  "Save",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                color: Color.fromARGB(255, 6, 84, 79),
               ),
             ],
           ),
