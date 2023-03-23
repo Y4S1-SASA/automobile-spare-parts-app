@@ -1,5 +1,6 @@
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -283,11 +284,11 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                       nameOnCardController.clear();
                       cvvController.clear();
                     }
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const PlaceOrder()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OrderList()),
+                    );
                   },
                   color: const Color(0xff5db075),
                   child: const Text(

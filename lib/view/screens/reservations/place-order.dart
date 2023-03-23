@@ -260,14 +260,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     var totPrice = int.parse(itemPrice) * int.parse(quantity);
                     totalPrice = totPrice.toString();
                     final orderObj = OrderModel(
-                        userId,
-                        orderNumber,
-                        imgUrl,
-                        itemId,
-                        itemName,
-                        quantity,
-                        totalPrice,
-                        deliveryAddress);
+                        userId: userId,
+                        orderNumber: orderNumber,
+                        imgUrl: imgUrl,
+                        itemId: itemId,
+                        itemName: itemName,
+                        quantity: quantity,
+                        totalPrice: totalPrice,
+                        deliveryAddress: deliveryAddress);
                     // var result = _orderService.createOrder(orderObj);
                     // if (result == null) {
                     //   ScaffoldMessenger.of(context).showSnackBar(

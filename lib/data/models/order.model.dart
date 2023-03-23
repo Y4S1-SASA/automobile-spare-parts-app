@@ -10,8 +10,15 @@ class OrderModel {
   String totalPrice;
   String deliveryAddress;
 
-  OrderModel(this.userId, this.orderNumber, this.imgUrl, this.itemId,
-      this.itemName, this.quantity, this.totalPrice, this.deliveryAddress);
+  OrderModel(
+      {required this.userId,
+      required this.orderNumber,
+      required this.imgUrl,
+      required this.itemId,
+      required this.itemName,
+      required this.quantity,
+      required this.totalPrice,
+      required this.deliveryAddress});
 
   // factory OrderModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
   //   final data = doc.data()!;
