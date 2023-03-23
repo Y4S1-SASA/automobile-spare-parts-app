@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                           },
                           icon: Icon(Icons.edit),
-                          color: Color(0xff5db075),
+                          color: Color.fromARGB(255, 6, 84, 79),
                         ),
                       ),
                       SizedBox(width: 30),
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             userProvider.deleteUser(context);
                           },
                           icon: Icon(Icons.delete),
-                          color: Color(0xff5db075),
+                          color: Color.fromARGB(255, 6, 84, 79),
                         ),
                       ),
                       SizedBox(width: 30),
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             userProvider.logout(context);
                           },
                           icon: Icon(Icons.logout),
-                          color: Color(0xff5db075),
+                          color: Color.fromARGB(255, 6, 84, 79),
                         ),
                       ),
                       SizedBox(width: 30),

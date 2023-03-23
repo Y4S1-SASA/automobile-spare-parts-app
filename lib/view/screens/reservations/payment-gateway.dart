@@ -106,7 +106,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                   fontSize: 20 * ffem,
                   fontWeight: FontWeight.w500,
                   height: 1.2125 * ffem / fem,
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                 ),
               ),
             ),
@@ -260,7 +260,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: MaterialButton(
@@ -290,7 +290,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                           builder: (context) => const OrderList()),
                     );
                   },
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(
                     "Pay Now",
                     style: TextStyle(
@@ -313,7 +313,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
 
       // bottomNavigationBar: BottomAppBar(
       //   shape: const CircularNotchedRectangle(),
-      //   color: const Color(0xff5db075),
+      //   color: const Color.fromARGB(255, 6, 84, 79),
       //   height: 60,
       //   child: Row(
       //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

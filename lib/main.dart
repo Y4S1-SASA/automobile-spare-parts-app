@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color(0xff5db075),
+                backgroundColor: Color.fromARGB(255, 6, 84, 79),
                 toolbarHeight: 10,
               ),
               body: LoginScreen(),

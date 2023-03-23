@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 text: 'Register',
                                 style: TextStyle(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -215,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Forgot Password",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xff5db075),
+                                color: Color.fromARGB(255, 6, 84, 79),
                                 fontSize: 13,
                                 fontFamily: "Inter",
                               ),
@@ -247,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontFamily: 'Inter',
                             ),
                           ),
-                          color: Color(0xff5db075),
+                          color: Color.fromARGB(255, 6, 84, 79),
                         ),
                         SizedBox(
                           height: 10,
@@ -259,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color(0xff5db075),
+                              color: Color.fromARGB(255, 6, 84, 79),
                             ))),
                       ],
                     ),

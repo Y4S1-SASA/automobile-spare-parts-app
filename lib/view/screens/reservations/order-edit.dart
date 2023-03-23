@@ -253,7 +253,7 @@ class _EditOrderState extends State<EditOrder> {
                     height: 50 * fem,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xff5db075),
+                        color: const Color.fromARGB(255, 6, 84, 79),
                         borderRadius: BorderRadius.circular(8 * fem),
                       ),
                       child: IconButton(
@@ -278,7 +278,7 @@ class _EditOrderState extends State<EditOrder> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: MaterialButton(
@@ -332,7 +332,7 @@ class _EditOrderState extends State<EditOrder> {
                     //   MaterialPageRoute(builder: (context) => OrderList()),
                     // );
                   },
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(
                     "Save Edited Order",
                     style: TextStyle(
@@ -353,7 +353,7 @@ class _EditOrderState extends State<EditOrder> {
       // Don't write bottom app bar here. - SHEHAN
       // bottomNavigationBar: BottomAppBar(
       //   shape: const CircularNotchedRectangle(),
-      //   color: const Color(0xff5db075),
+      //   color: const Color.fromARGB(255, 6, 84, 79),
       //   height: 60,
       //   child: Row(
       //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
