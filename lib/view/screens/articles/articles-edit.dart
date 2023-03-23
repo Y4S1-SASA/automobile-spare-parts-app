@@ -476,7 +476,7 @@ Future<void> updateArticle(ArticleModal article) async {
                           Container(
                             // group6fJQ (10:1168)
                             margin: EdgeInsets.fromLTRB(
-                                55 * fem, 0 * fem, 56 * fem, 0 * fem),
+                                55 * fem, 8 * fem, 56 * fem, 0 * fem),
                             width: double.infinity,
                             height: 45 * fem,
                             decoration: BoxDecoration(
@@ -491,7 +491,7 @@ Future<void> updateArticle(ArticleModal article) async {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 214, 120, 13),
                                   borderRadius: BorderRadius.circular(30 * fem),
                                 ),
                                 child: Center(

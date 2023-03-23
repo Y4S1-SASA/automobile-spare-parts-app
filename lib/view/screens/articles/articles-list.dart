@@ -41,8 +41,8 @@ class _ListArticlesState extends State<ListArticles> {
           tags: tagsList,
           imageUrl: value["imageUrl"],
           ownerEmail: value["ownerEmail"]);
-
-      articlesList.add(article);
+setState(() { articlesList.add(article);  });
+      
     });
   }
 
