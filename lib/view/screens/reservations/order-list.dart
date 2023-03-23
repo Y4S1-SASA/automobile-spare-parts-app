@@ -255,7 +255,51 @@ class _OrderListState extends State<OrderList> {
                                   IconButton(
                                     icon: Image.asset(
                                         'assets/page-1/images/icon-trash-1t4.png'),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => SimpleDialog(
+                                                title: const Text(
+                                                    "Delete Order Confirmation!"),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0,
+                                                        vertical: 12.0),
+                                                children: [
+                                                  SizedBox(
+                                                    width: 70,
+                                                    child: Row(children: [
+                                                      Expanded(
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  fetchOrders();
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  'Cancel'))),
+                                                      const SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                      Expanded(
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                _orderService
+                                                                    .deleteOrder(
+                                                                        e.orderId);
+                                                                fetchOrders();
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  'Delete')))
+                                                    ]),
+                                                  )
+                                                ],
+                                              ));
+                                    },
                                   ),
                                 ],
                               ),

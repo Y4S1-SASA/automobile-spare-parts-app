@@ -60,4 +60,12 @@ class OrderService {
         .then((value) => print("Order Updated Successfully"))
         .catchError((error) => print("Failed"));
   }
+
+  Future<void> deleteOrder(String? orderId) async {
+    await orderCollection
+        .child(orderId ?? "")
+        .remove()
+        .then((value) => print("Order Deleted Successfully"))
+        .catchError((error) => print("Failed"));
+  }
 }
