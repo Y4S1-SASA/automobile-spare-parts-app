@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import '../../../../../utils.dart';
 
@@ -16,8 +17,8 @@ class LabelValue extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16 * fem, 19 * fem, 16 * fem, 16.48 * fem),
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffe7e7e7)),
-        color: Color(0xfff6f6f6),
+        border: Border.all(color: Colors.white),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -27,9 +28,7 @@ class LabelValue extends StatelessWidget {
           fontSize: 16 * ffem,
           fontWeight: FontWeight.w500,
           height: 1.2125 * ffem / fem,
-          color: disabled == true
-              ? const Color(0xffbdbdbd)
-              : const Color(0xff000000),
+          color: disabled == true ? Colors.white : Colors.black,
         ),
       ),
     );

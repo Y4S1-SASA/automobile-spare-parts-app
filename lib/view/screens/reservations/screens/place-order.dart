@@ -1,11 +1,11 @@
-// ignore: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:automobile_spare_parts_app/data/models/item.model.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/components/maps.dart';
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
-import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../utils.dart';
 import '../shared/components/incrementor.dart';
 import '../shared/components/input-text.dart';
 import '../shared/components/label-name.dart';
@@ -13,28 +13,21 @@ import '../shared/components/label-value.dart';
 import 'payment-gateway.dart';
 
 class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key});
-
+  const PlaceOrder({super.key, required this.itemModel});
+  final ItemModel itemModel;
   @override
   State<PlaceOrder> createState() => _PlaceOrderState();
 }
 
 class _PlaceOrderState extends State<PlaceOrder> {
+  var rnd = Random().nextInt(900000).toString(); // Gnerate random numbers
   final String userId = FirebaseAuth.instance.currentUser!.uid;
-  final TextEditingController quantityController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController itemNameController =
-      TextEditingController(text: 'Spark Plug');
-  final TextEditingController orderNumberController =
-      TextEditingController(text: 'ORD-001');
+  TextEditingController quantityController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController itemNameController = TextEditingController();
+  TextEditingController orderNumberController = TextEditingController();
 
-  String orderNumber = '';
-  String imgUrl =
-      'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
-  String itemId = '';
-  String itemName = 'Spark Plug';
-  String itemPrice = '300';
   var quantity = '';
   var totalPrice = '';
   var deliveryAddress = '';
@@ -43,7 +36,13 @@ class _PlaceOrderState extends State<PlaceOrder> {
   Widget build(BuildContext context) {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+    String orderNumber = 'ORD - $rnd';
+    String imgUrl = widget.itemModel.imageUrl;
+    String itemId = widget.itemModel.id;
+    String itemName = widget.itemModel.name;
+    double itemValue = widget.itemModel.price;
+    String itemPrice = itemValue.toString();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -51,47 +50,30 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Color.fromARGB(255, 6, 84, 79),
+              color: const Color.fromARGB(255, 6, 84, 79),
             ),
-            Container(
-              // Heading place order and back arrow
-              margin:
-                  EdgeInsets.fromLTRB(33 * fem, 0 * fem, 155 * fem, 0 * fem),
-              width: double.infinity,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
-                    width: 11.65 * fem,
-                    height: 66 * fem,
-                    child: IconButton(
-                      icon: Image.asset(
-                        Constants.LEFT_ARROW_ICON,
-                        width: 11.65 * fem,
-                        height: 26 * fem,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      },
-                    ),
-                  ),
-                  Text(
-                    'Place Order',
-                    style: SafeGoogleFont(
-                      'Inter',
-                      fontSize: 24 * ffem,
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    "Place Order",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      height: 1.2125 * ffem / fem,
-                      color: const Color(0xff000000),
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24,
+                      fontFamily: "Inter",
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 48),
+              ],
             ),
             Container(
               margin:
@@ -101,7 +83,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 borderRadius: BorderRadius.circular(8 * fem),
               ),
               child: Center(
-                // contentblockdyA (1:79)
                 child: SizedBox(
                   width: double.infinity,
                   height: 139 * fem,
@@ -120,6 +101,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ),
             ),
             InputText(
+                keyboardType: 'text',
                 onChanged: (value) {
                   orderNumber = orderNumber;
                 },
@@ -128,6 +110,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 enabled: false,
                 controller: orderNumberController),
             InputText(
+                keyboardType: 'text',
                 onChanged: (value) {
                   itemName = itemName;
                 },
@@ -157,11 +140,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           ),
                           child: Incrementor(
                               minValue: 0,
-                              maxValue: 10,
+                              maxValue: widget.itemModel.quantity,
                               onChanged: (value) {
                                 quantity = value.toString();
                                 var totPrice =
-                                    int.parse(itemPrice) * int.parse(quantity);
+                                    int.parse((itemPrice).split('.')[0]) *
+                                        int.parse(quantity);
                                 totalPrice = totPrice.toString();
                                 setState(() {
                                   totalPrice = totalPrice;
@@ -175,11 +159,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     margin: EdgeInsets.fromLTRB(
                         32 * fem, 0 * fem, 0 * fem, 22 * fem),
                     width: 190 * fem,
-                    // height: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const LabelName(labelName: 'TotalPrice'),
+                        const LabelName(labelName: 'Unit Price (LKR)'),
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: const Color(0xffe7e7e7)),
@@ -195,42 +178,66 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 105 * fem,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 340 * fem,
-                    height: double.infinity,
-                    child: InputText(
-                        onChanged: (value) {
-                          deliveryAddress = value;
-                        },
-                        labelName: 'Delivery Address',
-                        hint: 'Enter Delivery Address',
-                        enabled: true,
-                        controller: addressController),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        10 * fem, 0 * fem, 0 * fem, 10 * fem),
-                    width: 50 * fem,
-                    height: 50 * fem,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 6, 84, 79),
-                        borderRadius: BorderRadius.circular(8 * fem),
-                      ),
-                      child: IconButton(
-                        icon: Image.asset(Constants.LOCATION_ICON),
-                        onPressed: () {},
-                      ),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => LocationPicker(
+                          onChanged: (value) {
+                            deliveryAddress = value;
+                            setState(() {
+                              deliveryAddress = value;
+                            });
+                          },
+                          controller: addressController,
+                        ));
+              },
+              child: SizedBox(
+                height: 60 * fem,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(
+                      25 * fem, 0 * fem, 25 * fem, 10 * fem),
+                  width: double.infinity,
+                  height: 40 * fem,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 74, 76, 76),
+                      borderRadius: BorderRadius.circular(8 * fem),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Image.asset(
+                            Constants.LOCATION_ICON,
+                            height: 20,
+                            width: 20,
+                          ),
+                          onPressed: () {},
+                        ),
+                        const Text("Pick Location",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontFamily: 'Inter',
+                            ))
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                  margin: EdgeInsets.fromLTRB(
+                      32 * fem, 5 * fem, 32.41 * fem, 0 * fem),
+                  child: const LabelName(labelName: "Delivery Address")),
+              Container(
+                margin: const EdgeInsets.fromLTRB(25, 3, 25, 25),
+                child: LabelValue(labelValue: deliveryAddress, disabled: false),
+              )
+            ]),
             Container(
               margin:
                   EdgeInsets.fromLTRB(88 * fem, 0 * fem, 87 * fem, 58 * fem),
@@ -253,7 +260,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
-                    var totPrice = int.parse(itemPrice) * int.parse(quantity);
+                    var totPrice = int.parse((itemPrice).split('.')[0]) *
+                        int.parse(quantity);
                     totalPrice = totPrice.toString();
                     final orderObj = OrderModel(
                         userId: userId,
@@ -293,4 +301,3 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
   }
 }
-
