@@ -255,8 +255,8 @@ class _ItemViewState extends State<ItemView> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                PlaceOrder()));
+                                            builder: (context) => PlaceOrder(
+                                                itemModel: widget.itemModel)));
                                   }
                                 },
                                 child: currentUserEmail == "adin@gmail.com"

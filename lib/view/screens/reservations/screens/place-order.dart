@@ -1,4 +1,5 @@
 // ignore: depend_on_referenced_packages
+import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
@@ -13,7 +14,9 @@ import '../shared/components/label-value.dart';
 import 'payment-gateway.dart';
 
 class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key});
+  PlaceOrder({Key? key, required this.itemModel}) : super(key: key);
+
+  final ItemModel itemModel;
 
   @override
   State<PlaceOrder> createState() => _PlaceOrderState();
@@ -293,4 +296,3 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
   }
 }
-
