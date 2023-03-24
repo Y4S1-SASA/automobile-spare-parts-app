@@ -20,18 +20,11 @@ class Scene extends StatefulWidget {
 }
 
 class _SceneState extends State<Scene> {
-  int _selectedAppBarIconIndex = 1;
-
-  void _appBarIconTap(int index) {
-    setState(() {
-      _selectedAppBarIconIndex = index;
-    });
-  }
-
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _tagsController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
   File? _imageFile;
   final picker = ImagePicker();
 
@@ -96,59 +89,57 @@ class _SceneState extends State<Scene> {
   // saves article in firebase realitime database
   Future<void> _saveArticle(BuildContext context) async {
     String? loggedInUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (_formKey.currentState!.validate()) {
+      if (loggedInUserUid != null) {
+        // Show progress dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          barrierDismissible: false,
+        );
+        String imageUrl = await _uploadImageToFirebase(context);
+        List<String> tagsList = _tagsController.text.split(",");
+        ArticleModal article = ArticleModal(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            tags: tagsList,
+            imageUrl: imageUrl,
+            ownerUid: loggedInUserUid);
 
-    if (loggedInUserUid != null) {
-      // Show progress dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        barrierDismissible: false,
-      );
-      String imageUrl = await _uploadImageToFirebase(context);
-      List<String> tagsList = _tagsController.text.split(",");
-      ArticleModal article = ArticleModal(
-          title: _titleController.text,
-          description: _descriptionController.text,
-          tags: tagsList,
-          imageUrl: imageUrl,
-          ownerUid: loggedInUserUid);
+        // Generate a new push key for the article
+        final articleRef =
+            FirebaseDatabase.instance.reference().child('articles').push();
 
-      // Generate a new push key for the article
-      final articleRef =
-          FirebaseDatabase.instance.reference().child('articles').push();
+        // Write the article to the Realtime Database
+        await articleRef.set({
+          'title': article.title,
+          'description': article.description,
+          'tags': article.tags,
+          'imageUrl': article.imageUrl,
+          'ownerUid': article.ownerUid
+        });
+        // Hide progress dialog
+        Navigator.of(context).pop();
 
-      // Write the article to the Realtime Database
-      await articleRef.set({
-        'title': article.title,
-        'description': article.description,
-        'tags': article.tags,
-        'imageUrl': article.imageUrl,
-        'ownerUid': article.ownerUid
-      });
-      // Hide progress dialog
-      Navigator.of(context).pop();
-
-      // Show a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Article created successfully!')),
-      );
-      Navigator.pop(context);
-    } else {
-      print("not logged in");
+        // Show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Article created successfully!')),
+        );
+        Navigator.pop(context);
+      } else {
+        print("not logged in");
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 445;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          // articlescreatebq2 (10:678)
+          margin: EdgeInsets.only(bottom: 50),
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xffececec)),
@@ -165,7 +156,7 @@ class _SceneState extends State<Scene> {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                    Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   ),
                   Expanded(
@@ -180,288 +171,295 @@ class _SceneState extends State<Scene> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                      width: 48), // Add some spacing to the right of the text
+                  SizedBox(width: 48),
                 ],
               ),
-              Container(
-                // autogroupyq5usGk (2G1d1Cw1Lk4a1AbVs8yQ5u)
-                padding:
-                    EdgeInsets.fromLTRB(0 * fem, 21.79 * fem, 0 * fem, 0 * fem),
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Heading(),
-                    GestureDetector(
-                      onTap: () async {
-                        await _showImageSourceSelectionDialog();
-                      },
-                      child: Container(
-                        // group47wA8 (10:1628)
-                        margin: EdgeInsets.fromLTRB(
-                            9 * fem, 0 * fem, 0 * fem, 47.64 * fem),
-                        width: 242 * fem,
-                        height: 149 * fem,
-                        child: _imageFile == null
-                            ? Image.asset(
-                                'assets/page-1/images/group-47.png',
-                                width: 242 * fem,
-                                height: 149 * fem,
-                              )
-                            : Image.file(
-                                _imageFile!,
-                                height: 200,
-                              ),
+              Form(
+                key: _formKey,
+                child: Container(
+                  padding: EdgeInsets.only(top: 20),
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await _showImageSourceSelectionDialog();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          height: 200,
+                          child: _imageFile == null
+                              ? Image.asset('assets/page-1/images/group-47.png',
+                                  width: 250, height: 250)
+                              : Image.file(
+                                  _imageFile!,
+                                  height: 250,
+                                ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      // group40rH6 (10:1178)
-                      margin: EdgeInsets.fromLTRB(
-                          32 * fem, 0 * fem, 32 * fem, 179 * fem),
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // autogroup8pfrysW (2G1dHnHip4VR5KhvaR8pfR)
-                            padding: EdgeInsets.fromLTRB(
-                                0 * fem, 0 * fem, 0 * fem, 22 * fem),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  // inputtextW6k (10:805)
-                                  margin: EdgeInsets.fromLTRB(
-                                      0 * fem, 0 * fem, 0.41 * fem, 22 * fem),
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // titleqep (10:806)
-                                        margin: EdgeInsets.fromLTRB(0 * fem,
-                                            0 * fem, 0 * fem, 8.88 * fem),
-                                        child: Text(
-                                          'Title',
-                                          style: SafeGoogleFont(
-                                            'Inter',
-                                            fontSize: 12 * ffem,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.2125 * ffem / fem,
-                                            color: Color(0xff666666),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Color(0xffe7e7e7)),
-                                          color: Color(0xfff6f6f6),
-                                          borderRadius:
-                                              BorderRadius.circular(8 * fem),
-                                        ),
-                                        child: TextFormField(
-                                          controller: _titleController,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 20.0,
-                                                    horizontal: 14.0),
-                                            hintText:
-                                                'Enter title for the article',
-                                            hintStyle: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontSize: 16 * ffem,
-                                              fontWeight: FontWeight.w500,
-                                              height: 1.2125 * ffem / fem,
-                                              color: Color(0xffbdbdbd),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 29),
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(bottom: 18),
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 18),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 7),
+                                          child: Text(
+                                            'Title',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              color: Color.fromARGB(
+                                                  255, 63, 63, 63),
+                                              fontSize: 10,
+                                              fontFamily: "Inter",
                                             ),
-                                            border: InputBorder.none,
-                                          ),
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 16 * ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.2125 * ffem / fem,
-                                            color: Color(0xff666666),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  // inputtext1hi (10:808)
-                                  margin: EdgeInsets.fromLTRB(
-                                      0 * fem, 0 * fem, 0.41 * fem, 0 * fem),
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // descriptionk9W (10:809)
-                                        margin: EdgeInsets.fromLTRB(0 * fem,
-                                            0 * fem, 0 * fem, 8.52 * fem),
-                                        child: Text(
-                                          'Description',
-                                          style: SafeGoogleFont(
-                                            'Inter',
-                                            fontSize: 12 * ffem,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.2125 * ffem / fem,
-                                            color: Color(0xff666666),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Color(0xffe7e7e7)),
-                                          color: Color(0xfff6f6f6),
-                                          borderRadius:
-                                              BorderRadius.circular(8 * fem),
-                                        ),
-                                        child: TextFormField(
-                                          controller: _descriptionController,
-                                          decoration: InputDecoration(
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 20.0,
-                                                    horizontal: 14.0),
-                                            hintText:
-                                                'Enter a description for the article',
-                                            hintStyle: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontSize: 16 * ffem,
-                                              fontWeight: FontWeight.w500,
-                                              height: 1.2125 * ffem / fem,
-                                              color: Color(0xffbdbdbd),
+                                        Container(
+                                          child: TextFormField(
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Please enter a title';
+                                              }
+                                              if (RegExp(r'^[0-9]+$')
+                                                  .hasMatch(value)) {
+                                                return 'Title cannot contain numbers';
+                                              }
+                                              return null;
+                                            },
+                                            controller: _titleController,
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Color.fromARGB(
+                                                  255, 235, 235, 235),
+                                              hintText: 'Enter a title',
+                                              enabled: true,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 20.0,
+                                                      horizontal: 14.0),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255, 217, 217, 217)),
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        8),
+                                              ),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255, 217, 217, 217)),
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        8),
+                                              ),
                                             ),
-                                            border: InputBorder.none,
-                                          ),
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 16 * ffem,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.2125 * ffem / fem,
-                                            color: Color(0xff666666),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            // group39LNc (10:1172)
-                            margin: EdgeInsets.fromLTRB(
-                                0 * fem, 0 * fem, 0 * fem, 40 * fem),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  // tagsgBa (10:1173)
-                                  margin: EdgeInsets.fromLTRB(
-                                      0 * fem, 0 * fem, 0 * fem, 9 * fem),
-                                  child: Text(
-                                    'Tags',
-                                    style: SafeGoogleFont(
-                                      'Inter',
-                                      fontSize: 12 * ffem,
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.2125 * ffem / fem,
-                                      color: Color(0xff666666),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Container(
+                                  Container(
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 7),
+                                          child: Text(
+                                            'Description',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              color: Color.fromARGB(
+                                                  255, 63, 63, 63),
+                                              fontSize: 10,
+                                              fontFamily: "Inter",
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Color(0xffe7e7e7)),
+                                            color: Color(0xfff6f6f6),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: TextFormField(
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Please enter a description';
+                                              }
+                                              if (RegExp(r'^[0-9]+$')
+                                                  .hasMatch(value)) {
+                                                return 'Description cannot contain numbers';
+                                              }
+                                              return null;
+                                            },
+                                            controller: _descriptionController,
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Color.fromARGB(
+                                                  255, 235, 235, 235),
+                                              hintText: 'Enter a description',
+                                              enabled: true,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 20.0,
+                                                      horizontal: 14.0),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255, 217, 217, 217)),
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        8),
+                                              ),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255, 217, 217, 217)),
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        8),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 35),
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 7),
+                                    child: Text(
+                                      'Tags',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Color.fromARGB(255, 63, 63, 63),
+                                        fontSize: 10,
+                                        fontFamily: "Inter",
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Color(0xffe7e7e7)),
+                                      color: Color(0xfff6f6f6),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: TextFormField(
+                                      controller: _tagsController,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter atleast one tag';
+                                        }
+                                        if (RegExp(r'^[0-9]+$')
+                                            .hasMatch(value)) {
+                                          return 'Tags cannot contain numbers';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor:
+                                            Color.fromARGB(255, 235, 235, 235),
+                                        hintText:
+                                            'Enter tags separated by commas',
+                                        enabled: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 20.0,
+                                                horizontal: 14.0),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 217, 217, 217)),
+                                          borderRadius:
+                                              new BorderRadius.circular(8),
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 217, 217, 217)),
+                                          borderRadius:
+                                              new BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 52),
+                              width: double.infinity,
+                              height: 43,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(27),
+                              ),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await _saveArticle(context);
+                                },
+                                child: Container(
                                   width: double.infinity,
+                                  height: double.infinity,
                                   decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Color(0xffe7e7e7)),
-                                    color: Color(0xfff6f6f6),
-                                    borderRadius:
-                                        BorderRadius.circular(8 * fem),
+                                    color: Color.fromARGB(255, 6, 84, 79),
+                                    borderRadius: BorderRadius.circular(27),
                                   ),
-                                  child: TextFormField(
-                                    controller: _tagsController,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 20.0, horizontal: 14.0),
-                                      hintText:
-                                          'Enter tags separated by commas',
-                                      hintStyle: TextStyle(
+                                  child: Center(
+                                    child: Text(
+                                      'Create',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
                                         fontFamily: 'Inter',
-                                        fontSize: 16 * ffem,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.2125 * ffem / fem,
-                                        color: Color(0xffbdbdbd),
                                       ),
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.2125 * ffem / fem,
-                                      color: Color(0xff666666),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            // group6fJQ (10:1168)
-                            margin: EdgeInsets.fromLTRB(
-                                55 * fem, 0 * fem, 56 * fem, 0 * fem),
-                            width: double.infinity,
-                            height: 45 * fem,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30 * fem),
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                await _saveArticle(context);
-                              },
-                              child: Container(
-                                // group5CJL (10:1169)
-                                width: double.infinity,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 6, 84, 79),
-                                  borderRadius: BorderRadius.circular(30 * fem),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Create',
-                                    style: SafeGoogleFont(
-                                      'Inter',
-                                      fontSize: 18 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.3333333333 * ffem / fem,
-                                      letterSpacing: 0.150000006 * fem,
-                                      color: Color(0xffffffff),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
