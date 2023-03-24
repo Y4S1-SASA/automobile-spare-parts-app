@@ -28,7 +28,7 @@ class _ItemViewState extends State<ItemView> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Items'),
-          backgroundColor: const Color(0xff5db075),
+          backgroundColor: const Color.fromARGB(255, 6, 84, 79),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -238,7 +238,7 @@ class _ItemViewState extends State<ItemView> {
                               child: ElevatedButton(
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xff5db075)),
+                                        Color.fromARGB(255, 6, 84, 79)),
                                     shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
