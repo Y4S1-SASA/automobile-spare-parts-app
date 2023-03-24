@@ -88,7 +88,7 @@ class _EditOrderState extends State<EditOrder> {
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Colors.green,
+              color: Color.fromARGB(255, 6, 84, 79),
             ),
             Container(
               margin:
@@ -265,7 +265,7 @@ class _EditOrderState extends State<EditOrder> {
                     height: 50 * fem,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xff5db075),
+                        color: const Color.fromARGB(255, 6, 84, 79),
                         borderRadius: BorderRadius.circular(8 * fem),
                       ),
                       child: IconButton(
@@ -289,7 +289,7 @@ class _EditOrderState extends State<EditOrder> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: MaterialButton(
@@ -326,7 +326,7 @@ class _EditOrderState extends State<EditOrder> {
                       );
                     }
                   },
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(
                     "Save Edited Order",
                     style: TextStyle(

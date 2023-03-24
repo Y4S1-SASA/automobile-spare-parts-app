@@ -18,7 +18,7 @@ class Footer extends StatelessWidget {
       width: double.infinity,
       height: 83 * fem,
       decoration: BoxDecoration(
-        color: Color(0xff5db075),
+        color: Color.fromARGB(255, 6, 84, 79),
       ),
       child: Container(
         // group28N6L (10:772)

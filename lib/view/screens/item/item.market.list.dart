@@ -52,7 +52,7 @@ class _ItemMarketListState extends State<ItemMarketList> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Items'),
-          backgroundColor: const Color(0xff5db075),
+          backgroundColor: const Color.fromARGB(255, 6, 84, 79),
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -77,7 +77,7 @@ class _ItemMarketListState extends State<ItemMarketList> {
                     fontSize: 16 * ffem,
                     fontWeight: FontWeight.w600,
                     height: 1.2125 * ffem / fem,
-                    color: Color(0xff5db075),
+                    color: Color.fromARGB(255, 6, 84, 79),
                   ),
                 ),
               ),

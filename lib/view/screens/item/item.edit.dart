@@ -156,7 +156,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(width: 4, color: Colors.white),
-                      color: Colors.green,
+                      color: Color.fromARGB(255, 6, 84, 79),
                     ),
                     child: GestureDetector(
                         onTap: () async {
@@ -454,7 +454,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(Color(0xff5db075)),
+                                MaterialStateProperty.all(Color.fromARGB(255, 6, 84, 79)),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -518,7 +518,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
-            backgroundColor: const Color(0xff5db075),
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
             textColor: Colors.white,
             fontSize: 16.0);
         Navigator.push(

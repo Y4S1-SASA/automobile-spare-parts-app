@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -116,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Text(
                           "Register Now",
                           style: TextStyle(
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 24,
                             fontFamily: "Inter",
@@ -137,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   width: 1,
                                 ),
                               ),
@@ -192,6 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: new BorderRadius.circular(8),
                             ),
                           ),
+                          // validate first name to required
                           validator: (value) {
                             if (value!.length == 0) {
                               return "First Name cannot be empty";
@@ -240,6 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: new BorderRadius.circular(8),
                             ),
                           ),
+                          // validate last name to required
                           validator: (value) {
                             if (value!.length == 0) {
                               return "Last Name cannot be empty";
@@ -288,6 +291,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: new BorderRadius.circular(8),
                             ),
                           ),
+                          // validate email to required
                           validator: (value) {
                             if (value!.length == 0) {
                               return "Email cannot be empty";
@@ -351,19 +355,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: new BorderRadius.circular(8),
                             ),
                           ),
+                          // validate password
                           validator: (value) {
-                            RegExp regex = new RegExp(r'^.{6,}$');
                             if (value!.isEmpty) {
                               return "Password cannot be empty";
                             }
-                            if (!regex.hasMatch(value)) {
-                              return ("please enter valid password min. 6 character");
-                            } else {
-                              return null;
+                            // check charactors
+                            if (value.length < 6) {
+                              return "Password must contain at least 6 characters";
                             }
+                            // check uppercase
+                            RegExp upperCaseRegExp = new RegExp(r'[A-Z]');
+                            if (!upperCaseRegExp.hasMatch(value)) {
+                              return "Password must contain at least one uppercase letter";
+                            }
+                            // check lowercase
+                            RegExp lowerCaseRegExp = new RegExp(r'[a-z]');
+                            if (!lowerCaseRegExp.hasMatch(value)) {
+                              return "Password must contain at least one lowercase letter";
+                            }
+                            // check special character
+                            RegExp specialCharRegExp =
+                                new RegExp(r'[!@#\$&*~]');
+                            if (!specialCharRegExp.hasMatch(value)) {
+                              return "Password must contain at least one special character (!@#\$&*~)";
+                            }
+                            return null;
                           },
                           onChanged: (value) {},
-                          //keyboardType: TextInputType.visiblePassword,
+                          keyboardType: TextInputType.visiblePassword,
                         ),
                         SizedBox(
                           height: 20,
@@ -413,6 +433,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: new BorderRadius.circular(8),
                             ),
                           ),
+                          // confirm password
                           validator: (value) {
                             if (confirmpassController.text !=
                                 passwordController.text) {
@@ -435,7 +456,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               TextSpan(
                                 text: 'Login',
                                 style: TextStyle(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -482,7 +503,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontFamily: 'Inter',
                               ),
                             ),
-                            color: Color(0xff5db075),
+                            color: Color.fromARGB(255, 6, 84, 79),
                           ),
                         ),
                         SizedBox(
@@ -495,7 +516,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color(0xff5db075),
+                              color: Color.fromARGB(255, 6, 84, 79),
                             ))),
                       ],
                     ),
@@ -509,74 +530,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // register req
+  // user registration
   register(
       String firstName, String lastName, String email, String password) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      String userId = userCredential.user!.uid;
-      String imageUrl = await _uploadImageToFirebase(context);
-      DatabaseReference usersRef =
-          FirebaseDatabase.instance.reference().child('users');
-      Map<String, dynamic> newUser = {
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'imageUrl': imageUrl,
-      };
-      usersRef.child(userId).set(newUser);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+    if (_formkey.currentState!.validate()) {
+      try {
+        visible = true;
+        // auth credentials
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        // store user data in realtime db
+        String userId = userCredential.user!.uid;
+        String imageUrl = await _uploadImageToFirebase(context);
+        DatabaseReference usersRef =
+            FirebaseDatabase.instance.reference().child('users');
+        Map<String, dynamic> newUser = {
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'imageUrl': imageUrl,
+        };
+        Fluttertoast.showToast(
+            msg: "Successfully Registered! Login to continue.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
+        // set new user in db
+        usersRef.child(userId).set(newUser);
+        // redirect
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          Fluttertoast.showToast(
+              msg: "The password provided is too weak!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          Fluttertoast.showToast(
+              msg: "Email already exist!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print(e);
+      visible = true;
+      CircularProgressIndicator();
     }
-    CircularProgressIndicator();
   }
-
-  // firestore code
-//   register(String firstName, String lastName, String email, String password) async {
-//   if (_formkey.currentState!.validate()) {
-//     try {
-//       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-//         email: email,
-//         password: password,
-//       );
-//       // Add first name and last name to user profile
-//       await userCredential.user?.updateProfile(displayName: '$firstName $lastName');
-//       await userCredential.user?.reload();
-//       // Save additional user data to Firestore or Realtime Database
-//       await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-//         'firstName': firstName,
-//         'lastName': lastName,
-//         'email': email,
-//       });
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (_) => LoginScreen(),
-//         ),
-//       );
-//     } on FirebaseAuthException catch (e) {
-//       if (e.code == 'weak-password') {
-//         print('The password provided is too weak.');
-//       } else if (e.code == 'email-already-in-use') {
-//         print('The account already exists for that email.');
-//       }
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-// }
 }

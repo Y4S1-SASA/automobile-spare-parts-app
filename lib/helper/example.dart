@@ -87,7 +87,7 @@ class MarketListView extends StatelessWidget {
                         fontSize: 16 * ffem,
                         fontWeight: FontWeight.w600,
                         height: 1.2125 * ffem / fem,
-                        color: Color(0xff5db075),
+                        color: Color.fromARGB(255, 6, 84, 79),
                       ),
                     ),
                   ),
@@ -842,7 +842,7 @@ class MarketListView extends StatelessWidget {
                               height: 83 * fem,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                 ),
                               ),
                             ),

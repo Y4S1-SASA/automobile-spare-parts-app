@@ -7,6 +7,7 @@ import 'forgot-password.dart';
 import 'register.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   // login state
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "Login",
                           style: TextStyle(
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 24,
                             fontFamily: "Inter",
@@ -95,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value!.length == 0) {
                               return "Email cannot be empty";
                             }
+                            // validate email
                             if (!RegExp(
                                     "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                 .hasMatch(value)) {
@@ -161,8 +163,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value!.isEmpty) {
                               return "Password cannot be empty";
                             }
+                            // validate password
                             if (!regex.hasMatch(value)) {
-                              return ("please enter valid password min. 6 character");
+                              return ("Minimum 6 characters required");
                             } else {
                               return null;
                             }
@@ -183,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 text: 'Register',
                                 style: TextStyle(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
@@ -192,7 +195,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => RegisterScreen()),
+                                          builder: (context) =>
+                                              RegisterScreen()),
                                     );
                                   },
                               ),
@@ -207,7 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ForgotPasswordScreen()));
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -215,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Forgot Password",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xff5db075),
+                                color: Color.fromARGB(255, 6, 84, 79),
                                 fontSize: 13,
                                 fontFamily: "Inter",
                               ),
@@ -247,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontFamily: 'Inter',
                             ),
                           ),
-                          color: Color(0xff5db075),
+                          color: Color.fromARGB(255, 6, 84, 79),
                         ),
                         SizedBox(
                           height: 10,
@@ -259,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             visible: visible,
                             child: Container(
                                 child: CircularProgressIndicator(
-                              color: Color(0xff5db075),
+                              color: Color.fromARGB(255, 6, 84, 79),
                             ))),
                       ],
                     ),
@@ -282,10 +287,20 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
         );
+        Fluttertoast.showToast(
+            msg: "Login Successfull!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
         // init user id
         String userId = userCredential.user!.uid;
         // provider to get auth user data
-        Provider.of<AuthProvider>(context, listen: false).getAuthUserData(userId);
+        Provider.of<AuthProvider>(context, listen: false)
+            .getAuthUserData(userId);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -294,12 +309,27 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
+          Fluttertoast.showToast(
+              msg: "User not found. Check credentials!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
+          Fluttertoast.showToast(
+              msg: "Incorrect Password!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('Wrong password provided for that user.');
         }
       }
     }
   }
-
 }

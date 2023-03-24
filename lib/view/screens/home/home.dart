@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return ProfileScreen();
         break;
       default:
-        return ListArticles();
+        return ItemMarketList();
     }
   }
 
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _getBody(_selectedAppBarIconIndex),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        color: Color(0xff5db075),
+        color: Color.fromARGB(255, 6, 84, 79),
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
