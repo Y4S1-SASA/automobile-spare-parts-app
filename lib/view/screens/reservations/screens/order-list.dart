@@ -6,9 +6,7 @@ import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../data/models/order.model.dart';
-import '../../../../utils.dart';
 import '../shared/components/delete-dialog.dart';
 import 'order-edit.dart';
 
@@ -30,6 +28,7 @@ class _OrderListState extends State<OrderList> {
     fetchOrders();
   }
 
+  // Method fetchs orders from the real time database and stores the orders relavant to the current user.
   fetchOrders() async {
     final snapshot = await _orderService.orderCollection.get();
     final map = snapshot.value as Map<dynamic, dynamic>;
@@ -57,7 +56,6 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
     const headerStyle = TextStyle(
         color: Color(0xffffffff), fontSize: 15, fontWeight: FontWeight.bold);
     return ordersList.isNotEmpty
@@ -68,47 +66,36 @@ class _OrderListState extends State<OrderList> {
                   Container(
                     height: 70 * fem,
                     width: double.infinity,
-                    color: Color.fromARGB(255, 6, 84, 79),
+                    color: const Color.fromARGB(255, 6, 84, 79),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        33 * fem, 0 * fem, 155 * fem, 0 * fem),
-                    width: double.infinity,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
-                          width: 11.65 * fem,
-                          height: 66 * fem,
-                          child: IconButton(
-                            icon: Image.asset(
-                              Constants.LEFT_ARROW_ICON,
-                              width: 11.65 * fem,
-                              height: 26 * fem,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()),
-                              );
-                            },
-                          ),
-                        ),
-                        Text(
-                          Constants.MY_ORDERS_TITLE,
-                          style: SafeGoogleFont(
-                            'Inter',
-                            fontSize: 24 * ffem,
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()),
+                          );
+                        },
+                      ),
+                      const Expanded(
+                        child: Text(
+                          "My Reservations",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            height: 1.2125 * ffem / fem,
-                            color: const Color(0xff000000),
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 24,
+                            fontFamily: "Inter",
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                          width:
+                              48), // Add some spacing to the right of the text
+                    ],
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
@@ -128,7 +115,8 @@ class _OrderListState extends State<OrderList> {
                               leftIcon: const Icon(Icons.insights_rounded,
                                   color: Colors.white),
                               headerBackgroundColor: Colors.black,
-                              headerBackgroundColorOpened: Color.fromARGB(255, 6, 84, 79),
+                              headerBackgroundColorOpened:
+                                  const Color.fromARGB(255, 6, 84, 79),
                               header:
                                   Text(order.orderNumber, style: headerStyle),
                               content: Column(
@@ -144,7 +132,6 @@ class _OrderListState extends State<OrderList> {
                                               BorderRadius.circular(8 * fem),
                                         ),
                                         child: Center(
-                                          // contentblockdyA (1:79)
                                           child: SizedBox(
                                             width: double.infinity,
                                             height: 139 * fem,
@@ -211,6 +198,25 @@ class _OrderListState extends State<OrderList> {
                                                   ),
                                                 ],
                                               )),
+                                          Container(
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  5, 10, 0, 0),
+                                              child: Row(
+                                                children: [
+                                                  const Text(
+                                                    'Total Price: ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    'Rs.${order.totalPrice}.00',
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.normal),
+                                                  ),
+                                                ],
+                                              )),
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -230,7 +236,7 @@ class _OrderListState extends State<OrderList> {
                                                 margin:
                                                     const EdgeInsets.fromLTRB(
                                                         5, 10, 0, 0),
-                                                width: 240 * fem,
+                                                width: 370 * fem,
                                                 child: Text(
                                                   order.deliveryAddress,
                                                   style: const TextStyle(
@@ -273,7 +279,6 @@ class _OrderListState extends State<OrderList> {
                                                     DeleteDialog(
                                                         orderId:
                                                             order.orderId));
-                                            fetchOrders();
                                           },
                                         ),
                                       ],
@@ -298,47 +303,33 @@ class _OrderListState extends State<OrderList> {
                 Container(
                   height: 70 * fem,
                   width: double.infinity,
-                  color: Color.fromARGB(255, 6, 84, 79),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(
-                      33 * fem, 0 * fem, 155 * fem, 0 * fem),
-                  width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(
-                            0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
-                        width: 11.65 * fem,
-                        height: 66 * fem,
-                        child: IconButton(
-                          icon: Image.asset(
-                            Constants.LEFT_ARROW_ICON,
-                            width: 11.65 * fem,
-                            height: 26 * fem,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          },
-                        ),
-                      ),
-                      Text(
-                        Constants.MY_ORDERS_TITLE,
-                        style: SafeGoogleFont(
-                          'Inter',
-                          fontSize: 24 * ffem,
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
+                    ),
+                    const Expanded(
+                      child: Text(
+                        "My Reservations",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          height: 1.2125 * ffem / fem,
-                          color: const Color(0xff000000),
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 24,
+                          fontFamily: "Inter",
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
                 Center(
                     child: Container(
@@ -347,9 +338,8 @@ class _OrderListState extends State<OrderList> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height: 150),
+                              const SizedBox(height: 150),
                               Container(
-                                // iconshieldtickkxY (1:297)
                                 margin: EdgeInsets.fromLTRB(
                                     0 * fem, 0 * fem, 0 * fem, 30 * fem),
                                 width: 110 * fem,
@@ -361,7 +351,7 @@ class _OrderListState extends State<OrderList> {
                                 ),
                               ),
                               const Text(
-                                "No Previous Orders to Display",
+                                Constants.NO_ORDERS,
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   color: Color.fromARGB(255, 0, 0, 0),
@@ -369,7 +359,7 @@ class _OrderListState extends State<OrderList> {
                                   fontFamily: "Inter",
                                 ),
                               ),
-                              SizedBox(height: 100),
+                              const SizedBox(height: 100),
                             ])))
               ]),
             ),
