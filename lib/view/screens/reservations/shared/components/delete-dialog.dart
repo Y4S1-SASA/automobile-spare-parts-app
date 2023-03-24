@@ -1,10 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages
-
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../../service/order.service.dart';
 import '../../../../../utils.dart';
+import '../../screens/order-list.dart';
 import '../constants.dart';
 
 class DeleteDialog extends StatefulWidget {
@@ -30,7 +30,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
       contentPadding: const EdgeInsets.all(20),
       children: [
         Container(
-          // iconshieldtickkxY (1:297)
           margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 30 * fem),
           width: 110 * fem,
           height: 110 * fem,
@@ -41,7 +40,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
           ),
         ),
         Container(
-          // group68G5e (1:301)
           margin: EdgeInsets.fromLTRB(26 * fem, 0 * fem, 18 * fem, 0 * fem),
           width: double.infinity,
           decoration: BoxDecoration(
@@ -54,7 +52,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                 margin:
                     EdgeInsets.fromLTRB(7.14 * fem, 0 * fem, 0 * fem, 30 * fem),
                 child: Text(
-                  Constants.DELETE_ORDER_CONFIRMAITON,
+                  Constants.DELETE_ORDER_CONFIRMATION,
                   style: SafeGoogleFont(
                     'Inter',
                     fontSize: 20 * ffem,
@@ -65,7 +63,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                 ),
               ),
               Container(
-                // group67ac8 (1:306)
+                // Delete Button
                 margin:
                     EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 10 * fem),
                 width: double.infinity,
@@ -74,7 +72,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: Container(
-                  // group5JHE (1:307)
                   width: double.infinity,
                   height: double.infinity,
                   decoration: BoxDecoration(
@@ -85,7 +82,11 @@ class _DeleteDialogState extends State<DeleteDialog> {
                     child: GestureDetector(
                       onTap: () {
                         _orderService.deleteOrder(widget.orderId);
-                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const OrderList()),
+                        );
                       },
                       child: Text(
                         'Delete Order',
@@ -103,7 +104,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                 ),
               ),
               Container(
-                // group66xcg (1:302)
+                // Cancel Button
                 width: double.infinity,
                 height: 45 * fem,
                 decoration: BoxDecoration(
@@ -143,35 +144,3 @@ class _DeleteDialogState extends State<DeleteDialog> {
     );
   }
 }
-
-
-// SizedBox(
-//                     width: 340 * fem,
-//                     height: 200,
-//                     child: Column(
-//                       children: [
-//                         InputText(
-//                             onChanged: (value) {
-//                               deliveryAddress = value;
-//                             },
-//                             labelName: 'Delivery Address',
-//                             hint: 'Enter Delivery Address',
-//                             enabled: true,
-//                             controller: addressController),
-                        // Expanded(child:
-                        //     ListView.builder(itemBuilder: (context, index) {
-                        //   return ListTile(
-                        //     onTap: () {
-                        //       addressController.clear();
-                        //       setState(() {
-                        //         addressController =
-                        //             _placesList[index]['description'];
-                        //         addressController.clear();
-                        //       });
-                        //     },
-                        //     title: Text(_placesList[index]['description']),
-                        //   );
-                        // }))
-                    //   ],
-                    // ),
-//                   ),

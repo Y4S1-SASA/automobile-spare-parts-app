@@ -214,6 +214,7 @@ flutter:
     - assets/orders/icon-calendar.png
     - assets/orders/icons-visa.png
     - assets/orders/icon-close-circle.png
+    - assets/orders/icon-shield-tick.png
     - assets/orders/package.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

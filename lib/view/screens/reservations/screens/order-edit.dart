@@ -6,8 +6,6 @@ import 'package:automobile_spare_parts_app/service/order.service.dart';
 import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../utils.dart';
 import '../shared/components/incrementor.dart';
 import '../shared/components/input-text.dart';
 import '../shared/components/label-name.dart';
@@ -57,12 +55,6 @@ class _EditOrderState extends State<EditOrder> {
         TextEditingController(text: currentOrder.orderNumber);
   }
 
-  String orderNumber = '';
-  String imgUrl =
-      'https://firebasestorage.googleapis.com/v0/b/automobile-spare-parts-app.appspot.com/o/images%2F1679407761082?alt=media&token=243f3f65-4201-4b90-951f-5f38d2efc427';
-  String itemId = 'I001';
-  String itemName = 'Spark Plug';
-  String itemPrice = '';
   var quantity = '';
   var totalPrice = '';
   var deliveryAddress = '';
@@ -71,8 +63,11 @@ class _EditOrderState extends State<EditOrder> {
   Widget build(BuildContext context) {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-
+    String orderNumber = currentOrder.orderNumber;
+    String imgUrl = currentOrder.imgUrl;
+    String itemId = currentOrder.itemId;
+    String itemName = currentOrder.itemName;
+    String itemPrice = currentOrder.itemPrice;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -80,46 +75,34 @@ class _EditOrderState extends State<EditOrder> {
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Color.fromARGB(255, 6, 84, 79),
+              color: const Color.fromARGB(255, 6, 84, 79),
             ),
-            Container(
-              margin:
-                  EdgeInsets.fromLTRB(33 * fem, 0 * fem, 155 * fem, 0 * fem),
-              width: double.infinity,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
-                    width: 11.65 * fem,
-                    height: 66 * fem,
-                    child: IconButton(
-                      icon: Image.asset(
-                        Constants.LEFT_ARROW_ICON,
-                        width: 11.65 * fem,
-                        height: 26 * fem,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      },
-                    ),
-                  ),
-                  Text(
-                    Constants.EDIT_ORDERS_TITLE,
-                    style: SafeGoogleFont(
-                      'Inter',
-                      fontSize: 24 * ffem,
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    "Edit Order",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      height: 1.2125 * ffem / fem,
-                      color: const Color(0xff000000),
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24,
+                      fontFamily: "Inter",
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                    width: 48), // Add some spacing to the right of the text
+              ],
             ),
             Container(
               // Image of the item
@@ -130,26 +113,25 @@ class _EditOrderState extends State<EditOrder> {
                 borderRadius: BorderRadius.circular(8 * fem),
               ),
               child: Center(
-                // contentblockdyA (1:79)
                 child: SizedBox(
                   width: double.infinity,
                   height: 139 * fem,
                   child: Container(
-                    child: Image.network(currentOrder.imgUrl),
-                    // contentblockQ9E (I9:522;150:1080)
                     margin:
                         EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem),
                     width: double.infinity,
                     height: 240 * fem,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8 * fem),
-                      color: const Color(0xfff6f6f6),
+                      color: Colors.white,
                     ),
+                    child: Image.network(currentOrder.imgUrl),
                   ),
                 ),
               ),
             ),
             InputText(
+                keyboardType: 'text',
                 onChanged: (value) {
                   orderNumber = orderNumber;
                 },
@@ -158,6 +140,7 @@ class _EditOrderState extends State<EditOrder> {
                 enabled: false,
                 controller: orderNumberController),
             InputText(
+                keyboardType: 'text',
                 onChanged: (value) {
                   itemName = itemName;
                 },
@@ -181,18 +164,20 @@ class _EditOrderState extends State<EditOrder> {
                         const LabelName(labelName: 'Quantity'),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xffe7e7e7)),
-                            color: const Color(0xfff6f6f6),
+                            border: Border.all(color: Colors.white),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Incrementor(
+                              //Reuse component
                               minValue: 0,
-                              maxValue: 10,
+                              maxValue: 50,
                               onChanged: (value) {
                                 currentOrder.quantity = value.toString();
-                                var totPrice =
-                                    int.parse(currentOrder.itemPrice) *
-                                        int.parse(currentOrder.quantity);
+                                var totPrice = int.parse(
+                                        (currentOrder.itemPrice)
+                                            .split('.')[0]) *
+                                    int.parse(currentOrder.quantity);
                                 totalPrice = totPrice.toString();
                                 setState(() {
                                   currentOrder.totalPrice = totalPrice;
@@ -206,15 +191,14 @@ class _EditOrderState extends State<EditOrder> {
                     margin: EdgeInsets.fromLTRB(
                         32 * fem, 0 * fem, 0 * fem, 22 * fem),
                     width: 190 * fem,
-                    // height: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const LabelName(labelName: 'TotalPrice'),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xffe7e7e7)),
-                            color: const Color(0xfff6f6f6),
+                            border: Border.all(color: Colors.white),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: LabelValue(
@@ -227,41 +211,63 @@ class _EditOrderState extends State<EditOrder> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 60 * fem,
-              child: Container(
-                margin:
-                    EdgeInsets.fromLTRB(10 * fem, 0 * fem, 0 * fem, 10 * fem),
-                width: 50 * fem,
-                height: 50 * fem,
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => LocationPicker(
+                          onChanged: (value) {
+                            currentOrder.deliveryAddress = value;
+                            setState(() {
+                              currentOrder.deliveryAddress = value;
+                            });
+                          },
+                          controller: addressController,
+                        ));
+              },
+              child: SizedBox(
+                height: 60 * fem,
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xff5db075),
-                    borderRadius: BorderRadius.circular(8 * fem),
-                  ),
-                  child: IconButton(
-                    icon: Image.asset(Constants.LOCATION_ICON),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => LocationPicker(
-                                onChanged: (value) {
-                                  currentOrder.deliveryAddress = value;
-                                  setState(() {
-                                    currentOrder.deliveryAddress = value;
-                                  });
-                                },
-                                controller: addressController,
-                              ));
-                    },
+                  margin: EdgeInsets.fromLTRB(
+                      25 * fem, 0 * fem, 25 * fem, 10 * fem),
+                  width: double.infinity,
+                  height: 40 * fem,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 74, 76, 76),
+                      borderRadius: BorderRadius.circular(8 * fem),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Image.asset(
+                            Constants.LOCATION_ICON,
+                            height: 20,
+                            width: 20,
+                          ),
+                          onPressed: () {},
+                        ),
+                        const Text("Pick Location",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontFamily: 'Inter',
+                            ))
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-            Column(children: [
-              const LabelName(labelName: "Delivery Address"),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(25, 10, 25, 25),
+                  margin: EdgeInsets.fromLTRB(
+                      32 * fem, 5 * fem, 32.41 * fem, 0 * fem),
+                  child: const LabelName(labelName: "Delivery Address")),
+              Container(
+                margin: const EdgeInsets.fromLTRB(25, 3, 25, 25),
                 child: LabelValue(
                     labelValue: currentOrder.deliveryAddress, disabled: false),
               )
