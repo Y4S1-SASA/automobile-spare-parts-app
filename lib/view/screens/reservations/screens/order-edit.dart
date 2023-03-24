@@ -12,6 +12,7 @@ import '../shared/components/incrementor.dart';
 import '../shared/components/input-text.dart';
 import '../shared/components/label-name.dart';
 import '../shared/components/label-value.dart';
+import '../shared/components/maps.dart';
 
 class EditOrder extends StatefulWidget {
   const EditOrder({
@@ -49,9 +50,6 @@ class _EditOrderState extends State<EditOrder> {
         quantity: widget.orderModel.quantity,
         totalPrice: widget.orderModel.totalPrice,
         deliveryAddress: widget.orderModel.deliveryAddress);
-    // quantityController =
-    //     TextEditingController(text: widget.orderModel.quantity);
-    // priceController = TextEditingController(text: widget.orderModel.totalPrice);
     addressController =
         TextEditingController(text: widget.orderModel.deliveryAddress);
     itemNameController = TextEditingController(text: currentOrder.itemName);
@@ -68,12 +66,6 @@ class _EditOrderState extends State<EditOrder> {
   var quantity = '';
   var totalPrice = '';
   var deliveryAddress = '';
-
-  // void _appBarIconTap(int index) {
-  //   setState(() {
-  //     _selectedAppBarIconIndex = index;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +143,9 @@ class _EditOrderState extends State<EditOrder> {
                     height: 240 * fem,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8 * fem),
-                      color: Color(0xfff6f6f6),
+                      color: const Color(0xfff6f6f6),
                     ),
                   ),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(8 * fem),
-                  //     color: const Color.fromARGB(255, 187, 186, 186),
-                  //   ),
-                  // ),
                 ),
               ),
             ),
@@ -242,41 +228,44 @@ class _EditOrderState extends State<EditOrder> {
               ),
             ),
             SizedBox(
-              height: 105 * fem,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 340 * fem,
-                    height: double.infinity,
-                    child: InputText(
-                        onChanged: (value) {
-                          currentOrder.deliveryAddress = value;
-                        },
-                        labelName: 'Delivery Address',
-                        hint: 'Delivery Address',
-                        enabled: true,
-                        controller: addressController),
+              height: 60 * fem,
+              child: Container(
+                margin:
+                    EdgeInsets.fromLTRB(10 * fem, 0 * fem, 0 * fem, 10 * fem),
+                width: 50 * fem,
+                height: 50 * fem,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xff5db075),
+                    borderRadius: BorderRadius.circular(8 * fem),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        10 * fem, 0 * fem, 0 * fem, 10 * fem),
-                    width: 50 * fem,
-                    height: 50 * fem,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xff5db075),
-                        borderRadius: BorderRadius.circular(8 * fem),
-                      ),
-                      child: IconButton(
-                        icon: Image.asset(Constants.LOCATION_ICON),
-                        onPressed: () {},
-                      ),
-                    ),
+                  child: IconButton(
+                    icon: Image.asset(Constants.LOCATION_ICON),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => LocationPicker(
+                                onChanged: (value) {
+                                  currentOrder.deliveryAddress = value;
+                                  setState(() {
+                                    currentOrder.deliveryAddress = value;
+                                  });
+                                },
+                                controller: addressController,
+                              ));
+                    },
                   ),
-                ],
+                ),
               ),
             ),
+            Column(children: [
+              const LabelName(labelName: "Delivery Address"),
+              Container(
+                margin: const EdgeInsets.fromLTRB(25, 10, 25, 25),
+                child: LabelValue(
+                    labelValue: currentOrder.deliveryAddress, disabled: false),
+              )
+            ]),
             Container(
               margin:
                   EdgeInsets.fromLTRB(88 * fem, 0 * fem, 87 * fem, 58 * fem),

@@ -15,6 +15,7 @@ class Constants {
   static const EDIT_ORDERS_TITLE = "Edit Order";
 
   static const DELETE_ORDER_TITLE = "Delete Order Confirmation";
+  static const LOCATION_PICKER_TITLE = "Select Delivery Location";
   static const DELETE_ORDER_CONFIRMAITON =
       'Are you sure that you want to delete this order?';
 

@@ -1,10 +1,13 @@
+import 'package:automobile_spare_parts_app/helper/example.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/screens/order-list.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/screens/place-order.dart';
 import 'package:flutter/material.dart';
+import './../item/item.market.list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,12 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         return ListArticles();
+        break;
       case 1:
-        return SaveItem();
+        return ItemMarketList();
+        break;
       case 2:
-        return const OrderList();
+        return OrderList();
+        break;
       case 3:
         return ProfileScreen();
+        break;
       default:
         return ListArticles();
     }

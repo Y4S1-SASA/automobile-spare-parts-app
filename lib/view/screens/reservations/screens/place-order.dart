@@ -1,9 +1,14 @@
 // ignore: depend_on_referenced_packages
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/components/maps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 import 'package:automobile_spare_parts_app/view/screens/home/home.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../utils.dart';
 import '../shared/components/incrementor.dart';
@@ -11,6 +16,7 @@ import '../shared/components/input-text.dart';
 import '../shared/components/label-name.dart';
 import '../shared/components/label-value.dart';
 import 'payment-gateway.dart';
+import 'package:http/http.dart' as http;
 
 class PlaceOrder extends StatefulWidget {
   const PlaceOrder({super.key});
@@ -20,14 +26,14 @@ class PlaceOrder extends StatefulWidget {
 }
 
 class _PlaceOrderState extends State<PlaceOrder> {
+  var rnd = Random().nextInt(900000).toString();
   final String userId = FirebaseAuth.instance.currentUser!.uid;
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   final TextEditingController itemNameController =
       TextEditingController(text: 'Spark Plug');
-  final TextEditingController orderNumberController =
-      TextEditingController(text: 'ORD-001');
+  final TextEditingController orderNumberController = TextEditingController();
 
   String orderNumber = '';
   String imgUrl =
@@ -44,6 +50,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     double baseWidth = 445;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+    orderNumber = 'ORD - $rnd';
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -196,40 +203,45 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ),
             ),
             SizedBox(
-              height: 105 * fem,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 340 * fem,
-                    height: double.infinity,
-                    child: InputText(
-                        onChanged: (value) {
-                          deliveryAddress = value;
-                        },
-                        labelName: 'Delivery Address',
-                        hint: 'Enter Delivery Address',
-                        enabled: true,
-                        controller: addressController),
+              height: 60 * fem,
+              child: Container(
+                margin:
+                    EdgeInsets.fromLTRB(10 * fem, 0 * fem, 0 * fem, 10 * fem),
+                width: 50 * fem,
+                height: 50 * fem,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xff5db075),
+                    borderRadius: BorderRadius.circular(8 * fem),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        10 * fem, 0 * fem, 0 * fem, 10 * fem),
-                    width: 50 * fem,
-                    height: 50 * fem,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xff5db075),
-                        borderRadius: BorderRadius.circular(8 * fem),
-                      ),
-                      child: IconButton(
-                        icon: Image.asset(Constants.LOCATION_ICON),
-                        onPressed: () {},
-                      ),
-                    ),
+                  child: IconButton(
+                    icon: Image.asset(Constants.LOCATION_ICON),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => LocationPicker(
+                                onChanged: (value) {
+                                  deliveryAddress = value;
+                                  setState(() {
+                                    deliveryAddress = value;
+                                  });
+                                },
+                                controller: addressController,
+                              ));
+                    },
                   ),
-                ],
+                ),
               ),
+            ),
+            Container(
+              child: Column(children: [
+                LabelName(labelName: "Delivery Address"),
+                Container(
+                  margin: EdgeInsets.fromLTRB(25, 10, 25, 25),
+                  child:
+                      LabelValue(labelValue: deliveryAddress, disabled: false),
+                )
+              ]),
             ),
             Container(
               margin:

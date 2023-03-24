@@ -143,3 +143,35 @@ class _DeleteDialogState extends State<DeleteDialog> {
     );
   }
 }
+
+
+// SizedBox(
+//                     width: 340 * fem,
+//                     height: 200,
+//                     child: Column(
+//                       children: [
+//                         InputText(
+//                             onChanged: (value) {
+//                               deliveryAddress = value;
+//                             },
+//                             labelName: 'Delivery Address',
+//                             hint: 'Enter Delivery Address',
+//                             enabled: true,
+//                             controller: addressController),
+                        // Expanded(child:
+                        //     ListView.builder(itemBuilder: (context, index) {
+                        //   return ListTile(
+                        //     onTap: () {
+                        //       addressController.clear();
+                        //       setState(() {
+                        //         addressController =
+                        //             _placesList[index]['description'];
+                        //         addressController.clear();
+                        //       });
+                        //     },
+                        //     title: Text(_placesList[index]['description']),
+                        //   );
+                        // }))
+                    //   ],
+                    // ),
+//                   ),

@@ -1,11 +1,12 @@
-import 'package:automobile_spare_parts_app/data/models/order.model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: depend_on_referenced_packages
 import 'package:firebase_database/firebase_database.dart';
+import 'package:automobile_spare_parts_app/data/models/order.model.dart';
 
 class OrderService {
   final orderCollection = FirebaseDatabase.instance.ref().child('orders');
   final itemCollection = FirebaseDatabase.instance.ref().child('items');
 
+//Create order to firebase
   Future<void> createOrder(OrderModel orderModel) async {
     await orderCollection
         .push()
@@ -24,6 +25,7 @@ class OrderService {
         .catchError((error) => print("Order Failed"));
   }
 
+//Update order details
   Future<void> updateOrder(OrderModel order, String? orderId) async {
     final Map<String, dynamic> updateData = {
       'userId': order.userId,
@@ -43,6 +45,7 @@ class OrderService {
         .catchError((error) => print("Failed"));
   }
 
+// Delete order details
   Future<void> deleteOrder(String? orderId) async {
     await orderCollection
         .child(orderId ?? "")
