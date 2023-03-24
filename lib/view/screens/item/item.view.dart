@@ -243,7 +243,7 @@ class _ItemViewState extends State<ItemView> {
                                             borderRadius:
                                                 BorderRadius.circular(18.0)))),
                                 onPressed: () {
-                                  if (currentUserEmail == "adin@gmail.com") {
+                                  if (currentUserEmail == "admin@gmail.com") {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -259,14 +259,14 @@ class _ItemViewState extends State<ItemView> {
                                                 itemModel: widget.itemModel)));
                                   }
                                 },
-                                child: currentUserEmail == "adin@gmail.com"
+                                child: currentUserEmail == "admin@gmail.com"
                                     ? const Text(
                                         'Update Item',
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 25),
                                       )
                                     : const Text(
-                                        'Place Order',
+                                        'Buy Item',
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 25),
                                       ),
@@ -276,12 +276,12 @@ class _ItemViewState extends State<ItemView> {
                             Container(
                               height: 50,
                               width: 250,
-                              decoration: currentUserEmail == "amin@gmail.com"
+                              decoration: currentUserEmail == "admin@gmail.com"
                                   ? BoxDecoration(
                                       color: Colors.blue,
                                       borderRadius: BorderRadius.circular(20))
                                   : null,
-                              child: currentUserEmail == "amin@gmail.com"
+                              child: currentUserEmail == "admin@gmail.com"
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           backgroundColor:
@@ -318,36 +318,6 @@ class _ItemViewState extends State<ItemView> {
                                       ),
                                     )
                                   : null,
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              height: 50,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromARGB(255, 6, 84, 79)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0)))),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PlaceOrder(
-                                              itemModel: widget.itemModel)));
-                                },
-                                child: const Text(
-                                  'Buy Item',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
-                              ),
                             ),
                           ],
                         ),

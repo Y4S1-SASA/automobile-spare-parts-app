@@ -218,7 +218,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Item Name is required";
                         } else {
                           return null;
                         }
@@ -328,7 +328,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Last Name cannot be empty";
+                                      return "Qunatity is required";
                                     } else {
                                       return null;
                                     }
@@ -387,13 +387,13 @@ class _EditItemScreenState extends State<EditItemScreen> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Quantity is Required";
+                                      return "Price is Required";
                                     } else {
                                       return null;
                                     }
                                   },
                                   onChanged: (value) {},
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.number,
                                 ),
                               ],
                             )),
@@ -439,7 +439,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Description is Required";
                         } else {
                           return null;
                         }

@@ -207,7 +207,7 @@ class _SaveItemState extends State<SaveItem> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Item is Required";
                         } else {
                           return null;
                         }
@@ -317,13 +317,13 @@ class _SaveItemState extends State<SaveItem> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Last Name cannot be empty";
+                                      return "Quantity is Required";
                                     } else {
                                       return null;
                                     }
                                   },
                                   onChanged: (value) {},
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.number,
                                 ),
                               ],
                             )),
@@ -376,13 +376,13 @@ class _SaveItemState extends State<SaveItem> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Quantity is Required";
+                                      return "Price is Required";
                                     } else {
                                       return null;
                                     }
                                   },
                                   onChanged: (value) {},
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.number,
                                 ),
                               ],
                             )),
@@ -428,7 +428,7 @@ class _SaveItemState extends State<SaveItem> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Description is Required";
                         } else {
                           return null;
                         }

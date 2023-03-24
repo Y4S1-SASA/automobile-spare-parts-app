@@ -156,11 +156,13 @@ class _ItemMarketListState extends State<ItemMarketList> {
                           )
                         : SizedBox.shrink(),
                     title: Text(
-                      item['name'] as String? ?? '',
+                      "Name: " + item['name'] as String? ?? '',
                       style: TextStyle(color: Colors.black),
                     ),
                     subtitle: Text(
-                      item['category'] as String? ?? '',
+                      "Price: " + "LKR " + item['price'].toString()
+                              as String? ??
+                          '',
                       style: TextStyle(color: Colors.black),
                     ),
                     trailing: MaterialButton(
@@ -184,7 +186,7 @@ class _ItemMarketListState extends State<ItemMarketList> {
                                 name: item["name"],
                                 category: item["category"],
                                 quantity: item["quantity"],
-                                price: 3,
+                                price: 23,
                                 description: item["description"] ?? "",
                                 imageUrl: item["imageUrl"] ?? "",
                                 createdBy: item["createdBy"] ?? "",
