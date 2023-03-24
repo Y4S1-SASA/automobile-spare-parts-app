@@ -4,8 +4,7 @@ import 'package:automobile_spare_parts_app/view/screens/articles/articles-create
 import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:automobile_spare_parts_app/view/screens/item/save.item.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/order-list.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/screens/order-list.dart';
 import 'package:flutter/material.dart';
 import './../item/item.market.list.dart';
 
