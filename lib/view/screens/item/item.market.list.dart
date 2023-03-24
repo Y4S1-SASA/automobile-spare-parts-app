@@ -79,31 +79,28 @@ class _ItemMarketListState extends State<ItemMarketList> {
             SizedBox(
               height: 20 * fem,
             ),
-            if (currentUserEmail == "admin@gmail.com")
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SaveItem()));
-                },
-                child: Container(
-                  margin:
-                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
-                  width: double.infinity,
-                  child: currentUserEmail == "admin@gmail.com"
-                      ? Text(
-                          'Add',
-                          textAlign: TextAlign.center,
-                          style: SafeGoogleFont(
-                            'Inter',
-                            fontSize: 16 * ffem,
-                            fontWeight: FontWeight.w600,
-                            height: 1.2125 * ffem / fem,
-                            color: Color.fromARGB(255, 6, 84, 79),
-                          ),
-                        )
-                      : null,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SaveItem()));
+              },
+              child: Container(
+                margin:
+                    EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
+                width: double.infinity,
+                child: Text(
+                  'Add',
+                  textAlign: TextAlign.center,
+                  style: SafeGoogleFont(
+                    'Inter',
+                    fontSize: 16 * ffem,
+                    fontWeight: FontWeight.w600,
+                    height: 1.2125 * ffem / fem,
+                    color: Color.fromARGB(255, 6, 84, 79),
+                  ),
                 ),
               ),
+            ),
             const SizedBox(
               height: 2,
             ),
