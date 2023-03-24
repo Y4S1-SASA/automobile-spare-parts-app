@@ -1,8 +1,8 @@
 import 'package:automobile_spare_parts_app/data/models/article.modal.dart';
 import 'package:automobile_spare_parts_app/view/base/footer.widget.dart';
 import 'package:automobile_spare_parts_app/view/base/heading.widget.dart';
+import 'package:automobile_spare_parts_app/view/screens/articles/articles-list.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
@@ -20,14 +20,14 @@ class Scene extends StatefulWidget {
 }
 
 class _SceneState extends State<Scene> {
-
-    int _selectedAppBarIconIndex = 1;
+  int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
     setState(() {
       _selectedAppBarIconIndex = index;
     });
   }
+
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _tagsController = TextEditingController();
@@ -95,9 +95,9 @@ class _SceneState extends State<Scene> {
 
   // saves article in firebase realitime database
   Future<void> _saveArticle(BuildContext context) async {
-    String? loggedInUserEmail = FirebaseAuth.instance.currentUser?.email;
+    String? loggedInUserUid = FirebaseAuth.instance.currentUser?.uid;
 
-    if (loggedInUserEmail != null) {
+    if (loggedInUserUid != null) {
       // Show progress dialog
       showDialog(
         context: context,
@@ -113,7 +113,7 @@ class _SceneState extends State<Scene> {
           description: _descriptionController.text,
           tags: tagsList,
           imageUrl: imageUrl,
-          ownerEmail: loggedInUserEmail);
+          ownerUid: loggedInUserUid);
 
       // Generate a new push key for the article
       final articleRef =
@@ -125,7 +125,7 @@ class _SceneState extends State<Scene> {
         'description': article.description,
         'tags': article.tags,
         'imageUrl': article.imageUrl,
-        'ownerEmail': article.ownerEmail
+        'ownerUid': article.ownerUid
       });
       // Hide progress dialog
       Navigator.of(context).pop();
@@ -134,6 +134,7 @@ class _SceneState extends State<Scene> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Article created successfully!')),
       );
+      Navigator.pop(context);
     } else {
       print("not logged in");
     }
@@ -145,9 +146,6 @@ class _SceneState extends State<Scene> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Article'),
-      ),
       body: SingleChildScrollView(
         child: Container(
           // articlescreatebq2 (10:678)
@@ -159,6 +157,33 @@ class _SceneState extends State<Scene> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 70,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                    Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Create Article",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 24,
+                        fontFamily: "Inter",
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                      width: 48), // Add some spacing to the right of the text
+                ],
+              ),
               Container(
                 // autogroupyq5usGk (2G1d1Cw1Lk4a1AbVs8yQ5u)
                 padding:
@@ -414,12 +439,12 @@ class _SceneState extends State<Scene> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   borderRadius: BorderRadius.circular(30 * fem),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Create Article',
+                                    'Create',
                                     style: SafeGoogleFont(
                                       'Inter',
                                       fontSize: 18 * ffem,
@@ -443,58 +468,6 @@ class _SceneState extends State<Scene> {
           ),
         ),
       ),
-            bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        color: Color(0xff5db075),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: _selectedAppBarIconIndex == 0
-                  ? Image.asset('assets/appbar/article_filled.png')
-                  : Image.asset('assets/appbar/article.png'),
-              onPressed: () {
-                _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Scene()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 1
-                  ? Image.asset('assets/appbar/market_filled.png')
-                  : Image.asset('assets/appbar/market.png'),
-              onPressed: () => _appBarIconTap(1),
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 2
-                  ? Image.asset('assets/appbar/reservation_filled.png')
-                  : Image.asset('assets/appbar/reservation.png'),
-              onPressed: () {
-                _appBarIconTap(2);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 3
-                  ? Image.asset('assets/appbar/profile_filled.png')
-                  : Image.asset('assets/appbar/profile.png'),
-              onPressed: () {
-                _appBarIconTap(3);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      )
     );
   }
 }

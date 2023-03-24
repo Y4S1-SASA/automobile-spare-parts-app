@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'login.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           Text(
                             "Forgot Password",
                             style: TextStyle(
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 24,
                               fontFamily: "Inter",
@@ -92,6 +92,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               if (value!.length == 0) {
                                 return "Email cannot be empty";
                               }
+                              // validate email
                               if (!RegExp(
                                       "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                   .hasMatch(value)) {
@@ -128,7 +129,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   fontFamily: 'Inter',
                                 ),
                               ),
-                              color: Color(0xff5db075),
+                              color: Color.fromARGB(255, 6, 84, 79),
                             ),
                           ),
                           SizedBox(
@@ -141,7 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(30.0)),
                                 side: BorderSide(
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                 ),
                               ),
                               elevation: 2.0,
@@ -158,7 +159,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 "Login",
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Color(0xff5db075),
+                                  color: Color.fromARGB(255, 6, 84, 79),
                                   fontFamily: 'Inter',
                                 ),
                               ),
@@ -175,7 +176,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               visible: visible,
                               child: Container(
                                   child: CircularProgressIndicator(
-                                color: Color(0xff5db075),
+                                color: Color.fromARGB(255, 6, 84, 79),
                               ))),
                         ],
                       ),
@@ -193,13 +194,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   // request password reset email
   void ReqForgotPassword(String email) async {
     if (_formkey.currentState!.validate()) {
+      Fluttertoast.showToast(
+          msg:
+              "Password Reset link sent to your email. Please check your email",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Color.fromARGB(255, 4, 154, 89),
+          textColor: Colors.white,
+          fontSize: 16.0);
       await _auth
           .sendPasswordResetEmail(email: email)
           .then((uid) => {
+                // after req redirect to login
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginScreen()))
               })
-          .catchError((e) {});
+          .catchError((e) {
+        Fluttertoast.showToast(
+            msg: e,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
     }
   }
 }

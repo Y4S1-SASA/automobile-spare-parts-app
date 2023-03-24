@@ -1,32 +1,31 @@
-import 'package:automobile_spare_parts_app/view/screens/articles/articles-create.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/place-order.dart';
-import 'package:automobile_spare_parts_app/view/screens/reservations/shared/input-field.dart';
+import 'package:automobile_spare_parts_app/data/models/order.model.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils.dart';
-import 'shared/label-name.dart';
-import 'shared/label-value.dart';
+import '../../../../service/order.service.dart';
+import '../../../../utils.dart';
+import '../shared/components/input-text.dart';
+import '../shared/components/label-name.dart';
+import 'order-list.dart';
 
 class PaymentGateway extends StatefulWidget {
-  const PaymentGateway({super.key});
-
+  const PaymentGateway({super.key, required this.orderModel});
+  final OrderModel orderModel;
   @override
   State<PaymentGateway> createState() => _PaymentGatewayState();
 }
 
 class _PaymentGatewayState extends State<PaymentGateway> {
-  int _selectedAppBarIconIndex = 1;
   final TextEditingController cardNoController = TextEditingController();
   final TextEditingController nameOnCardController = TextEditingController();
   final TextEditingController expDateController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
+  final OrderService _orderService = OrderService();
   DateTime selectedDate = DateTime.now();
-
-  void _appBarIconTap(int index) {
-    setState(() {
-      _selectedAppBarIconIndex = index;
-    });
-  }
+  String cardNo = '';
+  String nameOnCard = '';
+  String expDate = '';
+  String cvv = '';
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -47,14 +46,15 @@ class _PaymentGatewayState extends State<PaymentGateway> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      // appBar: AppBar(backgroundColor: Colors.green, title: Text('')), // App Bar
+      // appBar: AppBar(backgroundColor: Color.fromARGB(255, 6, 84, 79), title: Text('')), // App Bar
+
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Colors.green,
+              color: Color.fromARGB(255, 6, 84, 79),
             ),
             Container(
               // Heading place order and back arrow
@@ -70,7 +70,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 11.65 * fem,
                     height: 66 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icon-arrow-left-1-3tC.png',
+                      Constants.LEFT_ARROW_ICON,
                       width: 11.65 * fem,
                       height: 26 * fem,
                     ),
@@ -97,7 +97,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                   fontSize: 20 * ffem,
                   fontWeight: FontWeight.w500,
                   height: 1.2125 * ffem / fem,
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                 ),
               ),
             ),
@@ -115,7 +115,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 91 * fem,
                     height: 91 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-mastercard-480-1-B1A.png',
+                      Constants.MASTERCARD_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -127,7 +127,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 92 * fem,
                     height: 92 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-visa-480-1-ijS.png',
+                      Constants.VISA_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -141,7 +141,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 54 * fem,
                     height: 54 * fem,
                     child: Image.asset(
-                      'assets/page-1/images/icons8-paypal-64-1-JoS.png',
+                      Constants.PAYPAL_ICON,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -162,16 +162,24 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                 ),
               ),
             ),
-            InputField(
-                labelName: 'Card No',
-                enabled: true,
-                controller: cardNoController,
-                hint: 'Enter name on Card'),
-            InputField(
-                labelName: 'Name on Card',
-                enabled: true,
-                controller: nameOnCardController,
-                hint: 'Enter name on Card'),
+            InputText(
+              labelName: 'Card No',
+              enabled: true,
+              controller: cardNoController,
+              hint: 'Enter name on Card',
+              onChanged: (value) {
+                cardNo = value;
+              },
+            ),
+            InputText(
+              labelName: 'Name on Card',
+              enabled: true,
+              controller: nameOnCardController,
+              hint: 'Enter name on Card',
+              onChanged: (value) {
+                nameOnCard = value;
+              },
+            ),
             SizedBox(
               height: 105 * fem,
               child: Row(
@@ -185,11 +193,15 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputField(
-                            enabled: true,
-                            controller: cvvController,
-                            hint: 'CVV',
-                            labelName: 'CVV')
+                        InputText(
+                          enabled: true,
+                          controller: cvvController,
+                          hint: 'CVV',
+                          labelName: 'CVV',
+                          onChanged: (value) {
+                            cvv = value;
+                          },
+                        )
                       ],
                     ),
                   ),
@@ -217,8 +229,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                           ],
                         ),
                         IconButton(
-                          icon: Image.asset(
-                              'assets/page-1/images/icons8-calendar-48.png'),
+                          icon: Image.asset(Constants.CALENDAR_ICON),
                           onPressed: () => _selectDate(context),
                         ),
                       ],
@@ -239,7 +250,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   borderRadius: BorderRadius.circular(30 * fem),
                 ),
                 child: MaterialButton(
@@ -249,13 +260,27 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
+                    var result = _orderService.createOrder(widget.orderModel);
+                    if (result == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('ERROR!')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Order Placed successfully!')),
+                      );
+                      cardNoController.clear();
+                      nameOnCardController.clear();
+                      cvvController.clear();
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const PlaceOrder()),
+                          builder: (context) => const OrderList()),
                     );
                   },
-                  color: const Color(0xff5db075),
+                  color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(
                     "Pay Now",
                     style: TextStyle(
@@ -269,53 +294,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
             ),
             const SizedBox(
               height: 20,
-            ),
-          ],
-        ),
-      ),
-
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        color: const Color(0xff5db075),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: _selectedAppBarIconIndex == 0
-                  ? Image.asset('assets/appbar/article_filled.png')
-                  : Image.asset('assets/appbar/article.png'),
-              onPressed: () {
-                _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Scene()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 1
-                  ? Image.asset('assets/appbar/market_filled.png')
-                  : Image.asset('assets/appbar/market.png'),
-              onPressed: () => _appBarIconTap(1),
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 2
-                  ? Image.asset('assets/appbar/reservation_filled.png')
-                  : Image.asset('assets/appbar/reservation.png'),
-              onPressed: () {
-                _appBarIconTap(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PlaceOrder()),
-                );
-              },
-            ),
-            IconButton(
-              icon: _selectedAppBarIconIndex == 3
-                  ? Image.asset('assets/appbar/profile_filled.png')
-                  : Image.asset('assets/appbar/profile.png'),
-              onPressed: () => _appBarIconTap(3),
             ),
           ],
         ),

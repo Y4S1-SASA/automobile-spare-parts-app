@@ -5,24 +5,28 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
+import '/utils.dart';
 
-class SaveItem extends StatefulWidget {
-  SaveItem({super.key});
+class EditItemScreen extends StatefulWidget {
+  EditItemScreen({Key? key, required this.itemModel}) : super(key: key);
+
   final nameController = TextEditingController();
   final categoryController = TextEditingController();
   final quantityController = TextEditingController();
   final unitPriceController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  final ItemModel itemModel;
+
   @override
-  State<SaveItem> createState() => _SaveItemState();
+  State<EditItemScreen> createState() => _EditItemScreenState();
 }
 
-class _SaveItemState extends State<SaveItem> {
+class _EditItemScreenState extends State<EditItemScreen> {
   int _selectedAppBarIconIndex = 1;
 
   void _appBarIconTap(int index) {
@@ -103,6 +107,11 @@ class _SaveItemState extends State<SaveItem> {
 
   @override
   Widget build(BuildContext context) {
+    widget.nameController.text = widget.itemModel.name;
+    widget.quantityController.text = widget.itemModel.quantity.toString();
+    widget.unitPriceController.text = widget.itemModel.price.toString();
+    widget.descriptionController.text = widget.itemModel.description;
+    selectedCategory = widget.itemModel.category;
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -127,9 +136,9 @@ class _SaveItemState extends State<SaveItem> {
                 Container(
                   width: 130,
                   height: 130,
-                  child: _imageFile == null
-                      ? Image.asset(
-                          'assets/page-1/images/group-47.png',
+                  child: widget.itemModel.imageUrl != null
+                      ? Image.network(
+                          widget.itemModel.imageUrl,
                           width: 242,
                           height: 149,
                         )
@@ -454,9 +463,7 @@ class _SaveItemState extends State<SaveItem> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             ItemModel itemModel = ItemModel(
-                                id: DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
+                                id: widget.itemModel.id,
                                 name: widget.nameController.text,
                                 category: selectedCategory,
                                 quantity:
@@ -467,11 +474,11 @@ class _SaveItemState extends State<SaveItem> {
                                 imageUrl: "",
                                 createdBy: "");
 
-                            saveItem(itemModel);
+                            updateItem(itemModel);
                           }
                         },
                         child: const Text(
-                          'Create Item',
+                          'Update Item',
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
                       ),
@@ -484,90 +491,36 @@ class _SaveItemState extends State<SaveItem> {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   color: Color.fromARGB(255, 6, 84, 79),
-      //   height: 60,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     children: [
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 0
-      //             ? Image.asset('assets/appbar/article_filled.png')
-      //             : Image.asset('assets/appbar/article.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Scene()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 1
-      //             ? Image.asset('assets/appbar/market_filled.png')
-      //             : Image.asset('assets/appbar/market.png'),
-      //         onPressed: () => _appBarIconTap(1),
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 2
-      //             ? Image.asset('assets/appbar/reservation_filled.png')
-      //             : Image.asset('assets/appbar/reservation.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(2);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => const PlaceOrder()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 3
-      //             ? Image.asset('assets/appbar/profile_filled.png')
-      //             : Image.asset('assets/appbar/profile.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(3);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => SaveItem()),
-      //           );
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
-  Future<void> saveItem(ItemModel item) async {
+  Future<void> updateItem(ItemModel item) async {
     try {
       String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
-      print(currentUserEmail.toString());
+
       if (currentUserEmail != null) {
         final dbContextReference =
             FirebaseDatabase.instance.ref().child('items');
-        String imageUrl = await seedItemImageAsync(context);
-        print(imageUrl);
-        await dbContextReference.child(item.id).set(({
-              'id': item.id,
-              'name': item.name,
-              'category': item.category,
-              'quantity': item.quantity,
-              'price': item.price,
-              'description': item.description,
-              'imageUrl': imageUrl,
-              "createdBy": currentUserEmail,
-            }));
+        //String imageUrl = await seedItemImageAsync(context);
+
+        dbContextReference.child(item.id).update({
+          'name': item.name,
+          'category': item.category,
+          'quantity': item.quantity,
+          'price': item.price,
+          'desctiption': item.description,
+          'imageUrl': widget.itemModel.imageUrl,
+          "createdBy": currentUserEmail,
+        });
 
         Fluttertoast.showToast(
-            msg: "Item Saved Successfully",
+            msg: "Item Update Successfully",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
             backgroundColor: Color.fromARGB(255, 4, 154, 89),
             textColor: Colors.white,
             fontSize: 16.0);
-
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => ItemMarketList()));
       } else {

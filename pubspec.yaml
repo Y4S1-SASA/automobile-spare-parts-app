@@ -39,6 +39,7 @@ dependencies:
   firebase_storage: ^11.0.16
   syncfusion_flutter_datepicker: ^20.4.54
   cloud_firestore: ^4.4.5
+  accordion: ^2.5.1
 
 dev_dependencies:
   flutter_test:
@@ -54,10 +55,11 @@ dev_dependencies:
   firebase_app_check: ^0.1.1+12
   firebase_auth: ^4.2.9
   fluttertoast: ^8.2.1
-  firebase_database: ^10.0.14
+  firebase_database: ^10.0.16
   flutter_spinkit: ^5.1.0
   confirm_dialog: ^1.0.1
   provider: ^6.0.0
+  shared_preferences: ^2.0.20
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -190,6 +192,7 @@ flutter:
     - assets/page-1/images/icons8-visa-480-1-ijS.png
     - assets/page-1/images/icons8-paypal-64-1-JoS.png
     - assets/page-1/images/icons8-mastercard-480-1-B1A.png
+    - assets/page-1/images/icon-edit-2 copy.png
     - assets/appbar/article_filled.png
     - assets/appbar/article.png
     - assets/appbar/market_filled.png
@@ -200,6 +203,16 @@ flutter:
     - assets/appbar/profile_filled.png
     - assets/appbar/profile.png
     - assets/users/profile-icon.png
+    - assets/orders/icon-arrow-left.png
+    - assets/orders/icon-edit.png
+    - assets/orders/icon-location.png
+    - assets/orders/icon-trash.png
+    - assets/orders/icon-mastercard.png
+    - assets/orders/icon-paypal.png
+    - assets/orders/icon-calendar.png
+    - assets/orders/icons-visa.png
+    - assets/orders/icon-close-circle.png
+    - assets/orders/package.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
