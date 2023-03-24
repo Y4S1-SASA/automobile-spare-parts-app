@@ -1,24 +1,25 @@
 import 'dart:io';
-
+import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/profile/user-profile.dart';
 import 'package:flutter/material.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
+// edit state
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
   String? _lastName;
   String? _imageUrl;
 
+  // image picker
   Future<void> _pickImage() async {
     final imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -27,12 +28,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final userProvider = Provider.of<AuthProvider>(context, listen: false);
       final userId = userProvider.user!.userId;
 
-      // Upload the file to Firebase Storage
+      // Upload the image file to Firebase Storage
       final storageRef =
           FirebaseStorage.instance.ref().child('users/$userId/profile_pic');
       final task = storageRef.putFile(File(imageFile.path));
 
-      // Show a progress indicator while the file is uploading
+      // progress indicator alert
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -53,11 +54,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       );
 
-      // Wait for the upload to complete and get the URL of the uploaded file
+      // sync url
       final snapshot =
           await task.whenComplete(() => Navigator.of(context).pop());
       final imageUrl = await snapshot.ref.getDownloadURL();
-
       setState(() {
         _imageUrl = imageUrl;
       });
@@ -66,6 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // auth provider
     final userProvider = Provider.of<AuthProvider>(context);
     final user = userProvider.user;
 
@@ -80,12 +81,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SizedBox(
                 height: 50,
               ),
+
               Row(
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                    Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   ),
                   Expanded(
@@ -104,9 +106,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 48), // Add some spacing to the right of the text
                 ],
               ),
+
               SizedBox(
                 height: 20,
               ),
+
               CircleAvatar(
                 radius: 50,
                 backgroundImage: user?.imageUrl == null
@@ -121,7 +125,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onPressed: _pickImage,
                 ),
               ),
+
               SizedBox(height: 30),
+
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -134,9 +140,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
+
               SizedBox(
                 height: 2,
               ),
+
+// edit firstname
               TextFormField(
                 initialValue: user?.firstName ?? '',
                 decoration: InputDecoration(
@@ -157,6 +166,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: new BorderRadius.circular(8),
                   ),
                 ),
+                // validate firstname
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'First Name is required!';
@@ -167,9 +177,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _firstName = value;
                 },
               ),
+
               SizedBox(
                 height: 20,
               ),
+
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -182,9 +194,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
+
               SizedBox(
                 height: 2,
               ),
+
+              // edit lastname
               TextFormField(
                 initialValue: user?.lastName ?? '',
                 decoration: InputDecoration(
@@ -205,9 +220,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: new BorderRadius.circular(8),
                   ),
                 ),
+                // validate lastname
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
+                    return 'Last Name is required!';
                   }
                   return null;
                 },
@@ -215,7 +231,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _lastName = value;
                 },
               ),
+
               SizedBox(height: 20),
+
+              // save button
               MaterialButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -225,8 +244,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-
+                    // trigger updateUser in provider
                     final updatedUser = AuthUser(
+                      // passing data
                       userId: user?.userId ?? '',
                       email: user?.email ?? '',
                       firstName: _firstName ?? user?.firstName ?? '',
@@ -234,8 +254,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       imageUrl: _imageUrl ?? user?.imageUrl ?? '',
                     );
 
+                    // trigering point
                     userProvider.updateUser(updatedUser);
-
+                    // go back
                     Navigator.of(context).pop();
                   }
                 },

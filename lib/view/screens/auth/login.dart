@@ -41,9 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+
                         SizedBox(
                           height: 30,
                         ),
+
                         Text(
                           "Login",
                           style: TextStyle(
@@ -53,9 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontFamily: "Inter",
                           ),
                         ),
+
                         SizedBox(
                           height: 20,
                         ),
+
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -68,9 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+
                         SizedBox(
                           height: 2,
                         ),
+
                         TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
@@ -95,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value!.length == 0) {
                               return "Email cannot be empty";
                             }
+                            // validate email
                             if (!RegExp(
                                     "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                 .hasMatch(value)) {
@@ -108,9 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           keyboardType: TextInputType.emailAddress,
                         ),
+
                         SizedBox(
                           height: 20,
                         ),
+
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -123,9 +132,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+
                         SizedBox(
                           height: 2,
                         ),
+
                         TextFormField(
                           obscureText: _isObscure3,
                           controller: passwordController,
@@ -161,8 +172,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value!.isEmpty) {
                               return "Password cannot be empty";
                             }
+                            // validate password
                             if (!regex.hasMatch(value)) {
-                              return ("please enter valid password min. 6 character");
+                              return ("Minimum 6 characters required");
                             } else {
                               return null;
                             }
@@ -172,6 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           //keyboardType: TextInputType.visiblePassword,
                         ),
+                        
                         SizedBox(
                           height: 20,
                         ),

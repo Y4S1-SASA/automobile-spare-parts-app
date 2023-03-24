@@ -12,20 +12,29 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+// profile screen state
 class _ProfileScreenState extends State<ProfileScreen> {
+  // instance for items
   final DatabaseReference _itemsRef =
       FirebaseDatabase.instance.reference().child('items');
 
+  // init items
   List<Map<dynamic, dynamic>> _items = [];
+  // init filtered items
   List<Map<dynamic, dynamic>> _filteredItems = [];
 
+  // search controller
   TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    // get auth data
     final userProvider = Provider.of<AuthProvider>(context, listen: false);
     final userEmail = userProvider.user?.email ?? '';
+
+    // get items of the logged user
     _itemsRef
         .orderByChild('createdBy')
         .equalTo(userEmail)
@@ -34,12 +43,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (event.snapshot.value != null) {
         final Map<dynamic, dynamic>? map =
             event.snapshot.value as Map<dynamic, dynamic>?;
+        // check if not null
         if (map != null) {
           map.forEach((key, value) {
+            // map func
             final item =
                 Map<dynamic, dynamic>.from(value as Map<dynamic, dynamic>);
             _items.add(item);
           });
+          // set filtered state
           setState(() {
             _filteredItems = _items;
           });
@@ -49,10 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _filterItems(String query) {
+    // filter state for items
     setState(() {
       _filteredItems = _items
           .where((item) =>
+              // filter by name
               item['name'].toLowerCase().contains(query.toLowerCase()) ||
+              // filter by category
               item['category'].toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
@@ -60,8 +75,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // auth provider
     final userProvider = Provider.of<AuthProvider>(context);
     final user = userProvider.user;
+    // item modal
     final List<ItemModel> listOfItems = [];
 
     return Scaffold(
@@ -69,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // profile section
+            // profile section starts  here
             Container(
               color: Color.fromARGB(255, 6, 84, 79),
               padding: const EdgeInsets.all(8.0),
@@ -77,6 +94,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   SizedBox(
                     height: 70,
+                  ),
+                  // Text(
+                  //         "Profile",
+                  //         style: TextStyle(
+                  //           fontWeight: FontWeight.w400,
+                  //           color: Color.fromARGB(255, 255, 255, 255),
+                  //           fontSize: 24,
+                  //           fontFamily: "Inter",
+                  //         ),
+                  //       ),
+                  SizedBox(
+                    height: 20,
                   ),
                   CircleAvatar(
                     radius: 50,
@@ -88,19 +117,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             as ImageProvider<Object>?,
                   ),
                   SizedBox(height: 20),
+                  // user first name and last name
                   Text(
                     (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
                     style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
+
                   SizedBox(height: 10),
+
+                  // user email
                   Text(
                     user?.email ?? '',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+
                   SizedBox(height: 20),
+
+                  // icon set displays here
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -110,6 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         child: IconButton(
+                          // navigate to edit profile
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -127,6 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         child: IconButton(
+                          // trigger delete user in provider
                           onPressed: () {
                             userProvider.deleteUser(context);
                           },
@@ -141,6 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         child: IconButton(
+                          // trigger logout inprovider
                           onPressed: () {
                             userProvider.logout(context);
                           },
@@ -151,6 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(width: 30),
                     ],
                   ),
+
                   SizedBox(
                     height: 20,
                   ),
@@ -161,7 +201,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
-            // items section
+
+            // items section starts here
             Container(
               alignment: Alignment.center,
               child: Text(
@@ -174,9 +215,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+
             SizedBox(
               height: 20,
             ),
+
+            // search bos
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextField(
@@ -203,18 +247,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
             ),
+
+            // List view
             ListView.builder(
               shrinkWrap: true,
               padding: const EdgeInsets.all(8.0),
               physics: NeverScrollableScrollPhysics(),
               itemCount: _filteredItems.length,
               itemBuilder: (BuildContext context, int index) {
+                // filtered data
                 final item = _filteredItems[index];
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
+                  // item data to be displayed
                   child: ListTile(
                     tileColor: Colors.grey[200],
                     leading: item['imageUrl'] != null
@@ -240,6 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       onPressed: () {
+                        // navigate to item detail
                         Navigator.push(
                           context,
                           MaterialPageRoute(

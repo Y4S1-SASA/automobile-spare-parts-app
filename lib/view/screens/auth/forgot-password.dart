@@ -41,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           Text(
                             "Forgot Password",
                             style: TextStyle(
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.w500,
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 24,
                               fontFamily: "Inter",
@@ -92,6 +92,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               if (value!.length == 0) {
                                 return "Email cannot be empty";
                               }
+                              // validate email
                               if (!RegExp(
                                       "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                   .hasMatch(value)) {
@@ -196,6 +197,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await _auth
           .sendPasswordResetEmail(email: email)
           .then((uid) => {
+                // after req redirect to login
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginScreen()))
               })
