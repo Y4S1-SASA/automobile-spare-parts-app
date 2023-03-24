@@ -27,18 +27,28 @@ class EditArticle extends StatefulWidget {
 }
 
 class _EditArticleState extends State<EditArticle> {
-   final _formKey = GlobalKey<FormState>();
-  late ArticleModal oldArticle;
+  //Texting input controllers
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _tagsController;
-  int _selectedAppBarIconIndex = 1;
 
+  late ArticleModal oldArticle;
+  final _formKey = GlobalKey<FormState>();
+
+  File? _imageFile;
+  final picker = ImagePicker();
+
+  //database reference
   final databaseRef = FirebaseDatabase.instance.reference();
 
   @override
   void initState() {
     super.initState();
+    _setArticleValues();
+  }
+
+  //Set articles values to form
+  void _setArticleValues() {
     oldArticle = ArticleModal(
         key: widget.article.key,
         title: widget.article.title,
@@ -53,7 +63,9 @@ class _EditArticleState extends State<EditArticle> {
         TextEditingController(text: widget.article.tags.join(","));
   }
 
+  // Deletes article
   Future<void> deleteArticle(BuildContext context) async {
+    //Show loading
     showDialog(
       context: context,
       builder: (BuildContext context) => const Center(
@@ -62,6 +74,7 @@ class _EditArticleState extends State<EditArticle> {
       barrierDismissible: false,
     );
 
+    //Deletes article
     await databaseRef.child('articles').child(oldArticle.key ?? "").remove();
     Navigator.of(context).pop();
 
@@ -73,30 +86,20 @@ class _EditArticleState extends State<EditArticle> {
     Navigator.pop(context);
   }
 
+  // Updates article
   Future<void> updateArticle(ArticleModal article) async {
     final Map<String, dynamic> updateData = {
       'title': article.title,
       'description': article.description,
       'tags': article.tags,
-      'imageUrl': article.imageUrl,
-      'ownerUid': article.ownerUid
+      'imageUrl': article.imageUrl
     };
 
     await databaseRef
         .child('articles')
         .child(oldArticle.key ?? "")
         .update(updateData);
-    print('Article updated successfully.');
   }
-
-  void _appBarIconTap(int index) {
-    setState(() {
-      _selectedAppBarIconIndex = index;
-    });
-  }
-
-  File? _imageFile;
-  final picker = ImagePicker();
 
   // Loads image image from source
   Future<void> _getImageFromSource(ImageSource source) async {
@@ -140,6 +143,7 @@ class _EditArticleState extends State<EditArticle> {
     );
   }
 
+  // Delete confirmation dialog
   Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -193,8 +197,9 @@ class _EditArticleState extends State<EditArticle> {
   // saves article in firebase realitime database
   Future<void> _saveArticle(BuildContext context) async {
     String? loggedInUserUid = FirebaseAuth.instance.currentUser?.email;
+
+    // Form validation before submit
     if (_formKey.currentState!.validate()) {
-    if (loggedInUserUid != null) {
       // Show progress dialog
       showDialog(
         context: context,
@@ -216,7 +221,7 @@ class _EditArticleState extends State<EditArticle> {
           description: _descriptionController.text,
           tags: tagsList,
           imageUrl: imageUrl,
-          ownerUid: loggedInUserUid);
+          ownerUid: loggedInUserUid ?? "null");
 
       await updateArticle(article);
 
@@ -228,9 +233,6 @@ class _EditArticleState extends State<EditArticle> {
         SnackBar(content: Text('Article updated successfully!')),
       );
       Navigator.pop(context);
-    } else {
-      print("not logged in");
-    }
     }
   }
 
@@ -238,15 +240,11 @@ class _EditArticleState extends State<EditArticle> {
   Widget build(BuildContext context) {
     String? loggedInUserUid = FirebaseAuth.instance.currentUser?.uid;
     bool ownedByLoggedInUser = oldArticle.ownerUid == loggedInUserUid;
-    double baseWidth = 445;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
+
     return Scaffold(
       body: SingleChildScrollView(
-       
         child: Container(
-          
- margin: EdgeInsets.only(bottom: 50),
+          margin: EdgeInsets.only(bottom: 50),
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xffececec)),
@@ -255,7 +253,7 @@ class _EditArticleState extends State<EditArticle> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               SizedBox(
+              SizedBox(
                 height: 70,
               ),
               Row(
@@ -263,7 +261,7 @@ class _EditArticleState extends State<EditArticle> {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                    Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   ),
                   Expanded(
@@ -282,55 +280,54 @@ class _EditArticleState extends State<EditArticle> {
                       width: 48), // Add some spacing to the right of the text
                 ],
               ),
-               Form(
+              Form(
                 key: _formKey,
                 child: Container(
-                padding: EdgeInsets.only(top: 20),
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-
-                    GestureDetector(
-                      onTap: () async {
-                        if (ownedByLoggedInUser)
-                          await _showImageSourceSelectionDialog();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        height: 200,
-                        child: _imageFile == null
-                            ? Image.network(
-                                oldArticle.imageUrl,
-                                width: 250,
-                                height: 250,
-                              )
-                            : Image.file(
-                                _imageFile!,
-                                height: 250,
-                              ),
+                  padding: EdgeInsets.only(top: 20),
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          if (ownedByLoggedInUser)
+                            await _showImageSourceSelectionDialog();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          height: 200,
+                          child: _imageFile == null
+                              ? Image.network(
+                                  oldArticle.imageUrl,
+                                  width: 250,
+                                  height: 250,
+                                )
+                              : Image.file(
+                                  _imageFile!,
+                                  height: 250,
+                                ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 29),
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                           padding: EdgeInsets.only(bottom: 18),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 18),
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                 Container(
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 29),
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(bottom: 18),
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 18),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
                                           margin: EdgeInsets.only(bottom: 7),
                                           child: Text(
                                             'Title',
@@ -343,7 +340,7 @@ class _EditArticleState extends State<EditArticle> {
                                             ),
                                           ),
                                         ),
-                                     Container(
+                                        Container(
                                           child: TextFormField(
                                             validator: (value) {
                                               if (value == null ||
@@ -358,7 +355,6 @@ class _EditArticleState extends State<EditArticle> {
                                             },
                                             controller: _titleController,
                                             decoration: InputDecoration(
-                                              
                                               filled: true,
                                               fillColor: Color.fromARGB(
                                                   255, 235, 235, 235),
@@ -388,34 +384,32 @@ class _EditArticleState extends State<EditArticle> {
                                             ),
                                           ),
                                         ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  // inputtext1hi (10:808)
-                                  margin: EdgeInsets.fromLTRB(
-                                      0 * fem, 0 * fem, 0.41 * fem, 0 * fem),
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // descriptionk9W (10:809)
-                                        margin: EdgeInsets.fromLTRB(0 * fem,
-                                            0 * fem, 0 * fem, 8.52 * fem),
-                                        child: Text(
-                                          'Description',
-                                          style: SafeGoogleFont(
-                                            'Inter',
-                                            fontSize: 12 * ffem,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.2125 * ffem / fem,
-                                            color: Color(0xff666666),
+                                  Container(
+                                    // inputtext1hi (10:808)
+                                    // margin: EdgeInsets.fromLTRB(
+                                    //     0 * fem, 0 * fem, 0.41 * fem, 0 * fem),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                           Container(
+                                          margin: EdgeInsets.only(bottom: 7),
+                                          child: Text(
+                                            'Description',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              color: Color.fromARGB(
+                                                  255, 63, 63, 63),
+                                              fontSize: 10,
+                                              fontFamily: "Inter",
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                 Container(
+                                        Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             border: Border.all(
@@ -470,10 +464,10 @@ class _EditArticleState extends State<EditArticle> {
                                       ],
                                     ),
                                   ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                  Container(
+                            Container(
                               margin: EdgeInsets.only(bottom: 35),
                               width: double.infinity,
                               child: Column(
@@ -542,78 +536,80 @@ class _EditArticleState extends State<EditArticle> {
                                 ],
                               ),
                             ),
-                          if (ownedByLoggedInUser)
-                          Container(
-                              margin: EdgeInsets.symmetric(horizontal: 52),
-                              width: double.infinity,
-                              height: 43,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(27),
-                              ),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await _saveArticle(context);
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 6, 84, 79),
-                                    borderRadius: BorderRadius.circular(27),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Update',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        fontFamily: 'Inter',
+                            if (ownedByLoggedInUser)
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 52),
+                                width: double.infinity,
+                                height: 43,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(27),
+                                ),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await _saveArticle(context);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 6, 84, 79),
+                                      borderRadius: BorderRadius.circular(27),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Update',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          fontFamily: 'Inter',
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          if (ownedByLoggedInUser)
-                                        Container(
-                              margin: EdgeInsets.symmetric(horizontal: 52, vertical: 10),
-                              width: double.infinity,
-                              height: 43,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(27),
-                              ),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await _showDeleteConfirmationDialog(context);
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                     color: Color.fromARGB(255, 214, 120, 13),
-                                    borderRadius: BorderRadius.circular(27),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        fontFamily: 'Inter',
+                            if (ownedByLoggedInUser)
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 52, vertical: 10),
+                                width: double.infinity,
+                                height: 43,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(27),
+                                ),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await _showDeleteConfirmationDialog(
+                                        context);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 214, 120, 13),
+                                      borderRadius: BorderRadius.circular(27),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          fontFamily: 'Inter',
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               ),
             ],
           ),

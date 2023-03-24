@@ -20,6 +20,8 @@ class Scene extends StatefulWidget {
 }
 
 class _SceneState extends State<Scene> {
+  
+  //Texting input controllers
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _tagsController = TextEditingController();
@@ -28,7 +30,7 @@ class _SceneState extends State<Scene> {
   File? _imageFile;
   final picker = ImagePicker();
 
-  // Loads image image from source
+  // Loads images from camera or gallery
   Future<void> _getImageFromSource(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
     setState(() {
@@ -39,7 +41,7 @@ class _SceneState extends State<Scene> {
     Navigator.of(context).pop();
   }
 
-  // Image selecting dialog
+  // Image selecting dialog box
   Future<void> _showImageSourceSelectionDialog() async {
     return showDialog(
       context: context,
@@ -72,13 +74,15 @@ class _SceneState extends State<Scene> {
 
   // uploads image to firebase storage
   Future<String> _uploadImageToFirebase(BuildContext context) async {
-    if (_imageFile == null) return "null";
 
-    // Create a unique filename for the image
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    // If an image is not seleceted. default image will be returned
+    if (_imageFile == null) return "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg";
+
+    // Create a filename for the image
+    final imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
     // Upload the image to Firebase Storage
-    final storageRef = FirebaseStorage.instance.ref().child('images/$fileName');
+    final storageRef = FirebaseStorage.instance.ref().child('images/$imageFileName');
     final uploadTask = storageRef.putFile(_imageFile!);
     final snapshot = await uploadTask.whenComplete(() {});
     final imageUrl = await snapshot.ref.getDownloadURL();
@@ -88,9 +92,13 @@ class _SceneState extends State<Scene> {
 
   // saves article in firebase realitime database
   Future<void> _saveArticle(BuildContext context) async {
+
+    // Currenlty logged in users id
     String? loggedInUserUid = FirebaseAuth.instance.currentUser?.uid;
+
+    // Check form validations before submit
     if (_formKey.currentState!.validate()) {
-      if (loggedInUserUid != null) {
+
         // Show progress dialog
         showDialog(
           context: context,
@@ -99,6 +107,7 @@ class _SceneState extends State<Scene> {
           ),
           barrierDismissible: false,
         );
+
         String imageUrl = await _uploadImageToFirebase(context);
         List<String> tagsList = _tagsController.text.split(",");
         ArticleModal article = ArticleModal(
@@ -106,7 +115,7 @@ class _SceneState extends State<Scene> {
             description: _descriptionController.text,
             tags: tagsList,
             imageUrl: imageUrl,
-            ownerUid: loggedInUserUid);
+            ownerUid: loggedInUserUid ?? "null");
 
         // Generate a new push key for the article
         final articleRef =
@@ -120,6 +129,7 @@ class _SceneState extends State<Scene> {
           'imageUrl': article.imageUrl,
           'ownerUid': article.ownerUid
         });
+        
         // Hide progress dialog
         Navigator.of(context).pop();
 
@@ -128,9 +138,6 @@ class _SceneState extends State<Scene> {
           SnackBar(content: Text('Article created successfully!')),
         );
         Navigator.pop(context);
-      } else {
-        print("not logged in");
-      }
     }
   }
 

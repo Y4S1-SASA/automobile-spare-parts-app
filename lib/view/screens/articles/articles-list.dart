@@ -23,7 +23,11 @@ class _ListArticlesState extends State<ListArticles> {
     getArticles();
   }
 
+  // Fetch articles from database and save them in state
   getArticles() async {
+    setState(() {
+      articlesList.clear();
+    });
     final snapshot = await FirebaseDatabase.instance.ref('articles').get();
 
     final map = snapshot.value as Map<dynamic, dynamic>;
@@ -82,7 +86,8 @@ class _ListArticlesState extends State<ListArticles> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Scene()));
+                            MaterialPageRoute(builder: (context) => Scene()))
+                        .then((_) => getArticles());
                   },
                   child: Container(
                       child: Text(
@@ -109,10 +114,11 @@ class _ListArticlesState extends State<ListArticles> {
                         .map((article) => GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditArticle(article: article)));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditArticle(article: article)))
+                                  .then((_) => getArticles());
                             },
                             child: Container(
                               margin: EdgeInsets.only(bottom: 25),
