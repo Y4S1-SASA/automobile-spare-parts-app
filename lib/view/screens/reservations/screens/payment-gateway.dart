@@ -47,6 +47,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
     double ffem = fem * 0.97;
     return Scaffold(
       // appBar: AppBar(backgroundColor: Color.fromARGB(255, 6, 84, 79), title: Text('')), // App Bar
+
       body: SingleChildScrollView(
         child: Column(
           children: [
