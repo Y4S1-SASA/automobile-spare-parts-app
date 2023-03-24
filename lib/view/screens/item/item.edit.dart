@@ -518,7 +518,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
-            backgroundColor: const Color.fromARGB(255, 6, 84, 79),
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
             textColor: Colors.white,
             fontSize: 16.0);
         Navigator.push(

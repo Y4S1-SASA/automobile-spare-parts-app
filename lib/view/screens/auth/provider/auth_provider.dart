@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // created AuthProvider to get logged user data
 class AuthProvider with ChangeNotifier {
@@ -62,6 +63,14 @@ class AuthProvider with ChangeNotifier {
     _user = null;
     // _prefs.setString('user', json.encode(_user!.toJson()));
     notifyListeners();
+    Fluttertoast.showToast(
+            msg: "Logged out Successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
     // Login success redirect to login screen
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => LoginScreen()),
@@ -97,6 +106,14 @@ class AuthProvider with ChangeNotifier {
       'lastName': user.lastName,
       'imageUrl': user.imageUrl,
     });
+    Fluttertoast.showToast(
+            msg: "User data updated Successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
     // update state and notify
     _user = user;
     notifyListeners();
@@ -131,6 +148,14 @@ class AuthProvider with ChangeNotifier {
     if (confirmation == true) {
       // if confirmer user need to signed out and redirected to signin
       await _firebaseAuth.signOut();
+      Fluttertoast.showToast(
+            msg: "Your account removed Successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => LoginScreen()),
       );

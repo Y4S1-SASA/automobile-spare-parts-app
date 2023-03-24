@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -552,6 +553,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'email': email,
           'imageUrl': imageUrl,
         };
+        Fluttertoast.showToast(
+            msg: "Successfully Registered! Login to continue.",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
         // set new user in db
         usersRef.child(userId).set(newUser);
         // redirect
@@ -561,8 +570,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
+          Fluttertoast.showToast(
+              msg: "The password provided is too weak!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
+          Fluttertoast.showToast(
+              msg: "Email already exist!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('The account already exists for that email.');
         }
       } catch (e) {

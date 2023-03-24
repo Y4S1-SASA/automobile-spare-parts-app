@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'login.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -194,6 +194,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   // request password reset email
   void ReqForgotPassword(String email) async {
     if (_formkey.currentState!.validate()) {
+      Fluttertoast.showToast(
+          msg:
+              "Password Reset link sent to your email. Please check your email",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Color.fromARGB(255, 4, 154, 89),
+          textColor: Colors.white,
+          fontSize: 16.0);
       await _auth
           .sendPasswordResetEmail(email: email)
           .then((uid) => {
@@ -201,7 +210,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginScreen()))
               })
-          .catchError((e) {});
+          .catchError((e) {
+        Fluttertoast.showToast(
+            msg: e,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
     }
   }
 }

@@ -7,6 +7,7 @@ import 'forgot-password.dart';
 import 'register.dart';
 import 'package:automobile_spare_parts_app/view/screens/auth/provider/user.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   // login state
@@ -41,11 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-
                         SizedBox(
                           height: 30,
                         ),
-
                         Text(
                           "Login",
                           style: TextStyle(
@@ -55,11 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontFamily: "Inter",
                           ),
                         ),
-
                         SizedBox(
                           height: 20,
                         ),
-
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -72,11 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(
                           height: 2,
                         ),
-
                         TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
@@ -115,11 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           keyboardType: TextInputType.emailAddress,
                         ),
-
                         SizedBox(
                           height: 20,
                         ),
-
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -132,11 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(
                           height: 2,
                         ),
-
                         TextFormField(
                           obscureText: _isObscure3,
                           controller: passwordController,
@@ -184,7 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           //keyboardType: TextInputType.visiblePassword,
                         ),
-                        
                         SizedBox(
                           height: 20,
                         ),
@@ -297,6 +287,14 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
         );
+        Fluttertoast.showToast(
+            msg: "Login Successfull!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Color.fromARGB(255, 4, 154, 89),
+            textColor: Colors.white,
+            fontSize: 16.0);
         // init user id
         String userId = userCredential.user!.uid;
         // provider to get auth user data
@@ -311,8 +309,24 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
+          Fluttertoast.showToast(
+              msg: "User not found. Check credentials!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
+          Fluttertoast.showToast(
+              msg: "Incorrect Password!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: const Color.fromARGB(255, 233, 23, 23),
+              textColor: Colors.white,
+              fontSize: 16.0);
           print('Wrong password provided for that user.');
         }
       }
