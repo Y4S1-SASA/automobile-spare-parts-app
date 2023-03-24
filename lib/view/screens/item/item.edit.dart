@@ -98,11 +98,14 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   String selectedCategory = 'Item 1';
   final List<String> ctegories = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+    'Braking system',
+    'Electrified powertrain components',
+    'Engine components and parts',
+    'Engine cooling system',
+    'Engine oil systems',
+    'Exhaust system',
+    'Fuel supply system',
+    'Suspension and steering systems',
   ];
 
   @override
@@ -453,8 +456,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                           borderRadius: BorderRadius.circular(20)),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color.fromARGB(255, 6, 84, 79)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 6, 84, 79)),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -516,7 +519,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         Fluttertoast.showToast(
             msg: "Item Update Successfully",
             toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
+            gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 4,
             backgroundColor: Color.fromARGB(255, 4, 154, 89),
             textColor: Colors.white,
@@ -527,7 +530,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         Fluttertoast.showToast(
             msg: "Authentication Error",
             toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
+            gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 4,
             backgroundColor: Color.fromARGB(255, 192, 25, 25),
             textColor: Colors.white,
@@ -537,7 +540,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       Fluttertoast.showToast(
           msg: "Error has been occured pleas try again",
           toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 4,
           backgroundColor: const Color.fromARGB(255, 233, 23, 23),
           textColor: Colors.white,

@@ -33,7 +33,7 @@ class _SaveItemState extends State<SaveItem> {
 
   File? _imageFile;
   final picker = ImagePicker();
-
+  String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
   // Loads image image from source
   Future<void> getImageFromSource(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
@@ -92,13 +92,14 @@ class _SaveItemState extends State<SaveItem> {
     return imageUrl;
   }
 
-  String selectedCategory = 'Item 1';
+  String selectedCategory = 'Braking system';
   final List<String> ctegories = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+    'Braking system',
+    'Engine components and parts',
+    'Engine cooling system',
+    'Engine oil systems',
+    'Exhaust system',
+    'Fuel supply system',
   ];
 
   @override
@@ -496,33 +497,44 @@ class _SaveItemState extends State<SaveItem> {
             FirebaseDatabase.instance.ref().child('items');
         String imageUrl = await seedItemImageAsync(context);
 
-        await dbContextReference.child(item.id).set(({
-              'id': item.id,
-              'name': item.name,
-              'category': item.category,
-              'quantity': item.quantity,
-              'price': item.price,
-              'description': item.description,
-              'imageUrl': imageUrl,
-              "createdBy": currentUserEmail,
-            }));
+        if (imageUrl == "null") {
+          Fluttertoast.showToast(
+              msg: "Please Select an Image",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Color.fromARGB(255, 231, 149, 27),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else if (imageUrl.isNotEmpty) {
+          await dbContextReference.child(item.id).set(({
+                'id': item.id,
+                'name': item.name,
+                'category': item.category,
+                'quantity': item.quantity,
+                'price': item.price,
+                'description': item.description,
+                'imageUrl': imageUrl,
+                "createdBy": currentUserEmail,
+              }));
 
-        Fluttertoast.showToast(
-            msg: "Item Saved Successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 4,
-            backgroundColor: Color.fromARGB(255, 4, 154, 89),
-            textColor: Colors.white,
-            fontSize: 16.0);
+          Fluttertoast.showToast(
+              msg: "Item Saved Successfully",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Color.fromARGB(255, 4, 154, 89),
+              textColor: Colors.white,
+              fontSize: 16.0);
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => ItemMarketList()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ItemMarketList()));
+        }
       } else {
         Fluttertoast.showToast(
             msg: "Authentication Error",
             toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
+            gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 4,
             backgroundColor: Color.fromARGB(255, 192, 25, 25),
             textColor: Colors.white,
@@ -532,7 +544,7 @@ class _SaveItemState extends State<SaveItem> {
       Fluttertoast.showToast(
           msg: "Error has been occured pleas try again",
           toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 4,
           backgroundColor: const Color.fromARGB(255, 233, 23, 23),
           textColor: Colors.white,

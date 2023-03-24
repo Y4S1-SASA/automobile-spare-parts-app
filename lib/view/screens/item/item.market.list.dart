@@ -16,7 +16,14 @@ class ItemMarketList extends StatefulWidget {
 }
 
 class _ItemMarketListState extends State<ItemMarketList> {
-  final List<ItemModel> listOfItems = [];
+  final DatabaseReference dbContextRef =
+      FirebaseDatabase.instance.reference().child('items');
+  String? currentUserEmail = FirebaseAuth.instance.currentUser!.email;
+
+  // init items
+  List<Map<dynamic, dynamic>> liftOfItems = [];
+  // init filtered items
+  List<Map<dynamic, dynamic>> listOfFilteredItems = [];
   @override
   void initState() {
     super.initState();
@@ -24,23 +31,35 @@ class _ItemMarketListState extends State<ItemMarketList> {
   }
 
   getListOfMarketItemsAsync() async {
-    final snapshot = await FirebaseDatabase.instance.ref('items').get();
+    // get items of the logged user
+    dbContextRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final Map<dynamic, dynamic>? map =
+            event.snapshot.value as Map<dynamic, dynamic>?;
+        // check if not null
+        if (map != null) {
+          map.forEach((key, value) {
+            // map func
+            final item =
+                Map<dynamic, dynamic>.from(value as Map<dynamic, dynamic>);
+            liftOfItems.add(item);
+          });
+          // set filtered state
+          setState(() {
+            listOfFilteredItems = liftOfItems;
+          });
+        }
+      }
+    });
+  }
 
-    final map = snapshot.value as Map<dynamic, dynamic>;
-
-    map.forEach((key, value) {
-      ItemModel item = ItemModel(
-          id: value["id"],
-          name: value["name"],
-          category: value["category"],
-          quantity: value["quantity"],
-          price: 3,
-          description: value["description"] ?? "",
-          imageUrl: value["imageUrl"] ?? "",
-          createdBy: value["createdBy"] ?? "");
-      setState(() {
-        listOfItems.add(item);
-      });
+  void onSearchFilterChanged(String filter) {
+    setState(() {
+      listOfFilteredItems = liftOfItems
+          .where((item) =>
+              item['name'].toLowerCase().contains(filter.toLowerCase()) ||
+              item['category'].toLowerCase().contains(filter.toLowerCase()))
+          .toList();
     });
   }
 
@@ -58,188 +77,126 @@ class _ItemMarketListState extends State<ItemMarketList> {
             child: Column(
           children: <Widget>[
             SizedBox(
-              height: 12 * fem,
+              height: 20 * fem,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SaveItem()));
-              },
-              child: Container(
-                margin:
-                    EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
-                width: double.infinity,
-                child: Text(
-                  'Add',
-                  textAlign: TextAlign.center,
-                  style: SafeGoogleFont(
-                    'Inter',
-                    fontSize: 16 * ffem,
-                    fontWeight: FontWeight.w600,
-                    height: 1.2125 * ffem / fem,
-                    color: Color.fromARGB(255, 6, 84, 79),
-                  ),
+            if (currentUserEmail == "admin@gmail.com")
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SaveItem()));
+                },
+                child: Container(
+                  margin:
+                      EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 34 * fem),
+                  width: double.infinity,
+                  child: currentUserEmail == "admin@gmail.com"
+                      ? Text(
+                          'Add',
+                          textAlign: TextAlign.center,
+                          style: SafeGoogleFont(
+                            'Inter',
+                            fontSize: 16 * ffem,
+                            fontWeight: FontWeight.w600,
+                            height: 1.2125 * ffem / fem,
+                            color: Color.fromARGB(255, 6, 84, 79),
+                          ),
+                        )
+                      : null,
                 ),
               ),
-            ),
             const SizedBox(
               height: 2,
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromARGB(255, 235, 235, 235),
-                hintText: 'Search Item',
-                enabled: true,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 14.0),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Color.fromARGB(255, 217, 217, 217)),
-                  borderRadius: new BorderRadius.circular(8),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 235, 235, 235),
+                  hintText: 'Search Item',
+                  enabled: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 14.0),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(
+                        color: Color.fromARGB(255, 217, 217, 217)),
+                    borderRadius: new BorderRadius.circular(8),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: new BorderSide(
+                        color: Color.fromARGB(255, 217, 217, 217)),
+                    borderRadius: new BorderRadius.circular(8),
+                  ),
                 ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide:
-                      new BorderSide(color: Color.fromARGB(255, 217, 217, 217)),
-                  borderRadius: new BorderRadius.circular(8),
-                ),
+                onChanged: (value) {
+                  onSearchFilterChanged(value);
+                },
+                keyboardType: TextInputType.name,
               ),
-              validator: (value) {
-                if (value!.length == 0) {
-                  return "Quantity is Required";
-                } else {
-                  return null;
-                }
-              },
-              onChanged: (value) {},
-              keyboardType: TextInputType.name,
             ),
-            Container(
-              width: double.infinity,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xffececec)),
-                  color: Color(0xffffffff),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                          0 * fem, 0 * fem, 1 * fem, 0 * fem),
-                      width: double.infinity,
-                      height: 1072 * fem,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 21 * fem,
-                            top: 0 * fem,
-                            child: Container(
-                              width: 403 * fem,
-                              height: 1072 * fem,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: listOfItems
-                                    .map((item) => GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ItemView(
-                                                          itemModel: item)));
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.fromLTRB(0 * fem,
-                                              25 * fem, 0 * fem, 0 * fem),
-                                          width: double.infinity,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                child: Image.network(
-                                                    item.imageUrl),
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    8 * fem),
-                                                width: double.infinity,
-                                                height: 240 * fem,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8 * fem),
-                                                  color: Color(0xfff6f6f6),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.fromLTRB(
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    0 * fem,
-                                                    7 * fem),
-                                                child: Text(
-                                                  item.name,
-                                                  style: SafeGoogleFont(
-                                                    'Inter',
-                                                    fontSize: 16 * ffem,
-                                                    fontWeight: FontWeight.w600,
-                                                    height: 1.2125 * ffem / fem,
-                                                    color: Color(0xff000000),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: double.infinity,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0 * fem,
-                                                              0 * fem,
-                                                              0 * fem,
-                                                              8 * fem),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                        maxWidth: 404 * fem,
-                                                      ),
-                                                      child: Text(
-                                                        item.description,
-                                                        style: SafeGoogleFont(
-                                                          'Inter',
-                                                          fontSize: 14 * ffem,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          height: 1.2125 *
-                                                              ffem /
-                                                              fem,
-                                                          color:
-                                                              Color(0xff000000),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )))
-                                    .toList(),
+            ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(8.0),
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: listOfFilteredItems.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = listOfFilteredItems[index];
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.grey[200],
+                    leading: item['imageUrl'] != null
+                        ? Image.network(
+                            item['imageUrl'] as String,
+                            width: 50,
+                            height: 50,
+                          )
+                        : SizedBox.shrink(),
+                    title: Text(
+                      item['name'] as String? ?? '',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    subtitle: Text(
+                      item['category'] as String? ?? '',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    trailing: MaterialButton(
+                      child: currentUserEmail == "admin@gmail.com"
+                          ? const Icon(
+                              Icons.view_stream_rounded,
+                              color: Color.fromARGB(255, 6, 84, 79),
+                            )
+                          : const Icon(
+                              Icons.shopping_cart_rounded,
+                              color: Color.fromARGB(255, 6, 84, 79),
+                            ),
+                      onPressed: () {
+                        // navigate to item detail
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ItemView(
+                              itemModel: ItemModel(
+                                id: item["id"],
+                                name: item["name"],
+                                category: item["category"],
+                                quantity: item["quantity"],
+                                price: 3,
+                                description: item["description"] ?? "",
+                                imageUrl: item["imageUrl"] ?? "",
+                                createdBy: item["createdBy"] ?? "",
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ],
         )));
