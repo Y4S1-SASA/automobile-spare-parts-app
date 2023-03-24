@@ -1,3 +1,5 @@
+// ignore: depend_on_referenced_packages
+import 'package:automobile_spare_parts_app/data/models/item.model.dart';
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,8 +15,10 @@ import '../shared/components/label-value.dart';
 import 'payment-gateway.dart';
 
 class PlaceOrder extends StatefulWidget {
-  const PlaceOrder({super.key, required this.itemModel});
+  PlaceOrder({Key? key, required this.itemModel}) : super(key: key);
+
   final ItemModel itemModel;
+
   @override
   State<PlaceOrder> createState() => _PlaceOrderState();
 }

@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import '/utils.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ItemView extends StatefulWidget {
   ItemView({Key? key, required this.itemModel}) : super(key: key);
@@ -20,6 +21,7 @@ class ItemView extends StatefulWidget {
 }
 
 class _ItemViewState extends State<ItemView> {
+  String? currentUserEmail = FirebaseAuth.instance.currentUser!.email;
   DatabaseReference dbContext = FirebaseDatabase.instance.ref().child('items');
   @override
   Widget build(BuildContext context) {
@@ -70,11 +72,6 @@ class _ItemViewState extends State<ItemView> {
                                         0 * fem, 137.35 * fem, 0 * fem),
                                     width: 11.65 * fem,
                                     height: 26 * fem,
-                                    child: Image.asset(
-                                      'assets/page-1/images/icon-arrow-left-1.png',
-                                      width: 11.65 * fem,
-                                      height: 26 * fem,
-                                    ),
                                   ),
                                   Text(
                                     'Item',
@@ -173,7 +170,7 @@ class _ItemViewState extends State<ItemView> {
                                           text: 'Unit Price : ',
                                         ),
                                         TextSpan(
-                                          text: "LKR + " +
+                                          text: "LKR " +
                                               widget.itemModel.price.toString(),
                                           style: SafeGoogleFont(
                                             'Inter',
@@ -246,87 +243,81 @@ class _ItemViewState extends State<ItemView> {
                                             borderRadius:
                                                 BorderRadius.circular(18.0)))),
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditItemScreen(
-                                              itemModel: widget.itemModel)));
-                                },
-                                child: const Text(
-                                  'Update Item',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              height: 50,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromARGB(255, 216, 57, 57)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0)))),
-                                onPressed: () async {
-                                  if (await confirm(context,
-                                      title: const Text("Confirm"),
-                                      content: const Text(
-                                          "Are you sure you want to delete this item?"),
-                                      textOK: const Text("Yes"),
-                                      textCancel: const Text("No"))) {
-                                    dbContext
-                                        .child(widget.itemModel.id)
-                                        .remove();
+                                  if (currentUserEmail == "admin@gmail.com") {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => ItemMarketList()));
+                                            builder: (context) =>
+                                                EditItemScreen(
+                                                    itemModel:
+                                                        widget.itemModel)));
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PlaceOrder(
+                                                itemModel: widget.itemModel)));
                                   }
                                 },
-                                child: const Text(
-                                  'Delete Item',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
+                                child: currentUserEmail == "admin@gmail.com"
+                                    ? const Text(
+                                        'Update Item',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 25),
+                                      )
+                                    : const Text(
+                                        'Buy Item',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 25),
+                                      ),
                               ),
                             ),
                             const SizedBox(height: 16),
                             Container(
                               height: 50,
                               width: 250,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromARGB(255, 6, 84, 79)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0)))),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PlaceOrder(
-                                              itemModel: widget.itemModel)));
-                                },
-                                child: const Text(
-                                  'Buy Item',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
-                              ),
+                              decoration: currentUserEmail == "admin@gmail.com"
+                                  ? BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(20))
+                                  : null,
+                              child: currentUserEmail == "admin@gmail.com"
+                                  ? ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color.fromARGB(
+                                                      255, 216, 57, 57)),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          18.0)))),
+                                      onPressed: () async {
+                                        if (await confirm(context,
+                                            title: const Text("Confirm"),
+                                            content: const Text(
+                                                "Are you sure you want to delete this item?"),
+                                            textOK: const Text("Yes"),
+                                            textCancel: const Text("No"))) {
+                                          dbContext
+                                              .child(widget.itemModel.id)
+                                              .remove();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      ItemMarketList()));
+                                        }
+                                      },
+                                      child: const Text(
+                                        'Delete Item',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 25),
+                                      ),
+                                    )
+                                  : null,
                             ),
                           ],
                         ),
