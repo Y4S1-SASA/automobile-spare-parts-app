@@ -1,12 +1,11 @@
 import 'package:automobile_spare_parts_app/data/models/order.model.dart';
+import 'package:automobile_spare_parts_app/view/screens/reservations/shared/components/payment-result.dart';
 import 'package:automobile_spare_parts_app/view/screens/reservations/shared/constants.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../service/order.service.dart';
 import '../../../../utils.dart';
 import '../shared/components/input-text.dart';
 import '../shared/components/label-name.dart';
-import 'order-list.dart';
 
 class PaymentGateway extends StatefulWidget {
   const PaymentGateway({super.key, required this.orderModel});
@@ -27,6 +26,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
   String expDate = '';
   String cvv = '';
 
+  // Assigns the date according to the selected date.
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -46,47 +46,37 @@ class _PaymentGatewayState extends State<PaymentGateway> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
     return Scaffold(
-      // appBar: AppBar(backgroundColor: Color.fromARGB(255, 6, 84, 79), title: Text('')), // App Bar
-
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               height: 70 * fem,
               width: double.infinity,
-              color: Color.fromARGB(255, 6, 84, 79),
+              color: const Color.fromARGB(255, 6, 84, 79),
             ),
-            Container(
-              // Heading place order and back arrow
-              margin:
-                  EdgeInsets.fromLTRB(33 * fem, 0 * fem, 155 * fem, 0 * fem),
-              width: double.infinity,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(
-                        0 * fem, 0 * fem, 110.35 * fem, 0 * fem),
-                    width: 11.65 * fem,
-                    height: 66 * fem,
-                    child: Image.asset(
-                      Constants.LEFT_ARROW_ICON,
-                      width: 11.65 * fem,
-                      height: 26 * fem,
-                    ),
-                  ),
-                  Text(
-                    'Payment',
-                    style: SafeGoogleFont(
-                      'Inter',
-                      fontSize: 24 * ffem,
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    "Payment",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      height: 1.2125 * ffem / fem,
-                      color: const Color(0xff000000),
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24,
+                      fontFamily: "Inter",
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                    width: 48), // Add some spacing to the right of the text
+              ],
             ),
             Container(
               margin: EdgeInsets.fromLTRB(0 * fem, 10 * fem, 21 * fem, 9 * fem),
@@ -102,14 +92,12 @@ class _PaymentGatewayState extends State<PaymentGateway> {
               ),
             ),
             Container(
-              // group65E6t (1:157)
               margin: EdgeInsets.fromLTRB(83 * fem, 0 * fem, 83 * fem, 0 * fem),
               width: double.infinity,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    // icons8mastercard4801x2t (1:158)
                     margin:
                         EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 1 * fem),
                     width: 91 * fem,
@@ -123,7 +111,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 21 * fem,
                   ),
                   SizedBox(
-                    // icons8visa4801eAc (1:159)
                     width: 92 * fem,
                     height: 92 * fem,
                     child: Image.asset(
@@ -135,7 +122,6 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                     width: 21 * fem,
                   ),
                   Container(
-                    // icons8paypal641APr (1:160)
                     margin:
                         EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 2 * fem),
                     width: 54 * fem,
@@ -163,15 +149,17 @@ class _PaymentGatewayState extends State<PaymentGateway> {
               ),
             ),
             InputText(
+              keyboardType: 'number',
               labelName: 'Card No',
               enabled: true,
               controller: cardNoController,
-              hint: 'Enter name on Card',
+              hint: 'Enter Card Number',
               onChanged: (value) {
                 cardNo = value;
               },
             ),
             InputText(
+              keyboardType: 'text',
               labelName: 'Name on Card',
               enabled: true,
               controller: nameOnCardController,
@@ -194,6 +182,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InputText(
+                          keyboardType: 'number',
                           enabled: true,
                           controller: cvvController,
                           hint: 'CVV',
@@ -216,6 +205,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                         Column(
                           children: [
                             const LabelName(labelName: 'Exp. Date'),
+                            //Need only the month and the date so filtering the text widget content accordingly
                             Text(
                               "${"${selectedDate.toLocal()}".split('')[5]}${"${selectedDate.toLocal()}".split('')[6]}/${"${selectedDate.toLocal()}".split('')[2]}${"${selectedDate.toLocal()}".split('')[3]}",
                               style: SafeGoogleFont(
@@ -223,7 +213,7 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                                 fontSize: 18 * ffem,
                                 fontWeight: FontWeight.w500,
                                 height: 2.5 * ffem / fem,
-                                color: const Color(0xff000000),
+                                color: Colors.blue,
                               ),
                             ),
                           ],
@@ -260,25 +250,42 @@ class _PaymentGatewayState extends State<PaymentGateway> {
                   height: 45,
                   minWidth: 270,
                   onPressed: () {
-                    var result = _orderService.createOrder(widget.orderModel);
-                    if (result == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('ERROR!')),
-                      );
-                    } else {
+                    if (cardNo == '' || nameOnCard == '' || cvv == '') {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Order Placed successfully!')),
+                            content: Text(Constants.EMPTY_FIELDS_ERROR)),
                       );
-                      cardNoController.clear();
-                      nameOnCardController.clear();
-                      cvvController.clear();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentResult(
+                                  status: 'FAILED',
+                                )),
+                      );
+                    } else {
+                      var result = _orderService.createOrder(widget.orderModel);
+                      // ignore: unnecessary_null_comparison
+                      if (result == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text(Constants.CREATE_ERROR)),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(Constants.CREATE_SUCCESS)),
+                        );
+                        cardNoController.clear();
+                        nameOnCardController.clear();
+                        cvvController.clear();
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentResult(
+                                  status: 'PASSED',
+                                )),
+                      );
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OrderList()),
-                    );
                   },
                   color: const Color.fromARGB(255, 6, 84, 79),
                   child: const Text(

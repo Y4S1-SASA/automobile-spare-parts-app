@@ -33,7 +33,7 @@ class _SaveItemState extends State<SaveItem> {
 
   File? _imageFile;
   final picker = ImagePicker();
-
+  String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
   // Loads image image from source
   Future<void> getImageFromSource(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
@@ -92,13 +92,14 @@ class _SaveItemState extends State<SaveItem> {
     return imageUrl;
   }
 
-  String selectedCategory = 'Item 1';
+  String selectedCategory = 'Braking system';
   final List<String> ctegories = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+    'Braking system',
+    'Engine components and parts',
+    'Engine cooling system',
+    'Engine oil systems',
+    'Exhaust system',
+    'Fuel supply system',
   ];
 
   @override
@@ -206,7 +207,7 @@ class _SaveItemState extends State<SaveItem> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Item is Required";
                         } else {
                           return null;
                         }
@@ -316,13 +317,13 @@ class _SaveItemState extends State<SaveItem> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Last Name cannot be empty";
+                                      return "Quantity is Required";
                                     } else {
                                       return null;
                                     }
                                   },
                                   onChanged: (value) {},
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.number,
                                 ),
                               ],
                             )),
@@ -375,13 +376,13 @@ class _SaveItemState extends State<SaveItem> {
                                   ),
                                   validator: (value) {
                                     if (value!.length == 0) {
-                                      return "Quantity is Required";
+                                      return "Price is Required";
                                     } else {
                                       return null;
                                     }
                                   },
                                   onChanged: (value) {},
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.number,
                                 ),
                               ],
                             )),
@@ -427,7 +428,7 @@ class _SaveItemState extends State<SaveItem> {
                       ),
                       validator: (value) {
                         if (value!.length == 0) {
-                          return "Last Name cannot be empty";
+                          return "Description is Required";
                         } else {
                           return null;
                         }
@@ -444,8 +445,8 @@ class _SaveItemState extends State<SaveItem> {
                           borderRadius: BorderRadius.circular(20)),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color.fromARGB(255, 6, 84, 79)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 6, 84, 79)),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -484,97 +485,56 @@ class _SaveItemState extends State<SaveItem> {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   color: Color.fromARGB(255, 6, 84, 79),
-      //   height: 60,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     children: [
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 0
-      //             ? Image.asset('assets/appbar/article_filled.png')
-      //             : Image.asset('assets/appbar/article.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(0);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Scene()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 1
-      //             ? Image.asset('assets/appbar/market_filled.png')
-      //             : Image.asset('assets/appbar/market.png'),
-      //         onPressed: () => _appBarIconTap(1),
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 2
-      //             ? Image.asset('assets/appbar/reservation_filled.png')
-      //             : Image.asset('assets/appbar/reservation.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(2);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => const PlaceOrder()),
-      //           );
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: _selectedAppBarIconIndex == 3
-      //             ? Image.asset('assets/appbar/profile_filled.png')
-      //             : Image.asset('assets/appbar/profile.png'),
-      //         onPressed: () {
-      //           _appBarIconTap(3);
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => SaveItem()),
-      //           );
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
   Future<void> saveItem(ItemModel item) async {
     try {
       String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
-      print(currentUserEmail.toString());
+
       if (currentUserEmail != null) {
         final dbContextReference =
             FirebaseDatabase.instance.ref().child('items');
         String imageUrl = await seedItemImageAsync(context);
-        print(imageUrl);
-        await dbContextReference.child(item.id).set(({
-              'id': item.id,
-              'name': item.name,
-              'category': item.category,
-              'quantity': item.quantity,
-              'price': item.price,
-              'description': item.description,
-              'imageUrl': imageUrl,
-              "createdBy": currentUserEmail,
-            }));
 
-        Fluttertoast.showToast(
-            msg: "Item Saved Successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 4,
-            backgroundColor: Color.fromARGB(255, 4, 154, 89),
-            textColor: Colors.white,
-            fontSize: 16.0);
+        if (imageUrl == "null") {
+          Fluttertoast.showToast(
+              msg: "Please Select an Image",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Color.fromARGB(255, 231, 149, 27),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else if (imageUrl.isNotEmpty) {
+          await dbContextReference.child(item.id).set(({
+                'id': item.id,
+                'name': item.name,
+                'category': item.category,
+                'quantity': item.quantity,
+                'price': item.price,
+                'description': item.description,
+                'imageUrl': imageUrl,
+                "createdBy": currentUserEmail,
+              }));
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => ItemMarketList()));
+          Fluttertoast.showToast(
+              msg: "Item Saved Successfully",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Color.fromARGB(255, 4, 154, 89),
+              textColor: Colors.white,
+              fontSize: 16.0);
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ItemMarketList()));
+        }
       } else {
         Fluttertoast.showToast(
             msg: "Authentication Error",
             toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
+            gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 4,
             backgroundColor: Color.fromARGB(255, 192, 25, 25),
             textColor: Colors.white,
@@ -584,7 +544,7 @@ class _SaveItemState extends State<SaveItem> {
       Fluttertoast.showToast(
           msg: "Error has been occured pleas try again",
           toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 4,
           backgroundColor: const Color.fromARGB(255, 233, 23, 23),
           textColor: Colors.white,
