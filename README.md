@@ -1,16 +1,11 @@
 # automobile_spare_parts_app
 
-A new Flutter project.
+## Member Details
+- IT200225526 - Dunusinghe A.V (Github - Avdunusinghe)
+- IT20037338 - Jayathilake S.M.D.A.R (Githhub - amanthajayathilake)
+- IT20020262 - Perera M.S.D (Github - dulshan-perera)
+- IT20274702 - Bartholomeusz S.V (Github - Shehanx86)
 
-## Getting Started
+## Demonstration Video Link
+- [Link](https://web.microsoftstream.com/video/c000c4b1-7da4-4bbb-8515-7ced52216e0d)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
